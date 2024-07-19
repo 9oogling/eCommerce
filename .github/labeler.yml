@@ -1,0 +1,14 @@
+enable:
+  issues: false
+  prs: true
+
+labels:
+  'bug':
+    include:
+      - '\bfix\b'
+  'feature':
+    include:
+      - '\bfeat\b'
+  'refactoring':
+    include:
+      - '\brefactor\b'
