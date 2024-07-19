@@ -1,4 +1,4 @@
-package com.team9oogling.ecommerce.global.dto;
+package com.team9oogling.codyus.global.dto;
 
 import lombok.Builder;
 import lombok.Getter;

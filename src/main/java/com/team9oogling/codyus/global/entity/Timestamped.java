@@ -1,4 +1,4 @@
-package com.team9oogling.ecommerce.global.entity;
+package com.team9oogling.codyus.global.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

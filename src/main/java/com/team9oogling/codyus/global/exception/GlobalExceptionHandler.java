@@ -1,4 +1,4 @@
-package com.team9oogling.ecommerce.global.exception;
+package com.team9oogling.codyus.global.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatusCode;

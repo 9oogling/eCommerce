@@ -1,4 +1,4 @@
-package com.team9oogling.ecommerce.global.config;
+package com.team9oogling.codyus.global.config;
 
 import org.springframework.context.annotation.Configuration;
 

@@ -1,10 +1,10 @@
-package com.team9oogling.ecommerce;
+package com.team9oogling.codyus;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ECommerceApplicationTests {
+class CodyUsApplicationTests {
 
   @Test
   void contextLoads() {

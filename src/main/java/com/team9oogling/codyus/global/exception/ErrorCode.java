@@ -1,4 +1,4 @@
-package com.team9oogling.ecommerce.global.exception;
+package com.team9oogling.codyus.global.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
