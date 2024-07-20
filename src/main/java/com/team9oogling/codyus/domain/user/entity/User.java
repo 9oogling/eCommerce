@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -47,6 +48,9 @@ public class User extends Timestamped {
   @Column
   private String refreshToken;
 
+  @Column
+  private Date inactivatedAt; // 비활성화된 시간
+
   public User(UserSignupRequestDto requestDto, UserRole role, UserStatus status/*, UserOauth oauth*/) {
     this.email = requestDto.getEmail();
     this.password = requestDto.getPassword();
@@ -63,5 +67,13 @@ public class User extends Timestamped {
 
   public void updateRefreshToken(String refreshToken) {
     this.refreshToken = refreshToken;
+  }
+
+  public void updateStatus(UserStatus status) {
+    this.status = status;
+  }
+
+  public void updateInactivatedAt(Date inactivatedAt) {
+    this.inactivatedAt = inactivatedAt;
   }
 }
