@@ -14,7 +14,9 @@ public enum ErrorCode {
   EXPIRED_TOKEN(400, "만료된 토큰입니다."),
   BAD_REQUEST(400, "잘못된 요청입니다."),
   CHECK_PASSWORD(400, "비밀번호를 확인해주세요."),
-  ALREADY_INACTIVE_USER(400, "이미 탈퇴한 사용자입니다.");
+  ALREADY_INACTIVE_USER(400, "이미 탈퇴한 사용자입니다."),
+  CANNOT_CHANGE_SAME_PASSWORD(400, "현재 비밀번호와 동일한 비밀번호로는 변경할 수 없습니다."),
+  NOT_MATCH_PASSWORD(400, "비밀번호가 일치하지 않습니다.");
 
 
   private final int status;

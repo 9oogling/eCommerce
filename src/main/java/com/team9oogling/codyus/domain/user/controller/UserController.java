@@ -1,5 +1,6 @@
 package com.team9oogling.codyus.domain.user.controller;
 
+import com.team9oogling.codyus.domain.user.dto.UpdateProfilePasswordRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserSignupRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserWithDrawalRequestDto;
 import com.team9oogling.codyus.domain.user.service.UserService;
@@ -9,7 +10,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,6 +53,15 @@ public class UserController {
   public ResponseEntity<MessageResponseDto> withdrawal(@Valid @RequestBody UserWithDrawalRequestDto requestDto) {
 
     MessageResponseDto responseDto = userService.withdrawal(requestDto);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+  }
+
+  @PutMapping("/profile/password/my")
+  public ResponseEntity<MessageResponseDto> updatePassword(@Valid @RequestBody
+  UpdateProfilePasswordRequestDto requestDto) {
+
+    MessageResponseDto responseDto = userService.updatePassword(requestDto);
 
     return ResponseEntity.status(HttpStatus.OK).body(responseDto);
   }
