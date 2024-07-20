@@ -1,16 +1,16 @@
-package com.team9oogling.ecommerce.global.dto;
+package com.team9oogling.codyus.global.dto;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MessageResponseDto<T> {
+public class MessageResponseDto {
 
   private final Integer statusCode;
   private final String message;
 
   @Builder
-  public MessageResponseDto(Integer status, String message, T data) {
+  public MessageResponseDto(Integer status, String message) {
     this.statusCode = status;
     this.message = message;
   }
