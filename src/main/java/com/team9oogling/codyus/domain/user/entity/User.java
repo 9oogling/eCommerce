@@ -38,10 +38,10 @@ public class User extends Timestamped {
   @Enumerated(value = EnumType.STRING)
   private UserStatus status;
 
-  @Column(nullable = false)
+  @Column
   private String address;
 
-  @Column(nullable = false, unique = true)
+  @Column
   private String phoneNumber;
 
   @Column

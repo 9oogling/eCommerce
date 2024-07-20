@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MessageResponseDto<T> {
+public class MessageResponseDto {
 
   private final Integer statusCode;
   private final String message;

@@ -14,7 +14,7 @@ public class SecurityResponse {
   public void sendResponse(
       HttpServletResponse response, HttpStatus status, String message) throws IOException {
 
-    MessageResponseDto<String> responseDto = new MessageResponseDto<String>(status.value(), message);
+    MessageResponseDto responseDto = new MessageResponseDto(status.value(), message);
     String json = objectMapper.writeValueAsString(responseDto);
 
     response.setStatus(status.value());
