@@ -1,5 +1,6 @@
 package com.team9oogling.codyus.domain.user.entity;
 
+import com.team9oogling.codyus.domain.user.dto.UpdateProfileAddressRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UpdateProfilePasswordRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserSignupRequestDto;
 import com.team9oogling.codyus.global.entity.Timestamped;
@@ -76,6 +77,10 @@ public class User extends Timestamped {
 
   public void updateInactivatedAt(Date inactivatedAt) {
     this.inactivatedAt = inactivatedAt;
+  }
+
+  public void updateAddress(UpdateProfileAddressRequestDto requestDto) {
+    this.address = requestDto.getAddress();
   }
 
 }
