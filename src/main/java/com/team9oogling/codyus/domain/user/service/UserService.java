@@ -12,14 +12,21 @@ import com.team9oogling.codyus.global.exception.CustomException;
 import com.team9oogling.codyus.global.exception.ErrorCode;
 import com.team9oogling.codyus.global.jwt.JwtProvider;
 import com.team9oogling.codyus.global.repository.BlacklistedTokenRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class UserService {
@@ -89,5 +96,71 @@ public class UserService {
 
   public boolean isTokenBlacklisted(String token) {
     return blacklistedTokenRepository.existsByToken(token);
+  }
+
+  public HttpHeaders refreshToken(HttpServletRequest request) {
+    String token = getRefreshToken(request);
+
+    // 리프레시 토큰이 존재하지 않거나 빈 문자열인 경우 예외를 발생시킵니다.
+    if (!StringUtils.hasText(token)) {
+      throw new CustomException(ErrorCode.BAD_REQUEST);
+    }
+
+    return validateToken(token);
+  }
+
+  private String getRefreshToken(HttpServletRequest request) {
+    Cookie[] cookies = request.getCookies();
+
+    if (cookies == null) {
+      throw new CustomException(ErrorCode.NOT_FOUND_COOKIE);
+    }
+
+    for (Cookie cookie : cookies) {
+      if ("refreshToken".equals(cookie.getName())) {
+        return cookie.getValue();
+      }
+    }
+
+    return null;
+  }
+
+  private HttpHeaders validateToken(String token) {
+
+    try {
+
+      Claims info = jwtProvider.getClaimsFromToken(token);
+      User user = userRepository.findByemail(info.getSubject())
+          .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+
+      if (!user.getRefreshToken().equals(token)) {
+        throw new CustomException(ErrorCode.INVALID_TOKEN);
+      }
+
+      return setHeaders(info, user);
+
+    } catch (ExpiredJwtException e) {
+      throw new CustomException(ErrorCode.EXPIRED_TOKEN);
+    } catch (JwtException e) {
+      throw new CustomException(ErrorCode.INVALID_TOKEN);
+    }
+  }
+
+  private HttpHeaders setHeaders(Claims info, User user) {
+
+    String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
+    String refreshToken = jwtProvider.generateToken(user.getEmail(), user.getRole(),
+        info.getExpiration());
+    ResponseCookie responseCookie = jwtProvider.createCookieRefreshToken(refreshToken,
+        info.getExpiration());
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", "Bearer " + accessToken);
+    headers.add(HttpHeaders.SET_COOKIE, responseCookie.toString());
+
+    user.updateRefreshToken(refreshToken);
+
+    return headers;
+
   }
 }

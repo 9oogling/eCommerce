@@ -3,6 +3,7 @@ package com.team9oogling.codyus.global.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team9oogling.codyus.domain.user.dto.UserLoginRequestDto;
 import com.team9oogling.codyus.domain.user.entity.User;
+import com.team9oogling.codyus.domain.user.entity.UserRole;
 import com.team9oogling.codyus.domain.user.repository.UserRepository;
 import com.team9oogling.codyus.domain.user.security.UserDetailsImpl;
 import com.team9oogling.codyus.global.dto.SecurityResponse;
@@ -71,20 +72,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
     String userId = userDetails.getUsername();
-    String role = userDetails.getAuthorities().iterator().next().getAuthority();
 
-    Optional<User> user = userRepository.findByemail(userId);
+    Optional<User> optionalUser = userRepository.findByemail(userId);
 
-    if (user.isEmpty()) {
+    if (optionalUser.isEmpty()) {
       securityResponse.sendResponse(response, HttpStatus.BAD_REQUEST, "아이디, 비밀번호를 확인해주세요.");
 
       return;
     }
 
+    User user = optionalUser.get();
+    UserRole role = user.getRole();
+
     String accessToken = jwtProvider.createAccessToken(userId, role);
     String refreshToken = jwtProvider.createRefreshToken(userId, role);
 
-    sendLoginResponse(response, user.get(), accessToken, refreshToken);
+    sendLoginResponse(response, user, accessToken, refreshToken);
 
   }
 

@@ -1,5 +1,6 @@
 package com.team9oogling.codyus.global.jwt;
 
+import com.team9oogling.codyus.domain.user.entity.UserRole;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -37,10 +38,10 @@ public class JwtProvider {
 
   }
 
-  public String generateToken(String userId, String role, Date expirationDate) {
+  public String generateToken(String email, UserRole role, Date expirationDate) {
     return Jwts.builder()
-        .setSubject(userId)
-        .claim("auth", role)
+        .setSubject(email)
+        .claim("auth", role.name())
         .setExpiration(expirationDate)
         .setIssuedAt(new Date())
         .signWith(key, signatureAlgorithm)
@@ -54,18 +55,18 @@ public class JwtProvider {
     return new Date(date.getTime() + ms);
   }
 
-  public String createAccessToken(String userId, String role) {
+  public String createAccessToken(String email, UserRole role) {
 
     Date expirationDate = generateExpirationDate(ACCESS_TOKEN_EXPIRATION);
 
-    return generateToken(userId, role, expirationDate);
+    return generateToken(email, role, expirationDate);
   }
 
-  public String createRefreshToken(String userId, String role) {
+  public String createRefreshToken(String email, UserRole role) {
 
     Date expirationDate = generateExpirationDate(REFRESH_TOKEN_EXPIRATION);
 
-    return generateToken(userId, role, expirationDate);
+    return generateToken(email, role, expirationDate);
   }
 
   public String getAccessTokenFromHeader(HttpServletRequest request) {
