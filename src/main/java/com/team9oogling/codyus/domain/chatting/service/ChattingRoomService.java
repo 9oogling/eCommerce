@@ -1,6 +1,6 @@
 package com.team9oogling.codyus.domain.chatting.service;
 
-import static com.team9oogling.codyus.global.exception.ErrorCode.*;
+import static com.team9oogling.codyus.global.entity.StatusCode.*;
 
 import java.util.Objects;
 
@@ -31,21 +31,16 @@ public class ChattingRoomService {
 	private final PostRepository postRepository;
 	@Transactional
 	public ChattingRoomCreateResponseDto createChattingRoom(Long postId, User user) {
-		// 1. 게시물 있는지 확인 , 게시물 생성 아이디가 자신인지 확인
 		Post post = postRepository.findById(postId).orElse(null); // -> PostService.PostfindById 로 바꿀예정
 		if(post == null) {
-			throw new RuntimeException("포스트 없다");
+			throw new CustomException(NOT_FOUND_POST);
 		}
 
-		log.info(post.getUser().getId() + "    유저 아이디 값인데");
-		log.info(user.getId() + "    시큐리티 유저 아이디 값");
 		if(Objects.equals(post.getUser().getId(), user.getId())) {
-			throw new RuntimeException("같습니다. 유저 아이디가");
+			throw new CustomException(SAME_USERID_POST_USERID);
 		}
-
-		// 2. 채팅 멤버에 user가 있는지 확인
 		ChattingRoomPostAndUser(postId, user);
-		// 3. 채팅방 생성 및 멤버 추가
+
 		ChattingRoom chattingRoom = new ChattingRoom(post);
 		ChattingMember chattingMember = new ChattingMember(user, chattingRoom);
 
