@@ -5,14 +5,16 @@ import com.team9oogling.codyus.domain.user.dto.UpdateProfilePasswordRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UpdateProfilePhoneNumberRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserSignupRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserWithDrawalRequestDto;
+import com.team9oogling.codyus.domain.user.security.UserDetailsImpl;
 import com.team9oogling.codyus.domain.user.service.UserService;
 import com.team9oogling.codyus.global.dto.MessageResponseDto;
+import com.team9oogling.codyus.global.entity.StatusCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,16 +32,17 @@ public class UserController {
   }
 
   @PostMapping("/users/signup")
-  public ResponseEntity<MessageResponseDto> signup(@Valid @RequestBody UserSignupRequestDto requestDto) {
-
-    MessageResponseDto responseDto = userService.signup(requestDto);
+  public ResponseEntity<MessageResponseDto> signup(
+      @Valid @RequestBody UserSignupRequestDto requestDto) {
+    userService.signup(requestDto);
+    MessageResponseDto responseDto = new MessageResponseDto(StatusCode.SUCCESS_SIGNUP);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
   }
 
   @PostMapping("/users/logout")
-  public ResponseEntity<?> logout() {
-    userService.logout();
+  public ResponseEntity<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    userService.logout(userDetails);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
@@ -47,42 +50,47 @@ public class UserController {
   @PostMapping("/users/token/refresh")
   public ResponseEntity<MessageResponseDto> refreshToken(HttpServletRequest request) {
     HttpHeaders headers = userService.refreshToken(request);
-    MessageResponseDto responseDto = new MessageResponseDto(200, "토큰 재발급에 성공했습니다.");
+    MessageResponseDto responseDto = new MessageResponseDto(StatusCode.SUCCESS_REFRESH_TOKEN);
 
     return ResponseEntity.status(HttpStatus.OK).headers(headers).body(responseDto);
   }
 
   @PutMapping("/users/withdrawal")
-  public ResponseEntity<MessageResponseDto> withdrawal(@Valid @RequestBody UserWithDrawalRequestDto requestDto) {
-
-    MessageResponseDto responseDto = userService.withdrawal(requestDto);
+  public ResponseEntity<MessageResponseDto> withdrawal(
+      @AuthenticationPrincipal UserDetailsImpl userDetails,
+      @Valid @RequestBody UserWithDrawalRequestDto requestDto) {
+    userService.withdrawal(requestDto, userDetails);
+    MessageResponseDto responseDto = new MessageResponseDto(StatusCode.SUCCESS_WITHDRAWAL);
 
     return ResponseEntity.status(HttpStatus.OK).body(responseDto);
   }
 
   @PutMapping("/profile/password/my")
-  public ResponseEntity<MessageResponseDto> updatePassword(@Valid @RequestBody
-  UpdateProfilePasswordRequestDto requestDto) {
-
-    MessageResponseDto responseDto = userService.updatePassword(requestDto);
+  public ResponseEntity<MessageResponseDto> updatePassword(
+      @AuthenticationPrincipal UserDetailsImpl userDetails,
+      @Valid @RequestBody UpdateProfilePasswordRequestDto requestDto) {
+    userService.updatePassword(requestDto, userDetails);
+    MessageResponseDto responseDto = new MessageResponseDto(StatusCode.SUCCESS_UPDATE_PASSWORD);
 
     return ResponseEntity.status(HttpStatus.OK).body(responseDto);
   }
 
   @PutMapping("/profile/address/my")
-  public ResponseEntity<MessageResponseDto> updateAddress(@RequestBody
-      UpdateProfileAddressRequestDto requestDto) {
-
-    MessageResponseDto responseDto = userService.updateAddress(requestDto);
+  public ResponseEntity<MessageResponseDto> updateAddress(
+      @AuthenticationPrincipal UserDetailsImpl userDetails,
+      @RequestBody UpdateProfileAddressRequestDto requestDto) {
+    userService.updateAddress(requestDto, userDetails);
+    MessageResponseDto responseDto = new MessageResponseDto(StatusCode.SUCCESS_UPDATE_ADDRESS);
 
     return ResponseEntity.status(HttpStatus.OK).body(responseDto);
   }
 
   @PutMapping("/profile/phone/my")
-  public ResponseEntity<MessageResponseDto> updatePhoneNumber(@Valid @RequestBody
-  UpdateProfilePhoneNumberRequestDto requestDto) {
-
-    MessageResponseDto responseDto = userService.updatePhoneNumber(requestDto);
+  public ResponseEntity<MessageResponseDto> updatePhoneNumber(
+      @AuthenticationPrincipal UserDetailsImpl userDetails,
+      @Valid @RequestBody UpdateProfilePhoneNumberRequestDto requestDto) {
+    userService.updatePhoneNumber(requestDto, userDetails);
+    MessageResponseDto responseDto = new MessageResponseDto(StatusCode.SUCCESS_UPDATE_PHONE_NUMBER);
 
     return ResponseEntity.status(HttpStatus.OK).body(responseDto);
   }

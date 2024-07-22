@@ -1,5 +1,6 @@
 package com.team9oogling.codyus.global.exception;
 
+import com.team9oogling.codyus.global.entity.StatusCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -7,13 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = "CustomException:: ")
 public class CustomException extends RuntimeException {
 
-  private final ErrorCode errorCode;
+  private final StatusCode statusCode;
 
-  public CustomException(ErrorCode errorCode) {
-    super(errorCode.getMessage());
-    this.errorCode = errorCode;
+  public CustomException(StatusCode statusCode) {
+    super(statusCode.getMessage());
+    this.statusCode = statusCode;
     log.info("ExceptionMethod: {}", getExceptionMethod());
-    log.info("ErrorCode: {}", errorCode.getMessage());
+    log.info("ErrorCode: {}", statusCode.getMessage());
   }
 
   public String getExceptionMethod() {
