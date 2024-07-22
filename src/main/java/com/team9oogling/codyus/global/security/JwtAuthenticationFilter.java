@@ -49,7 +49,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     try {
-
       UserLoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
           UserLoginRequestDto.class);
 

@@ -2,6 +2,7 @@ package com.team9oogling.codyus.global.config;
 
 import com.team9oogling.codyus.domain.user.repository.UserRepository;
 import com.team9oogling.codyus.domain.user.security.UserDetailsServiceImpl;
+import com.team9oogling.codyus.domain.user.service.UserService;
 import com.team9oogling.codyus.global.dto.SecurityResponse;
 import com.team9oogling.codyus.global.jwt.JwtProvider;
 import com.team9oogling.codyus.global.security.CustomAuthenticationEntryPoint;
@@ -28,17 +29,19 @@ public class SecurityConfig {
   private final UserRepository userRepository;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
   private final SecurityResponse securityResponse;
+  private final UserService userService;
 
   public SecurityConfig(JwtProvider jwtProvider, UserDetailsServiceImpl userDetailsService,
       AuthenticationConfiguration authenticationConfiguration, UserRepository userRepository,
       CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
-      SecurityResponse securityResponse) {
+      SecurityResponse securityResponse, UserService userService) {
     this.jwtProvider = jwtProvider;
     this.userDetailsService = userDetailsService;
     this.authenticationConfiguration = authenticationConfiguration;
     this.userRepository = userRepository;
     this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     this.securityResponse = securityResponse;
+    this.userService = userService;
   }
 
   @Bean
@@ -59,7 +62,7 @@ public class SecurityConfig {
 
   @Bean
   public JwtAuthorizationFilter jwtAuthorizationFilter() {
-    return new JwtAuthorizationFilter(jwtProvider, userDetailsService, securityResponse);
+    return new JwtAuthorizationFilter(jwtProvider, userDetailsService, securityResponse, userService);
   }
 
   @Bean

@@ -1,6 +1,7 @@
 package com.team9oogling.codyus.global.security;
 
 import com.team9oogling.codyus.domain.user.security.UserDetailsServiceImpl;
+import com.team9oogling.codyus.domain.user.service.UserService;
 import com.team9oogling.codyus.global.dto.SecurityResponse;
 import com.team9oogling.codyus.global.jwt.JwtProvider;
 import io.jsonwebtoken.Claims;
@@ -25,11 +26,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
   private final JwtProvider jwtProvider;
   private final UserDetailsServiceImpl userDetailsService;
   private final SecurityResponse securityResponse;
+  private final UserService userService;
 
-  public JwtAuthorizationFilter(JwtProvider jwtProvider, UserDetailsServiceImpl userDetailsService, SecurityResponse securityResponse) {
+  public JwtAuthorizationFilter(JwtProvider jwtProvider, UserDetailsServiceImpl userDetailsService, SecurityResponse securityResponse,
+      UserService userService) {
     this.jwtProvider = jwtProvider;
     this.userDetailsService = userDetailsService;
     this.securityResponse = securityResponse;
+    this.userService = userService;
   }
 
   @Override
@@ -38,8 +42,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     String tokenValue = jwtProvider.getAccessTokenFromHeader(request);
 
     if (StringUtils.hasText(tokenValue)) {
-
       try {
+        // 블랙리스트에 있는 토큰인지 확인
+        if (userService.isTokenBlacklisted(tokenValue)) {
+          securityResponse.sendResponse(response, HttpStatus.UNAUTHORIZED, "이 토큰은 사용이 금지되었습니다.");
+        }
 
         Claims info = jwtProvider.getClaimsFromToken(tokenValue);
         setAuthentication(info.getSubject());
