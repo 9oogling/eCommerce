@@ -1,5 +1,6 @@
 package com.team9oogling.codyus.domain.user.service;
 
+import com.team9oogling.codyus.domain.user.dto.UpdateProfilePasswordRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserSignupRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserWithDrawalRequestDto;
 import com.team9oogling.codyus.domain.user.entity.User;
@@ -22,8 +23,9 @@ import jakarta.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -130,6 +132,33 @@ public class UserService {
     return new MessageResponseDto(200, "회원탈퇴가 처리 중입니다. '탈퇴 신청일'로부터 30일이 경과되어야 완료됩니다.");
   }
 
+  @Transactional
+  public MessageResponseDto updatePassword(UpdateProfilePasswordRequestDto requestDto) {
+
+    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
+
+    User user = userRepository.findByemail(userDetails.getUsername())
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+
+    checkPassword(requestDto.getPassword(), user.getPassword());
+
+    if (requestDto.getNewPassword().equals(requestDto.getPassword())) {
+      throw new CustomException(ErrorCode.CANNOT_CHANGE_SAME_PASSWORD);
+    }
+
+    if (!requestDto.getNewPassword().equals(requestDto.getCheckPassword())) {
+      throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
+    }
+
+    String encryptionPassword = passwordEncoder.encode(requestDto.getNewPassword());
+    user.encryptionPassword(encryptionPassword);
+
+    userRepository.save(user);
+
+    return new MessageResponseDto(200, "비밀번호 수정에 성공했습니다.");
+  }
+
   private void addToBlacklist(String token) {
     LocalDateTime expiryDate = LocalDateTime.now().plus(Duration.ofMillis(accessTokenExpiration));
     BlacklistedToken blacklistedToken = new BlacklistedToken();
@@ -202,4 +231,5 @@ public class UserService {
       throw new CustomException(ErrorCode.CHECK_PASSWORD);
     }
   }
+
 }
