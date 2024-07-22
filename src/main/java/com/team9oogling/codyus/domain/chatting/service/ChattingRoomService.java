@@ -36,9 +36,9 @@ public class ChattingRoomService {
 			throw new CustomException(NOT_FOUND_POST);
 		}
 
-		if(Objects.equals(post.getUser().getId(), user.getId())) {
-			throw new CustomException(SAME_USERID_POST_USERID);
-		}
+//		if(Objects.equals(post.getUser().getId(), user.getId())) {
+//			throw new CustomException(SAME_USERID_POST_USERID);
+//		}
 		ChattingRoomPostAndUser(postId, user);
 
 		ChattingRoom chattingRoom = new ChattingRoom(post);

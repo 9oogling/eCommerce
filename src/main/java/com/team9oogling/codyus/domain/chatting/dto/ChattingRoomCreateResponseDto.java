@@ -11,17 +11,17 @@ public class ChattingRoomCreateResponseDto {
 	private final Long ChattingRoomId;
 	private final Long postId;
 	private final String title;
-	private final int price;
-	private final String dealStatus;
-	private final String sellingType;
+//	private final int price;
+//	private final String dealStatus;
+//	private final String sellingType;
 
 	public ChattingRoomCreateResponseDto(final Long chattingRoomId, final Post post) {
 	this.ChattingRoomId = chattingRoomId;
 	this.postId = post.getId();
 	this.title = post.getTitle();
-	this.price = post.getPrice();
-	this.dealStatus = post.getDealStatus();
-	this.sellingType = post.getSellingType();
+//	this.price = post.getPrice();
+//	this.dealStatus = post.getDealStatus();
+//	this.sellingType = post.getSellingType();
 	}
 
 

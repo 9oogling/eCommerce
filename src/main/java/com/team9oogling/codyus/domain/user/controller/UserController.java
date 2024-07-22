@@ -8,11 +8,11 @@ import com.team9oogling.codyus.domain.user.dto.UserWithDrawalRequestDto;
 import com.team9oogling.codyus.domain.user.security.UserDetailsImpl;
 import com.team9oogling.codyus.domain.user.service.UserService;
 import com.team9oogling.codyus.global.dto.MessageResponseDto;
+import com.team9oogling.codyus.global.entity.ResponseFactory;
 import com.team9oogling.codyus.global.entity.StatusCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,24 +35,22 @@ public class UserController {
   public ResponseEntity<MessageResponseDto> signup(
       @Valid @RequestBody UserSignupRequestDto requestDto) {
     userService.signup(requestDto);
-    MessageResponseDto responseDto = new MessageResponseDto(StatusCode.SUCCESS_SIGNUP);
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    return ResponseFactory.created(StatusCode.SUCCESS_SIGNUP);
   }
 
   @PostMapping("/users/logout")
   public ResponseEntity<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
     userService.logout(userDetails);
 
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    return ResponseFactory.noContent();
   }
 
   @PostMapping("/users/token/refresh")
   public ResponseEntity<MessageResponseDto> refreshToken(HttpServletRequest request) {
     HttpHeaders headers = userService.refreshToken(request);
-    MessageResponseDto responseDto = new MessageResponseDto(StatusCode.SUCCESS_REFRESH_TOKEN);
 
-    return ResponseEntity.status(HttpStatus.OK).headers(headers).body(responseDto);
+    return ResponseFactory.ok(StatusCode.SUCCESS_REFRESH_TOKEN, headers);
   }
 
   @PutMapping("/users/withdrawal")
@@ -60,9 +58,8 @@ public class UserController {
       @AuthenticationPrincipal UserDetailsImpl userDetails,
       @Valid @RequestBody UserWithDrawalRequestDto requestDto) {
     userService.withdrawal(requestDto, userDetails);
-    MessageResponseDto responseDto = new MessageResponseDto(StatusCode.SUCCESS_WITHDRAWAL);
 
-    return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    return ResponseFactory.ok(StatusCode.SUCCESS_WITHDRAWAL);
   }
 
   @PutMapping("/profile/password/my")
@@ -70,9 +67,8 @@ public class UserController {
       @AuthenticationPrincipal UserDetailsImpl userDetails,
       @Valid @RequestBody UpdateProfilePasswordRequestDto requestDto) {
     userService.updatePassword(requestDto, userDetails);
-    MessageResponseDto responseDto = new MessageResponseDto(StatusCode.SUCCESS_UPDATE_PASSWORD);
 
-    return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    return ResponseFactory.ok(StatusCode.SUCCESS_UPDATE_PASSWORD);
   }
 
   @PutMapping("/profile/address/my")
@@ -80,9 +76,8 @@ public class UserController {
       @AuthenticationPrincipal UserDetailsImpl userDetails,
       @RequestBody UpdateProfileAddressRequestDto requestDto) {
     userService.updateAddress(requestDto, userDetails);
-    MessageResponseDto responseDto = new MessageResponseDto(StatusCode.SUCCESS_UPDATE_ADDRESS);
 
-    return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    return ResponseFactory.ok(StatusCode.SUCCESS_UPDATE_ADDRESS);
   }
 
   @PutMapping("/profile/phone/my")
@@ -90,8 +85,7 @@ public class UserController {
       @AuthenticationPrincipal UserDetailsImpl userDetails,
       @Valid @RequestBody UpdateProfilePhoneNumberRequestDto requestDto) {
     userService.updatePhoneNumber(requestDto, userDetails);
-    MessageResponseDto responseDto = new MessageResponseDto(StatusCode.SUCCESS_UPDATE_PHONE_NUMBER);
 
-    return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    return ResponseFactory.ok(StatusCode.SUCCESS_UPDATE_PHONE_NUMBER);
   }
 }
