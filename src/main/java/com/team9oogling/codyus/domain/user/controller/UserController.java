@@ -1,5 +1,6 @@
 package com.team9oogling.codyus.domain.user.controller;
 
+import com.team9oogling.codyus.domain.user.dto.UpdateProfileAddressRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UpdateProfilePasswordRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserSignupRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserWithDrawalRequestDto;
@@ -62,6 +63,15 @@ public class UserController {
   UpdateProfilePasswordRequestDto requestDto) {
 
     MessageResponseDto responseDto = userService.updatePassword(requestDto);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+  }
+
+  @PutMapping("/profile/address/my")
+  public ResponseEntity<MessageResponseDto> updateAddress(@RequestBody
+      UpdateProfileAddressRequestDto requestDto) {
+
+    MessageResponseDto responseDto = userService.updateAddress(requestDto);
 
     return ResponseEntity.status(HttpStatus.OK).body(responseDto);
   }
