@@ -1,6 +1,7 @@
 package com.team9oogling.codyus.domain.user.service;
 
 import com.team9oogling.codyus.domain.user.dto.UserSignupRequestDto;
+import com.team9oogling.codyus.domain.user.dto.UserWithDrawalRequestDto;
 import com.team9oogling.codyus.domain.user.entity.User;
 import com.team9oogling.codyus.domain.user.entity.UserRole;
 import com.team9oogling.codyus.domain.user.entity.UserStatus;
@@ -20,7 +21,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -86,6 +89,47 @@ public class UserService {
     SecurityContextHolder.clearContext();
   }
 
+  @Transactional
+  public HttpHeaders refreshToken(HttpServletRequest request) {
+    String token = getRefreshToken(request);
+
+    // 리프레시 토큰이 존재하지 않거나 빈 문자열인 경우 예외를 발생시킵니다.
+    if (!StringUtils.hasText(token)) {
+      throw new CustomException(ErrorCode.BAD_REQUEST);
+    }
+
+    return validateToken(token);
+  }
+
+  @Transactional
+  public MessageResponseDto withdrawal(UserWithDrawalRequestDto requestDto) {
+
+    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
+
+    User user = userRepository.findByemail(userDetails.getUsername())
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+
+    checkPassword(requestDto.getPassword(), user.getPassword());
+
+    if (user.getStatus() == UserStatus.INACTIVE) {
+      throw new CustomException(ErrorCode.ALREADY_INACTIVE_USER);
+    }
+
+    user.updateStatus(UserStatus.INACTIVE);
+    user.updateInactivatedAt(new Date()); // 비활성화된 시간 설정
+    userRepository.save(user);
+
+    String currentToken = jwtProvider.getAccessTokenFromHeader(request);
+    // 현재 토큰 블랙리스트에 추가
+    addToBlacklist(currentToken);
+
+    // 현재 인증 정보 무효화
+    SecurityContextHolder.clearContext();
+
+    return new MessageResponseDto(200, "회원탈퇴가 처리 중입니다. '탈퇴 신청일'로부터 30일이 경과되어야 완료됩니다.");
+  }
+
   private void addToBlacklist(String token) {
     LocalDateTime expiryDate = LocalDateTime.now().plus(Duration.ofMillis(accessTokenExpiration));
     BlacklistedToken blacklistedToken = new BlacklistedToken();
@@ -96,17 +140,6 @@ public class UserService {
 
   public boolean isTokenBlacklisted(String token) {
     return blacklistedTokenRepository.existsByToken(token);
-  }
-
-  public HttpHeaders refreshToken(HttpServletRequest request) {
-    String token = getRefreshToken(request);
-
-    // 리프레시 토큰이 존재하지 않거나 빈 문자열인 경우 예외를 발생시킵니다.
-    if (!StringUtils.hasText(token)) {
-      throw new CustomException(ErrorCode.BAD_REQUEST);
-    }
-
-    return validateToken(token);
   }
 
   private String getRefreshToken(HttpServletRequest request) {
@@ -162,5 +195,11 @@ public class UserService {
 
     return headers;
 
+  }
+
+  private void checkPassword(String inputPassword, String dbPassword) {
+    if (!passwordEncoder.matches(inputPassword, dbPassword)) {
+      throw new CustomException(ErrorCode.CHECK_PASSWORD);
+    }
   }
 }
