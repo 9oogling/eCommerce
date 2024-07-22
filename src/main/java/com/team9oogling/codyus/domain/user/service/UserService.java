@@ -2,6 +2,7 @@ package com.team9oogling.codyus.domain.user.service;
 
 import com.team9oogling.codyus.domain.user.dto.UpdateProfileAddressRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UpdateProfilePasswordRequestDto;
+import com.team9oogling.codyus.domain.user.dto.UpdateProfilePhoneNumberRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserSignupRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserWithDrawalRequestDto;
 import com.team9oogling.codyus.domain.user.entity.User;
@@ -174,6 +175,22 @@ public class UserService {
     userRepository.save(user);
 
     return new MessageResponseDto(200, "주소 수정에 성공했습니다.");
+  }
+
+  @Transactional
+  public MessageResponseDto updatePhoneNumber(UpdateProfilePhoneNumberRequestDto requestDto) {
+
+    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
+
+    User user = userRepository.findByemail(userDetails.getUsername())
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+
+    user.updatePhoneNumber(requestDto);
+
+    userRepository.save(user);
+
+    return new MessageResponseDto(200, "휴대폰 번호 수정에 성공했습니다.");
   }
 
   private void addToBlacklist(String token) {

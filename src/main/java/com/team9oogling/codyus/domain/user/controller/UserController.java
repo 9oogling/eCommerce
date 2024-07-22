@@ -2,6 +2,7 @@ package com.team9oogling.codyus.domain.user.controller;
 
 import com.team9oogling.codyus.domain.user.dto.UpdateProfileAddressRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UpdateProfilePasswordRequestDto;
+import com.team9oogling.codyus.domain.user.dto.UpdateProfilePhoneNumberRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserSignupRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserWithDrawalRequestDto;
 import com.team9oogling.codyus.domain.user.service.UserService;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,6 +74,15 @@ public class UserController {
       UpdateProfileAddressRequestDto requestDto) {
 
     MessageResponseDto responseDto = userService.updateAddress(requestDto);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+  }
+
+  @PutMapping("/profile/phone/my")
+  public ResponseEntity<MessageResponseDto> updatePhoneNumber(@Valid @RequestBody
+  UpdateProfilePhoneNumberRequestDto requestDto) {
+
+    MessageResponseDto responseDto = userService.updatePhoneNumber(requestDto);
 
     return ResponseEntity.status(HttpStatus.OK).body(responseDto);
   }
