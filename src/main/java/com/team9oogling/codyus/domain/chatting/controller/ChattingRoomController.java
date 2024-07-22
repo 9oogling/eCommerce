@@ -35,6 +35,5 @@ public class ChattingRoomController {
 				SUCCESS_CREATE_CHATTINGROOMS.getMessage(),
 				responseDto
 			));
-
 	}
 }
