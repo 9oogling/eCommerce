@@ -10,10 +10,9 @@ import com.team9oogling.codyus.domain.user.entity.UserRole;
 import com.team9oogling.codyus.domain.user.entity.UserStatus;
 import com.team9oogling.codyus.domain.user.repository.UserRepository;
 import com.team9oogling.codyus.domain.user.security.UserDetailsImpl;
-import com.team9oogling.codyus.global.dto.MessageResponseDto;
 import com.team9oogling.codyus.global.entity.BlacklistedToken;
+import com.team9oogling.codyus.global.entity.StatusCode;
 import com.team9oogling.codyus.global.exception.CustomException;
-import com.team9oogling.codyus.global.exception.ErrorCode;
 import com.team9oogling.codyus.global.jwt.JwtProvider;
 import com.team9oogling.codyus.global.repository.BlacklistedTokenRepository;
 import io.jsonwebtoken.Claims;
@@ -25,8 +24,6 @@ import jakarta.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -58,34 +55,33 @@ public class UserService {
   }
 
   @Transactional
-  public MessageResponseDto signup(UserSignupRequestDto requestDto) {
+  public void signup(UserSignupRequestDto requestDto) {
 
     userRepository.findByemail(requestDto.getEmail()).ifPresent((existingUser) -> {
-      throw new CustomException(ErrorCode.ALREADY_EXIST_USER);
+      throw new CustomException(StatusCode.ALREADY_EXIST_USER);
     });
 
     User user = new User(requestDto, UserRole.USER, UserStatus.ACTIVE);
+
+    if (!requestDto.getPassword().equals(requestDto.getCheckPassword())) {
+      throw new CustomException(StatusCode.CHECK_PASSWORD);
+    }
 
     String encrytionPassword = passwordEncoder.encode(requestDto.getPassword());
     user.encryptionPassword(encrytionPassword);
 
     userRepository.save(user);
-
-    return new MessageResponseDto(201, "회원가입에 성공했습니다.");
   }
 
   @Transactional
-  public void logout() {
-    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
-
-    User user = userRepository.findByemail(userDetails.getUsername())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
-
+  public void logout(UserDetailsImpl userDetails) {
     String currentToken = jwtProvider.getAccessTokenFromHeader(request);
 
     // 현재 토큰 블랙리스트에 추가
     addToBlacklist(currentToken);
+
+    User user = userRepository.findByemail(userDetails.getUsername())
+        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
 
     userRepository.save(user);
 
@@ -99,25 +95,22 @@ public class UserService {
 
     // 리프레시 토큰이 존재하지 않거나 빈 문자열인 경우 예외를 발생시킵니다.
     if (!StringUtils.hasText(token)) {
-      throw new CustomException(ErrorCode.BAD_REQUEST);
+      throw new CustomException(StatusCode.BAD_REQUEST);
     }
 
     return validateToken(token);
   }
 
   @Transactional
-  public MessageResponseDto withdrawal(UserWithDrawalRequestDto requestDto) {
-
-    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
+  public void withdrawal(UserWithDrawalRequestDto requestDto, UserDetailsImpl userDetails) {
 
     User user = userRepository.findByemail(userDetails.getUsername())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
 
     checkPassword(requestDto.getPassword(), user.getPassword());
 
     if (user.getStatus() == UserStatus.INACTIVE) {
-      throw new CustomException(ErrorCode.ALREADY_INACTIVE_USER);
+      throw new CustomException(StatusCode.ALREADY_INACTIVE_USER);
     }
 
     user.updateStatus(UserStatus.INACTIVE);
@@ -130,67 +123,53 @@ public class UserService {
 
     // 현재 인증 정보 무효화
     SecurityContextHolder.clearContext();
-
-    return new MessageResponseDto(200, "회원탈퇴가 처리 중입니다. '탈퇴 신청일'로부터 30일이 경과되어야 완료됩니다.");
   }
 
   @Transactional
-  public MessageResponseDto updatePassword(UpdateProfilePasswordRequestDto requestDto) {
-
-    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
+  public void updatePassword(UpdateProfilePasswordRequestDto requestDto,
+      UserDetailsImpl userDetails) {
 
     User user = userRepository.findByemail(userDetails.getUsername())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
 
     checkPassword(requestDto.getPassword(), user.getPassword());
 
     if (requestDto.getNewPassword().equals(requestDto.getPassword())) {
-      throw new CustomException(ErrorCode.CANNOT_CHANGE_SAME_PASSWORD);
+      throw new CustomException(StatusCode.CANNOT_CHANGE_SAME_PASSWORD);
     }
 
     if (!requestDto.getNewPassword().equals(requestDto.getCheckPassword())) {
-      throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
+      throw new CustomException(StatusCode.NOT_MATCH_PASSWORD);
     }
 
     String encryptionPassword = passwordEncoder.encode(requestDto.getNewPassword());
     user.encryptionPassword(encryptionPassword);
 
     userRepository.save(user);
-
-    return new MessageResponseDto(200, "비밀번호 수정에 성공했습니다.");
   }
 
   @Transactional
-  public MessageResponseDto updateAddress(UpdateProfileAddressRequestDto requestDto) {
-
-    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
+  public void updateAddress(UpdateProfileAddressRequestDto requestDto,
+      UserDetailsImpl userDetails) {
 
     User user = userRepository.findByemail(userDetails.getUsername())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
 
     user.updateAddress(requestDto);
 
     userRepository.save(user);
-
-    return new MessageResponseDto(200, "주소 수정에 성공했습니다.");
   }
 
   @Transactional
-  public MessageResponseDto updatePhoneNumber(UpdateProfilePhoneNumberRequestDto requestDto) {
-
-    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
+  public void updatePhoneNumber(UpdateProfilePhoneNumberRequestDto requestDto,
+      UserDetailsImpl userDetails) {
 
     User user = userRepository.findByemail(userDetails.getUsername())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
 
     user.updatePhoneNumber(requestDto);
 
     userRepository.save(user);
-
-    return new MessageResponseDto(200, "휴대폰 번호 수정에 성공했습니다.");
   }
 
   private void addToBlacklist(String token) {
@@ -209,7 +188,7 @@ public class UserService {
     Cookie[] cookies = request.getCookies();
 
     if (cookies == null) {
-      throw new CustomException(ErrorCode.NOT_FOUND_COOKIE);
+      throw new CustomException(StatusCode.NOT_FOUND_COOKIE);
     }
 
     for (Cookie cookie : cookies) {
@@ -227,18 +206,18 @@ public class UserService {
 
       Claims info = jwtProvider.getClaimsFromToken(token);
       User user = userRepository.findByemail(info.getSubject())
-          .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+          .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
 
       if (!user.getRefreshToken().equals(token)) {
-        throw new CustomException(ErrorCode.INVALID_TOKEN);
+        throw new CustomException(StatusCode.INVALID_TOKEN);
       }
 
       return setHeaders(info, user);
 
     } catch (ExpiredJwtException e) {
-      throw new CustomException(ErrorCode.EXPIRED_TOKEN);
+      throw new CustomException(StatusCode.EXPIRED_TOKEN);
     } catch (JwtException e) {
-      throw new CustomException(ErrorCode.INVALID_TOKEN);
+      throw new CustomException(StatusCode.INVALID_TOKEN);
     }
   }
 
@@ -262,7 +241,7 @@ public class UserService {
 
   private void checkPassword(String inputPassword, String dbPassword) {
     if (!passwordEncoder.matches(inputPassword, dbPassword)) {
-      throw new CustomException(ErrorCode.CHECK_PASSWORD);
+      throw new CustomException(StatusCode.CHECK_PASSWORD);
     }
   }
 

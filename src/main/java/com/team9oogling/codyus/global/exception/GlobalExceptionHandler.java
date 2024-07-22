@@ -19,11 +19,11 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ExceptionResponseDto> handleInvalidPasswordException(
       HttpServletRequest request, CustomException e) {
     ExceptionResponseDto exceptionResponse = ExceptionResponseDto.builder()
-        .message(e.getErrorCode().getMessage())
+        .message(e.getStatusCode().getMessage())
         .path(request.getRequestURI())
         .build();
     return new ResponseEntity<>(exceptionResponse,
-        HttpStatusCode.valueOf(e.getErrorCode().getStatus()));
+        HttpStatusCode.valueOf(e.getStatusCode().getStatus()));
   }
 
   // 인증 후 유효성 검사를 하기 위한 예외 처리 설정

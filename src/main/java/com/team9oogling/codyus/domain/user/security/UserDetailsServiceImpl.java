@@ -3,7 +3,7 @@ package com.team9oogling.codyus.domain.user.security;
 import com.team9oogling.codyus.domain.user.entity.User;
 import com.team9oogling.codyus.domain.user.repository.UserRepository;
 import com.team9oogling.codyus.global.exception.CustomException;
-import com.team9oogling.codyus.global.exception.ErrorCode;
+import com.team9oogling.codyus.global.entity.StatusCode;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-    User user = userRepository.findByemail(email).orElseThrow( () -> new CustomException(ErrorCode.NOT_FOUND_USER));
+    User user = userRepository.findByemail(email).orElseThrow( () -> new CustomException(StatusCode.NOT_FOUND_USER));
 
     return new UserDetailsImpl(user);
   }

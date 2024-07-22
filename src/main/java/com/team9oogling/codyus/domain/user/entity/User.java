@@ -1,7 +1,6 @@
 package com.team9oogling.codyus.domain.user.entity;
 
 import com.team9oogling.codyus.domain.user.dto.UpdateProfileAddressRequestDto;
-import com.team9oogling.codyus.domain.user.dto.UpdateProfilePasswordRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UpdateProfilePhoneNumberRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserSignupRequestDto;
 import com.team9oogling.codyus.global.entity.Timestamped;
@@ -54,7 +53,8 @@ public class User extends Timestamped {
   @Column
   private Date inactivatedAt; // 비활성화된 시간
 
-  public User(UserSignupRequestDto requestDto, UserRole role, UserStatus status/*, UserOauth oauth*/) {
+  public User(UserSignupRequestDto requestDto, UserRole role,
+      UserStatus status/*, UserOauth oauth*/) {
     this.email = requestDto.getEmail();
     this.password = requestDto.getPassword();
     this.email = requestDto.getEmail();
