@@ -3,7 +3,9 @@ package com.team9oogling.codyus.domain.user.controller;
 import com.team9oogling.codyus.domain.user.dto.UserSignupRequestDto;
 import com.team9oogling.codyus.domain.user.service.UserService;
 import com.team9oogling.codyus.global.dto.MessageResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,5 +37,13 @@ public class UserController {
     userService.logout();
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
+
+  @PostMapping("/users/token/refresh")
+  public ResponseEntity<MessageResponseDto> refreshToken(HttpServletRequest request) {
+    HttpHeaders headers = userService.refreshToken(request);
+    MessageResponseDto responseDto = new MessageResponseDto(200, "토큰 재발급에 성공했습니다.");
+
+    return ResponseEntity.status(HttpStatus.OK).headers(headers).body(responseDto);
   }
 }
