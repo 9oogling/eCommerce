@@ -25,9 +25,10 @@ public enum StatusCode {
   CHECK_PASSWORD(400, "비밀번호를 확인해주세요."),
   ALREADY_INACTIVE_USER(400, "이미 탈퇴한 사용자입니다."),
   CANNOT_CHANGE_SAME_PASSWORD(400, "현재 비밀번호와 동일한 비밀번호로는 변경할 수 없습니다."),
-  NOT_MATCH_PASSWORD(400, "비밀번호가 일치하지 않습니다.");
+  NOT_MATCH_PASSWORD(400, "비밀번호가 일치하지 않습니다."),
 
-
+  // Chatting
+  ALREADY_CHATTINGROOMS_EXISTS(400, " 이미 채팅방이 존재합니다.");
   private final int status;
   private final String message;
 }
