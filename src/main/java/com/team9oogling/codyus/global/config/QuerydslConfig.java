@@ -1,4 +1,4 @@
-package com.team9oogling.codyus.domain.querydsl;
+package com.team9oogling.codyus.global.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

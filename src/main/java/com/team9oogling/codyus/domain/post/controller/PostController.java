@@ -1,12 +1,16 @@
 package com.team9oogling.codyus.domain.post.controller;
 
 
-import com.team9oogling.codyus.domain.post.dto.PostRequestDTO;
-import com.team9oogling.codyus.domain.post.dto.PostResponseDTO;
+import com.team9oogling.codyus.domain.post.dto.PostRequestDto;
+import com.team9oogling.codyus.domain.post.dto.PostResponseDto;
+import com.team9oogling.codyus.domain.post.entity.SearchType;
 import com.team9oogling.codyus.domain.post.service.PostService;
+import com.team9oogling.codyus.domain.user.security.UserDetailsImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,43 +23,53 @@ public class PostController {
 
     private final PostService postService;
 
+    //게시물 생성
     @PostMapping
-    public ResponseEntity<PostResponseDTO> createPost(@RequestBody PostRequestDTO postRequestDTO) {
-        PostResponseDTO postResponse = postService.createPost(postRequestDTO);
-        return new ResponseEntity<>(postResponse, HttpStatus.CREATED);
+    public ResponseEntity savePost(@Valid @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        String email = userDetails.getUsername(); //email을 username으로 사용
+        PostResponseDto postResponseDto = postService.savePost(requestDto, email);
+        return ResponseEntity.status(HttpStatus.CREATED).body(postResponseDto);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<PostResponseDTO> updatePost(@PathVariable Long id, @RequestBody PostRequestDTO postRequestDTO) {
-        PostResponseDTO postResponse = postService.updatePost(id, postRequestDTO);
-        return ResponseEntity.ok(postResponse);
+    //수정
+    @PutMapping("/{postId}")
+    public ResponseEntity updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDTO, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.status(HttpStatus.OK).body(postService.updatePost(postId, postRequestDTO, userDetails.getUser()));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
-        return ResponseEntity.noContent().build();
+    //삭제
+    @DeleteMapping("/{postId}")
+    public ResponseEntity deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.status(HttpStatus.OK).body(postService.deletePost(postId, userDetails.getUser()));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PostResponseDTO> getPostById(@PathVariable Long id) {
-        PostResponseDTO postResponse = postService.getPostById(id);
-        return ResponseEntity.ok(postResponse);
+    //게시물 전체조회
+    @GetMapping
+    public List<PostResponseDto> getAllPost(@RequestParam(value = "page", defaultValue = "0") int page,
+                                            @RequestParam(value = "size", defaultValue = "5") int size) {
+        return postService.findAllPost(page, size);
     }
 
+    // 게시물 선택 조회
+    @GetMapping("/{postId}")
+    public ResponseEntity getPost(@PathVariable Long postId) {
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getPost(postId));
+    }
 
+    @GetMapping("/my")
+    public List<PostResponseDto> getMyPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        String email = userDetails.getUsername();
+        return postService.findMyPosts(email);
+    }
+
+    // 게시물 검색
     @GetMapping("/search")
-    public ResponseEntity<List<PostResponseDTO>> searchPosts(@RequestParam String keyword) {
-        List<PostResponseDTO> posts = postService.searchPosts(keyword);
+    public ResponseEntity<List<PostResponseDto>> searchPosts(
+            @RequestParam SearchType type,
+            @RequestParam String value) {
+        List<PostResponseDto> posts = postService.searchPosts(type, value);
         return ResponseEntity.ok(posts);
     }
-
-    @GetMapping("/searchByHashtag")
-    public ResponseEntity<List<PostResponseDTO>> searchPostsByHashtag(@RequestParam String hashtag) {
-        List<PostResponseDTO> posts = postService.searchPostsByHashtag(hashtag);
-        return ResponseEntity.ok(posts);
-    }
-
 
 
 
