@@ -3,8 +3,10 @@ package com.team9oogling.codyus.domain.post.service;
 
 import com.team9oogling.codyus.domain.post.dto.PostRequestDto;
 import com.team9oogling.codyus.domain.post.dto.PostResponseDto;
+import com.team9oogling.codyus.domain.post.entity.Category;
 import com.team9oogling.codyus.domain.post.entity.Post;
 import com.team9oogling.codyus.domain.post.entity.SearchType;
+import com.team9oogling.codyus.domain.post.repository.CategoryRepository;
 import com.team9oogling.codyus.domain.post.repository.PostRepository;
 import com.team9oogling.codyus.domain.post.repository.PostRepositoryImpl;
 import com.team9oogling.codyus.domain.user.entity.User;
@@ -14,12 +16,11 @@ import com.team9oogling.codyus.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,16 +29,18 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PostRepositoryImpl postRepositoryImpl;
-    // private CategoryRepository categoryRepository;
+     private CategoryRepository categoryRepository;
 
 
     public PostResponseDto savePost(PostRequestDto requestDto, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()-> new CustomException(StatusCode.NOT_FOUND_USER));
 
+        Category category = categoryRepository.findByCategory(requestDto.getCategoryName())
+            .orElseThrow(()-> new CustomException(StatusCode.NOT_FOUND_CATEGORY));
 
         Post post = new Post(requestDto.getTitle(), requestDto.getContent(), requestDto.getPrice(),
-                requestDto.getStatus(), requestDto.getSaleType(), requestDto.getHashtags(), user);
+                requestDto.getStatus(), requestDto.getSaleType(), requestDto.getHashtags(), user, category);
         post = postRepository.save(post);
 
         return new PostResponseDto(post);
@@ -123,5 +126,14 @@ public class PostService {
         return posts.stream()
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void addCategoryIfNotExists(CategoryRepository categoryRepository, String categoryName) {
+        categoryRepository.findByCategory(categoryName).orElseGet(() -> {
+            Category category = new Category();
+            category.addCategory(categoryName);
+            return categoryRepository.save(category);
+        });
     }
 }

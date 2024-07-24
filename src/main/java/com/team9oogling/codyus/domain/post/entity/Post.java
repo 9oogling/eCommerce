@@ -19,9 +19,11 @@ public class Post extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /*@ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;*/
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostCategoryMatches> postCategoryMatches = new ArrayList<>();
+
+    @Column
+    private String category;
 
     private String title;
     private String content;
@@ -45,7 +47,7 @@ public class Post extends Timestamped {
 
 
 
-    public Post(String title, String content, Double price, PostStatus status, SaleType saleType, List<String> hashtags, User user) {
+    public Post(String title, String content, Double price, PostStatus status, SaleType saleType, List<String> hashtags, User user, Category category) {
         this.title = title;
         this.content = content;
         this.price = price;
@@ -53,6 +55,11 @@ public class Post extends Timestamped {
         this.saleType = saleType;
         this.hashtags = hashtags;
         this.user = user;
+        this.category = category.getCategory();
+
+        PostCategoryMatches postCategoryMatches = new PostCategoryMatches(this, category);
+        this.postCategoryMatches.add(postCategoryMatches);
+        category.getPostCategoryMatches().add(postCategoryMatches);
     }
 
 
