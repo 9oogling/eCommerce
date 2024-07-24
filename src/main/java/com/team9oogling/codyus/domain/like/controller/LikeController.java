@@ -1,7 +1,7 @@
 package com.team9oogling.codyus.domain.like.controller;
 
 import com.team9oogling.codyus.domain.like.service.LikeService;
-import com.team9oogling.codyus.domain.user.security.UserDetailsImpl;
+import com.team9oogling.codyus.global.security.UserDetailsImpl;
 import com.team9oogling.codyus.global.dto.MessageResponseDto;
 import com.team9oogling.codyus.global.entity.ResponseFactory;
 import com.team9oogling.codyus.global.entity.StatusCode;

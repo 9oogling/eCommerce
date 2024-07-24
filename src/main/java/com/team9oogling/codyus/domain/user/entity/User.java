@@ -61,7 +61,7 @@ public class User extends Timestamped {
     this.nickname = requestDto.getNickname();
     this.role = role;
     this.status = status;
-    // this.oauth = oauth;
+//     this.oauth = oauth;
   }
 
   public void encryptionPassword(String encryptionPassword) {

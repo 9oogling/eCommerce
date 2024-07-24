@@ -1,6 +1,5 @@
 package com.team9oogling.codyus.global.security;
 
-import com.team9oogling.codyus.domain.user.security.UserDetailsServiceImpl;
 import com.team9oogling.codyus.domain.user.service.UserService;
 import com.team9oogling.codyus.global.dto.SecurityResponse;
 import com.team9oogling.codyus.global.jwt.JwtProvider;

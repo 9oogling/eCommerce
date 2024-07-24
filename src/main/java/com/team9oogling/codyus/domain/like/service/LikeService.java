@@ -6,7 +6,7 @@ import com.team9oogling.codyus.domain.post.entity.Post;
 import com.team9oogling.codyus.domain.post.repository.PostRepository;
 import com.team9oogling.codyus.domain.user.entity.User;
 import com.team9oogling.codyus.domain.user.repository.UserRepository;
-import com.team9oogling.codyus.domain.user.security.UserDetailsImpl;
+import com.team9oogling.codyus.global.security.UserDetailsImpl;
 import com.team9oogling.codyus.global.entity.StatusCode;
 import com.team9oogling.codyus.global.exception.CustomException;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class LikeService {
         Post post = postRepository.findById(postId).orElseThrow(()
                 -> new CustomException(StatusCode.NOT_FOUND_POST));
 
-        User user = userRepository.findByemail(userDetails.getUsername()).orElseThrow(()
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(()
                 -> new CustomException(StatusCode.NOT_FOUND_USER));
 
         if (post.getUserId().equals(user.getId())) {

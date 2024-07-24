@@ -1,7 +1,7 @@
 package com.team9oogling.codyus.global.config;
 
 import com.team9oogling.codyus.domain.user.repository.UserRepository;
-import com.team9oogling.codyus.domain.user.security.UserDetailsServiceImpl;
+import com.team9oogling.codyus.global.security.UserDetailsServiceImpl;
 import com.team9oogling.codyus.domain.user.service.UserService;
 import com.team9oogling.codyus.global.dto.SecurityResponse;
 import com.team9oogling.codyus.global.jwt.JwtProvider;
@@ -78,7 +78,7 @@ public class SecurityConfig {
             .requestMatchers("/api/users/signup", "/api/users/token/refresh", "/api/users/login")
             .permitAll()
             .requestMatchers(HttpMethod.GET, "/api/users/login/kakao", "/api/users/kakao/callback",
-                "/api/users/login/naver", "/api/users/naver/callback").permitAll()
+                "/api/users/login/naver", "/api/users/naver/callback", "/api/posts").permitAll()
             .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
             .anyRequest().authenticated())
         .exceptionHandling((exceptionHandling) -> {

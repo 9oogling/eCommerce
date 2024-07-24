@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomCreateResponseDto;
 import com.team9oogling.codyus.domain.chatting.service.ChattingRoomService;
-import com.team9oogling.codyus.domain.user.security.UserDetailsImpl;
+import com.team9oogling.codyus.global.security.UserDetailsImpl;
 import com.team9oogling.codyus.global.dto.DataResponseDto;
 
 import lombok.RequiredArgsConstructor;

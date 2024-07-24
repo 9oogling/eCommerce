@@ -1,4 +1,4 @@
-package com.team9oogling.codyus.domain.user.security;
+package com.team9oogling.codyus.global.security;
 
 import com.team9oogling.codyus.domain.user.entity.User;
 import com.team9oogling.codyus.domain.user.entity.UserRole;
