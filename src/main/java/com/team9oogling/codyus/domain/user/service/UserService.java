@@ -9,7 +9,7 @@ import com.team9oogling.codyus.domain.user.entity.User;
 import com.team9oogling.codyus.domain.user.entity.UserRole;
 import com.team9oogling.codyus.domain.user.entity.UserStatus;
 import com.team9oogling.codyus.domain.user.repository.UserRepository;
-import com.team9oogling.codyus.domain.user.security.UserDetailsImpl;
+import com.team9oogling.codyus.global.security.UserDetailsImpl;
 import com.team9oogling.codyus.global.entity.BlacklistedToken;
 import com.team9oogling.codyus.global.entity.StatusCode;
 import com.team9oogling.codyus.global.exception.CustomException;
@@ -57,7 +57,7 @@ public class UserService {
   @Transactional
   public void signup(UserSignupRequestDto requestDto) {
 
-    userRepository.findByemail(requestDto.getEmail()).ifPresent((existingUser) -> {
+    userRepository.findByEmail(requestDto.getEmail()).ifPresent((existingUser) -> {
       throw new CustomException(StatusCode.ALREADY_EXIST_USER);
     });
 
@@ -80,7 +80,7 @@ public class UserService {
     // 현재 토큰 블랙리스트에 추가
     addToBlacklist(currentToken);
 
-    User user = userRepository.findByemail(userDetails.getUsername())
+    User user = userRepository.findByEmail(userDetails.getUsername())
         .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
 
     userRepository.save(user);
@@ -104,7 +104,7 @@ public class UserService {
   @Transactional
   public void withdrawal(UserWithDrawalRequestDto requestDto, UserDetailsImpl userDetails) {
 
-    User user = userRepository.findByemail(userDetails.getUsername())
+    User user = userRepository.findByEmail(userDetails.getUsername())
         .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
 
     checkPassword(requestDto.getPassword(), user.getPassword());
@@ -129,7 +129,7 @@ public class UserService {
   public void updatePassword(UpdateProfilePasswordRequestDto requestDto,
       UserDetailsImpl userDetails) {
 
-    User user = userRepository.findByemail(userDetails.getUsername())
+    User user = userRepository.findByEmail(userDetails.getUsername())
         .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
 
     checkPassword(requestDto.getPassword(), user.getPassword());
@@ -152,7 +152,7 @@ public class UserService {
   public void updateAddress(UpdateProfileAddressRequestDto requestDto,
       UserDetailsImpl userDetails) {
 
-    User user = userRepository.findByemail(userDetails.getUsername())
+    User user = userRepository.findByEmail(userDetails.getUsername())
         .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
 
     user.updateAddress(requestDto);
@@ -164,7 +164,7 @@ public class UserService {
   public void updatePhoneNumber(UpdateProfilePhoneNumberRequestDto requestDto,
       UserDetailsImpl userDetails) {
 
-    User user = userRepository.findByemail(userDetails.getUsername())
+    User user = userRepository.findByEmail(userDetails.getUsername())
         .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
 
     user.updatePhoneNumber(requestDto);
@@ -205,7 +205,7 @@ public class UserService {
     try {
 
       Claims info = jwtProvider.getClaimsFromToken(token);
-      User user = userRepository.findByemail(info.getSubject())
+      User user = userRepository.findByEmail(info.getSubject())
           .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
 
       if (!user.getRefreshToken().equals(token)) {

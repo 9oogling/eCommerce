@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<!-- kakao button -->
+<div class="text-center">
+  <a href="https://kauth.kakao.com/oauth/authorize"
+     th:href="@{https://kauth.kakao.com/oauth/authorize(client_id=${2a8bb218fc28dc7c54e61faf0de6060c}, redirect_uri=${http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fusers%2Flogin%2Fkakao}, response_type='code')}">
+    <img src="/images/kakao_login_medium_narrow.png">
+  </a>
+</div>
+</body>
+</html>

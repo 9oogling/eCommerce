@@ -5,7 +5,7 @@ import com.team9oogling.codyus.domain.user.dto.UpdateProfilePasswordRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UpdateProfilePhoneNumberRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserSignupRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserWithDrawalRequestDto;
-import com.team9oogling.codyus.domain.user.security.UserDetailsImpl;
+import com.team9oogling.codyus.global.security.UserDetailsImpl;
 import com.team9oogling.codyus.domain.user.service.UserService;
 import com.team9oogling.codyus.global.dto.MessageResponseDto;
 import com.team9oogling.codyus.global.entity.ResponseFactory;

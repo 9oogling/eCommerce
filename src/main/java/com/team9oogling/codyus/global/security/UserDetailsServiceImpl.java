@@ -1,4 +1,4 @@
-package com.team9oogling.codyus.domain.user.security;
+package com.team9oogling.codyus.global.security;
 
 import com.team9oogling.codyus.domain.user.entity.User;
 import com.team9oogling.codyus.domain.user.repository.UserRepository;
@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-    User user = userRepository.findByemail(email).orElseThrow( () -> new CustomException(StatusCode.NOT_FOUND_USER));
+    User user = userRepository.findByEmail(email).orElseThrow( () -> new CustomException(StatusCode.NOT_FOUND_USER));
 
     return new UserDetailsImpl(user);
   }

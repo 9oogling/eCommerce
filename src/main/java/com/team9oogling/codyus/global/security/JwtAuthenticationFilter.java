@@ -5,7 +5,6 @@ import com.team9oogling.codyus.domain.user.dto.UserLoginRequestDto;
 import com.team9oogling.codyus.domain.user.entity.User;
 import com.team9oogling.codyus.domain.user.entity.UserRole;
 import com.team9oogling.codyus.domain.user.repository.UserRepository;
-import com.team9oogling.codyus.domain.user.security.UserDetailsImpl;
 import com.team9oogling.codyus.global.dto.SecurityResponse;
 import com.team9oogling.codyus.global.jwt.JwtProvider;
 import jakarta.servlet.FilterChain;
@@ -73,7 +72,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
     String userId = userDetails.getUsername();
 
-    Optional<User> optionalUser = userRepository.findByemail(userId);
+    Optional<User> optionalUser = userRepository.findByEmail(userId);
 
     if (optionalUser.isEmpty()) {
       securityResponse.sendResponse(response, HttpStatus.BAD_REQUEST, "아이디, 비밀번호를 확인해주세요.");

@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
         .path(request.getRequestURI())
         .build();
     return new ResponseEntity<>(exceptionResponse,
-        HttpStatusCode.valueOf(e.getStatusCode().getStatus()));
+        HttpStatusCode.valueOf(e.getStatusCode().getStatus().value()));
   }
 
   // 인증 후 유효성 검사를 하기 위한 예외 처리 설정
