@@ -80,8 +80,7 @@ public class UserService {
     // 현재 토큰 블랙리스트에 추가
     addToBlacklist(currentToken);
 
-    User user = userRepository.findByEmail(userDetails.getUsername())
-        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
+    User user = userDetails.getUser();
 
     userRepository.save(user);
 
@@ -104,8 +103,7 @@ public class UserService {
   @Transactional
   public void withdrawal(UserWithDrawalRequestDto requestDto, UserDetailsImpl userDetails) {
 
-    User user = userRepository.findByEmail(userDetails.getUsername())
-        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
+    User user = userDetails.getUser();
 
     checkPassword(requestDto.getPassword(), user.getPassword());
 
@@ -129,8 +127,7 @@ public class UserService {
   public void updatePassword(UpdateProfilePasswordRequestDto requestDto,
       UserDetailsImpl userDetails) {
 
-    User user = userRepository.findByEmail(userDetails.getUsername())
-        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
+    User user = userDetails.getUser();
 
     checkPassword(requestDto.getPassword(), user.getPassword());
 
@@ -152,9 +149,7 @@ public class UserService {
   public void updateAddress(UpdateProfileAddressRequestDto requestDto,
       UserDetailsImpl userDetails) {
 
-    User user = userRepository.findByEmail(userDetails.getUsername())
-        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
-
+    User user = userDetails.getUser();
     user.updateAddress(requestDto);
 
     userRepository.save(user);
@@ -164,9 +159,7 @@ public class UserService {
   public void updatePhoneNumber(UpdateProfilePhoneNumberRequestDto requestDto,
       UserDetailsImpl userDetails) {
 
-    User user = userRepository.findByEmail(userDetails.getUsername())
-        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
-
+    User user = userDetails.getUser();
     user.updatePhoneNumber(requestDto);
 
     userRepository.save(user);
