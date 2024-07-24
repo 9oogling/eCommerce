@@ -25,4 +25,12 @@ public class LikeController {
 
         return ResponseFactory.created(StatusCode.SUCCESS_ADD_LIKE);
     }
+
+    @DeleteMapping("/{postId}/likes")
+    public ResponseEntity<MessageResponseDto> unLike(@PathVariable Long postId,
+                                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        likeService.unLike(postId, userDetails);
+
+        return ResponseFactory.ok(StatusCode.SUCCESS_DELETE_LIKE);
+    }
 }
