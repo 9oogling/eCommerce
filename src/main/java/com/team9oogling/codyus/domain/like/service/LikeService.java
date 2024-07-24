@@ -26,6 +26,7 @@ public class LikeService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public void addLike(Long postId, UserDetailsImpl userDetails) {
         Post post = postRepository.findById(postId).orElseThrow(()
                 -> new CustomException(StatusCode.NOT_FOUND_POST));
