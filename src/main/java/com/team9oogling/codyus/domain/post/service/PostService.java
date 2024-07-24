@@ -1,94 +1,127 @@
 package com.team9oogling.codyus.domain.post.service;
 
 
-import com.team9oogling.codyus.domain.post.dto.PostRequestDTO;
-import com.team9oogling.codyus.domain.post.dto.PostResponseDTO;
+import com.team9oogling.codyus.domain.post.dto.PostRequestDto;
+import com.team9oogling.codyus.domain.post.dto.PostResponseDto;
 import com.team9oogling.codyus.domain.post.entity.Post;
+import com.team9oogling.codyus.domain.post.entity.SearchType;
 import com.team9oogling.codyus.domain.post.repository.PostRepository;
+import com.team9oogling.codyus.domain.post.repository.PostRepositoryImpl;
+import com.team9oogling.codyus.domain.user.entity.User;
+import com.team9oogling.codyus.domain.user.repository.UserRepository;
+import com.team9oogling.codyus.global.entity.StatusCode;
+import com.team9oogling.codyus.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
+    private final PostRepositoryImpl postRepositoryImpl;
+    // private CategoryRepository categoryRepository;
 
-    public PostResponseDTO createPost(PostRequestDTO postRequestDTO) {
-        Post post = new Post();
-        post.setUserId(postRequestDTO.getUserId());
-        post.setCategoryId(postRequestDTO.getCategoryId());
-        post.setTitle(postRequestDTO.getTitle());
-        post.setContent(postRequestDTO.getContent());
-        post.setStatus(postRequestDTO.getStatus());
-        post.setPrice(postRequestDTO.getPrice());
-        post.setHashtags(postRequestDTO.getHashtags());
-        post.setCreatedAt(LocalDateTime.now());
-        post.setUpdatedAt(LocalDateTime.now());
 
-        Post savedPost = postRepository.save(post);
+    public PostResponseDto savePost(PostRequestDto requestDto, String email) {
+        User user = userRepository.findByemail(email)
+                .orElseThrow(()-> new CustomException(StatusCode.NOT_FOUND_USER));
 
-        return convertToDTO(savedPost);
-    }
 
-    public PostResponseDTO updatePost(Long id, PostRequestDTO postRequestDTO) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
-        post.setUserId(postRequestDTO.getUserId());
-        post.setCategoryId(postRequestDTO.getCategoryId());
-        post.setTitle(postRequestDTO.getTitle());
-        post.setContent(postRequestDTO.getContent());
-        post.setStatus(postRequestDTO.getStatus());
-        post.setPrice(postRequestDTO.getPrice());
-        post.setHashtags(postRequestDTO.getHashtags());
-        post.setUpdatedAt(LocalDateTime.now());
+        Post post = new Post(requestDto.getTitle(), requestDto.getContent(), requestDto.getPrice(),
+                requestDto.getStatus(), requestDto.getSaleType(), requestDto.getHashtags(), user);
+        post = postRepository.save(post);
 
-        Post updatedPost = postRepository.save(post);
-
-        return convertToDTO(updatedPost);
-    }
-
-    public void deletePost(Long id) {
-        postRepository.deleteById(id);
-    }
-
-    public PostResponseDTO getPostById(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
-        return convertToDTO(post);
+        return new PostResponseDto(post);
     }
 
 
+    public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) {
+        Post post = findById(postId);
+        checkUserSame(post, user);
+        post.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getPrice(),
+                requestDto.getStatus(), requestDto.getSaleType(), requestDto.getHashtags(), user);
 
-    public List<PostResponseDTO> searchPosts(String keyword) {
-        List<Post> posts = postRepository.findPostsByTitleOrContent(keyword);
-        return posts.stream().map(this::convertToDTO).collect(Collectors.toList());
+        return new PostResponseDto(post);
     }
 
-    public List<PostResponseDTO> searchPostsByHashtag(String hashtag) {
-        List<Post> posts = postRepository.findPostsByHashtag(hashtag);
-        return posts.stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
+    public String deletePost(Long postId, User user) {
+        Post post = findById(postId);
+        checkUserSame(post, user);
+        postRepository.delete(post);
 
-    private PostResponseDTO convertToDTO(Post post) {
-        PostResponseDTO dto = new PostResponseDTO();
-        dto.setId(post.getId());
-        dto.setUserId(post.getUserId());
-        dto.setCategoryId(post.getCategoryId());
-        dto.setTitle(post.getTitle());
-        dto.setContent(post.getContent());
-        dto.setStatus(post.getStatus());
-        dto.setPrice(post.getPrice());
-        dto.setCreatedAt(post.getCreatedAt());
-        dto.setUpdatedAt(post.getUpdatedAt());
-        dto.setHashtags(post.getHashtags());
-        return dto;
+        return postId + "번 게시물이 삭제 되었습니다.";
     }
 
 
+    public List<PostResponseDto> findAllPost(int page, int size) {
+        Page<Post> postsPage = postRepository.findAll(PageRequest.of(page, size));
+        return postsPage.stream()
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public long countAllPosts() {
+        return postRepository.count();
+    }
+
+    public PostResponseDto getPost(Long postId) {
+        Post post = findById(postId);
+        
+        return new PostResponseDto(post);
+    }
+    
+
+    public Post findById(Long postId){
+        return postRepository.findById(postId).orElseThrow(
+                ()-> new CustomException(StatusCode.NOT_FOUND_POST));
+    }
+
+    private void checkUserSame(Post post, User user) {
+        if(!post.getUser().getId().equals(user.getId())){
+            throw new CustomException(StatusCode.UNAUTHORIZED);
+        }
+    }
 
 
+    public List<PostResponseDto> searchPosts(SearchType type, String value) {
+        List<Post> posts;
+
+        switch (type) {
+            case TITLE:
+                posts = postRepository.findByTitle(value);
+                break;
+            case CONTENT:
+                posts = postRepository.findByTitleOrContent(value);
+                break;
+            case HASHTAG:
+                posts = postRepository.findByHashTag(value);
+                break;
+            default:
+                throw new CustomException(StatusCode.NOT_FOUND_POST);
+        }
+
+        // Post 엔티티를 PostResponseDto로 변환
+        return posts.stream()
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<PostResponseDto> findMyPosts(String email) {
+        User user = userRepository.findByemail(email)
+                .orElseThrow(()-> new CustomException(StatusCode.NOT_FOUND_USER));
+
+        List<Post> posts = postRepository.findByUser(user);
+        return posts.stream()
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
+    }
 }

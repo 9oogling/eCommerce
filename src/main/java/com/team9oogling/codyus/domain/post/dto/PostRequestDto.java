@@ -1,6 +1,8 @@
 package com.team9oogling.codyus.domain.post.dto;
 
 
+import com.team9oogling.codyus.domain.post.entity.PostStatus;
+import com.team9oogling.codyus.domain.post.entity.SaleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,13 +10,16 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class PostRequestDTO {
+public class PostRequestDto {
 
-    private Long userId;
-    private Long categoryId;
     private String title;
     private String content;
-    private String status;
+    private PostStatus status;
     private Double price;
+
+    private SaleType saleType;
+
     private List<String> hashtags;
+
+    //여기에 이미지 업로드 추가
 }
