@@ -9,6 +9,7 @@ import com.team9oogling.codyus.domain.user.repository.UserRepository;
 import com.team9oogling.codyus.domain.user.security.UserDetailsImpl;
 import com.team9oogling.codyus.global.entity.StatusCode;
 import com.team9oogling.codyus.global.exception.CustomException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class LikeService {
         User user = userRepository.findByemail(userDetails.getUsername()).orElseThrow(()
                 -> new CustomException(StatusCode.NOT_FOUND_USER));
 
-        if (post.getUserId().equals(user.getId())) {
+        if (post.getUser().equals(user)) {
             throw new CustomException(StatusCode.CANNOT_LIKE_YOURS);
         }
         Optional<Like> checkLike = likeRepository.findByPostIdAndUserId(postId, user.getId());
@@ -44,5 +45,16 @@ public class LikeService {
 
             likeRepository.save(like);
         }
+    }
+
+    @Transactional
+    public void unLike(Long postId, UserDetailsImpl userDetails) {
+        User user = userRepository.findByemail(userDetails.getUsername()).orElseThrow(()
+                -> new CustomException(StatusCode.NOT_FOUND_USER));
+
+        Like checkLike = likeRepository.findByPostIdAndUserId(postId, user.getId()).orElseThrow(()
+                -> new CustomException(StatusCode.NOT_FOUND_LIKE));
+
+        likeRepository.delete(checkLike);
     }
 }
