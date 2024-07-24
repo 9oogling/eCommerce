@@ -32,7 +32,7 @@ public class PostService {
 
 
     public PostResponseDto savePost(PostRequestDto requestDto, String email) {
-        User user = userRepository.findByemail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(()-> new CustomException(StatusCode.NOT_FOUND_USER));
 
 
@@ -116,7 +116,7 @@ public class PostService {
     }
 
     public List<PostResponseDto> findMyPosts(String email) {
-        User user = userRepository.findByemail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(()-> new CustomException(StatusCode.NOT_FOUND_USER));
 
         List<Post> posts = postRepository.findByUser(user);

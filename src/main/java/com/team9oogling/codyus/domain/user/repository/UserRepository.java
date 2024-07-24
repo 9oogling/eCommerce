@@ -13,6 +13,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   // 비활성화 된 사용자 조회
   List<User> findByStatusAndInactivatedAtBefore(UserStatus status, Date date);
-
-  Optional<User> findByUser(User user);
 }

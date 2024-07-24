@@ -245,9 +245,4 @@ public class UserService {
     }
   }
 
-  public User findByUser(User user) {
-    return userRepository.findByUser(user)
-        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
-  }
-
 }

@@ -50,7 +50,7 @@ public class LikeService {
 
     @Transactional
     public void unLike(Long postId, UserDetailsImpl userDetails) {
-        User user = userRepository.findByemail(userDetails.getUsername()).orElseThrow(()
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(()
                 -> new CustomException(StatusCode.NOT_FOUND_USER));
 
         Like checkLike = likeRepository.findByPostIdAndUserId(postId, user.getId()).orElseThrow(()
