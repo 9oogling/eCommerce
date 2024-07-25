@@ -24,6 +24,8 @@ public class CategoryInitializer {
       postService.addCategoryIfNotExists(categoryRepository, "MAN");
       postService.addCategoryIfNotExists(categoryRepository, "WOMAN");
       postService.addCategoryIfNotExists(categoryRepository, "SEASON");
+
+      // 분류 카테고리
       postService.addCategoryIfNotExists(categoryRepository, "TOPS");
       postService.addCategoryIfNotExists(categoryRepository, "BOTTOMS");
       postService.addCategoryIfNotExists(categoryRepository, "DRESS");
