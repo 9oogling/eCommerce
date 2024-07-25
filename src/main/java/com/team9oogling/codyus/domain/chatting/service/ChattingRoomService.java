@@ -2,18 +2,21 @@ package com.team9oogling.codyus.domain.chatting.service;
 
 import static com.team9oogling.codyus.global.entity.StatusCode.*;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomCreateResponseDto;
+import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomResponseDto;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingMember;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingRoom;
 import com.team9oogling.codyus.domain.chatting.entity.MessageOffset;
 import com.team9oogling.codyus.domain.chatting.repository.ChattingMemberRepository;
 import com.team9oogling.codyus.domain.chatting.repository.ChattingRoomRepository;
 import com.team9oogling.codyus.domain.chatting.repository.MessageOffsetRepository;
+import com.team9oogling.codyus.domain.chatting.repository.MessageRepositoryCustomImpl;
 import com.team9oogling.codyus.domain.post.entity.Post;
 import com.team9oogling.codyus.domain.post.service.PostService;
 import com.team9oogling.codyus.domain.user.entity.User;
@@ -31,7 +34,9 @@ public class ChattingRoomService {
 	private final ChattingRoomRepository chattingRoomRepository;
 	private final ChattingMemberRepository chattingMemberRepository;
 	private final MessageOffsetRepository messageOffsetRepository;
+	private final MessageRepositoryCustomImpl messageRepositoryCustom;
 
+	private final MessageService messageService;
 	private final PostService postService;
 
 	@Transactional
@@ -47,8 +52,12 @@ public class ChattingRoomService {
 		ChattingRoom chattingRoom = new ChattingRoom(post);
 		chattingRoomRepository.save(chattingRoom);
 		ChattingMember chattingMember = new ChattingMember(user, chattingRoom);
-		chattingMemberRepository.save(chattingMember);
+		ChattingMember chattingPostMember = new ChattingMember(post.getUser(), chattingRoom);
 		chattingRoom.addMember(chattingMember);
+		chattingRoom.addMember(chattingPostMember);
+		chattingMemberRepository.save(chattingMember);
+		chattingMemberRepository.save(chattingPostMember);
+
 		MessageOffset messageOffset = new MessageOffset(user, chattingRoom);
 		MessageOffset messageOffsetPostUser = new MessageOffset(post.getUser(), chattingRoom);
 		messageOffsetRepository.save(messageOffset);
@@ -67,9 +76,20 @@ public class ChattingRoomService {
 		}
 	}
 
-	public ChattingRoom ChattingRoomFindById(Long ChattingRoomId) {
-		return chattingRoomRepository.findById(ChattingRoomId).orElseThrow(
-			() -> new CustomException(NOT_FOUND_CHATTINGROOMS)
-		);
+	@Transactional(readOnly = true)
+	public List<ChattingRoomResponseDto> chattingRoomList(UserDetailsImpl userDetails) {
+		User user = userDetails.getUser();
+		List<ChattingMember> chattingMemberList = chattingMemberRepository.findByUser(user);
+
+		return chattingMemberList.stream()
+			.map(messageRepositoryCustom::findTopMessage)
+			.map(responseDto -> {
+				MessageOffset messageOffset = messageService.messageOffsetFindById(responseDto.getChattingRoomId(),
+					user.getId());
+				Integer unReadCount = messageService.unReadCount(responseDto.getChattingMember(),
+					messageOffset.getLastReadMessageId());
+				return new ChattingRoomResponseDto(responseDto, unReadCount);
+			})
+			.toList();
 	}
 }

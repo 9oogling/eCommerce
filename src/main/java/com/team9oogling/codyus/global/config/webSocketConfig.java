@@ -1,4 +1,4 @@
-package com.team9oogling.codyus.domain.chatting.config;
+package com.team9oogling.codyus.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
