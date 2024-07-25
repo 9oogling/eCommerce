@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomCreateResponseDto;
 import com.team9oogling.codyus.domain.chatting.service.ChattingRoomService;
-import com.team9oogling.codyus.global.security.UserDetailsImpl;
 import com.team9oogling.codyus.global.dto.DataResponseDto;
+import com.team9oogling.codyus.global.entity.ResponseFactory;
+import com.team9oogling.codyus.global.security.UserDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,15 +26,9 @@ public class ChattingRoomController {
 
 	@PostMapping("/post/{postId}/chattingrooms")
 	public ResponseEntity<DataResponseDto<ChattingRoomCreateResponseDto>> createChattingRoom(@PathVariable Long postId,
-		@AuthenticationPrincipal
-		UserDetailsImpl userDetails) {
-		ChattingRoomCreateResponseDto responseDto = chattingRoomService.createChattingRoom(postId,
-			userDetails.getUser());
-		return ResponseEntity.ok(
-			new DataResponseDto<>(
-				SUCCESS_CREATE_CHATTINGROOMS.getStatus(),
-				SUCCESS_CREATE_CHATTINGROOMS.getMessage(),
-				responseDto
-			));
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		ChattingRoomCreateResponseDto responseDto = chattingRoomService.createChattingRoom(postId, userDetails);
+		return ResponseFactory.ok(responseDto, SUCCESS_CREATE_CHATTINGROOMS);
+
 	}
 }
