@@ -48,7 +48,7 @@ public class MessageService {
 		ChattingMember member = chattingMemberRepository.findByChattingRoom(chattingRoom);
 
 		// 4. 메시지 처리
-		Message message = new Message(member, requestDto);
+		Message message = new Message(user, member, requestDto);
 		messageRepository.save(message);
 		// 생성되있으면 업데이트!!
 		updateMessageOffset(message, user, requestDto);
