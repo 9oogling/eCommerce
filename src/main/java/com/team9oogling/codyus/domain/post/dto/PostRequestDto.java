@@ -5,6 +5,8 @@ import com.team9oogling.codyus.domain.post.entity.Category;
 import com.team9oogling.codyus.domain.post.entity.PostStatus;
 import com.team9oogling.codyus.domain.post.entity.SaleType;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,11 +16,13 @@ import java.util.List;
 @AllArgsConstructor
 public class PostRequestDto {
 
+    @NotBlank
     private String title;
+    @NotBlank
     private String content;
-    private PostStatus status;
-    private Double price;
-
+    @NotNull
+    private int price;
+    @NotNull
     private SaleType saleType;
 
     private List<String> hashtags;
