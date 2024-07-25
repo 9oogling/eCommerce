@@ -19,6 +19,7 @@ public class Post extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostCategoryMatches> postCategoryMatches = new ArrayList<>();
 
@@ -29,12 +30,12 @@ public class Post extends Timestamped {
     private String content;
 
     @Enumerated(EnumType.STRING)
-    private PostStatus status;
+    private PostStatus status = PostStatus.INPROGRESS;
 
     @Enumerated(EnumType.STRING)
     private SaleType saleType;
 
-    private Double price;
+    private int price;
 
     @ElementCollection
     @CollectionTable(name = "post_hashtags", joinColumns = @JoinColumn(name = "post_id"))
@@ -47,7 +48,7 @@ public class Post extends Timestamped {
 
 
 
-    public Post(String title, String content, Double price, PostStatus status, SaleType saleType, List<String> hashtags, User user, Category category) {
+    public Post(String title, String content, int price, SaleType saleType, List<String> hashtags, User user, Category category) {
         this.title = title;
         this.content = content;
         this.price = price;
@@ -63,11 +64,10 @@ public class Post extends Timestamped {
     }
 
 
-    public void update(String title, String content, Double price, PostStatus status, SaleType saleType, List<String> hashtags, User user) {
+    public void update(String title, String content, int price, SaleType saleType, List<String> hashtags, User user) {
         this.title = title;
         this.content = content;
         this.price = price;
-        this.status = status;
         this.saleType = saleType;
         this.hashtags = hashtags;
         this.user = user;
