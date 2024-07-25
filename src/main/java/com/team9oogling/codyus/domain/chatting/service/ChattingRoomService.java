@@ -39,7 +39,7 @@ public class ChattingRoomService {
 		User user = userDetails.getUser();
 		Post post = postService.findById(postId);
 
-		if(Objects.equals(post.getUser().getId(), user.getId())) {
+		if (Objects.equals(post.getUser().getId(), user.getId())) {
 			throw new CustomException(SAME_USERID_POST_USERID);
 		}
 		ChattingRoomPostAndUser(postId, user);

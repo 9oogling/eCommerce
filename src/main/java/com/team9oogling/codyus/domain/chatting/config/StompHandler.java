@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.team9oogling.codyus.global.jwt.JwtProvider;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +28,7 @@ public class StompHandler implements ChannelInterceptor {
 			try {
 				// Authorization 헤더에서 Bearer 토큰을 추출
 				String token = accessor.getFirstNativeHeader("Authorization");
-				if(token != null && token.startsWith("Bearer ")) {
+				if (token != null && token.startsWith("Bearer ")) {
 					log.info("Token => {}", token);
 
 					token = token.substring(7); // 'Bearer ' 제거

@@ -29,7 +29,7 @@ public class Message extends Timestamped {
 
 	private String message;
 
-	public Message(User user, ChattingMember member,ChattingMessageRequestDto requestDto) {
+	public Message(User user, ChattingMember member, ChattingMessageRequestDto requestDto) {
 		this.user = user;
 		this.chattingMember = member;
 		this.message = requestDto.getMessage();
