@@ -29,8 +29,8 @@ public class Message extends Timestamped {
 
 	private String message;
 
-	public Message(ChattingMember member, ChattingMessageRequestDto requestDto) {
-		user = member.getUser();
+	public Message(User user, ChattingMember member,ChattingMessageRequestDto requestDto) {
+		this.user = user;
 		this.chattingMember = member;
 		this.message = requestDto.getMessage();
 	}
