@@ -77,8 +77,8 @@ public class SecurityConfig {
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             .requestMatchers("/api/users/signup", "/api/users/token/refresh", "/api/users/login")
             .permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/users/login/kakao", "/api/users/kakao/callback",
-                "/api/users/login/naver", "/api/users/naver/callback", "/api/posts").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/user/kakao/callback", "/api/users/kakao/callback",
+                "/api/users/login/naver", "/api/users/naver/callback", "/api/posts", "/login-page", "/home").permitAll()
             .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
             .anyRequest().authenticated())
         .exceptionHandling((exceptionHandling) -> {
