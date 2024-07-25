@@ -75,8 +75,7 @@ public class SecurityConfig {
             SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            .requestMatchers("/api/users/signup", "/api/users/token/refresh", "/api/users/login")
-            .permitAll()
+            .requestMatchers("/chatting/**","chat.html","login.html","/api/users/signup", "/api/users/token/refresh", "/api/users/login").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/user/kakao/callback", "/api/users/kakao/callback",
                 "/api/users/login/naver", "/api/users/naver/callback", "/api/posts", "/login-page", "/home").permitAll()
             .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
@@ -89,5 +88,4 @@ public class SecurityConfig {
 
     return http.build();
   }
-
 }

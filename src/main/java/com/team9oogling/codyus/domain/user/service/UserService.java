@@ -238,4 +238,8 @@ public class UserService {
     }
   }
 
+  public User findByToken(String token) {
+    String email = jwtProvider.getClaimsFromToken(token).getSubject();
+    return userRepository.findByEmail(email).orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
+  }
 }

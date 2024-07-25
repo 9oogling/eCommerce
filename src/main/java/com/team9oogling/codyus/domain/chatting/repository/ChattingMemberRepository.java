@@ -8,4 +8,6 @@ import com.team9oogling.codyus.domain.user.entity.User;
 
 public interface ChattingMemberRepository extends JpaRepository<ChattingMember, Long> {
 	boolean existsByChattingRoomAndUser(ChattingRoom room, User user);
+
+	ChattingMember findByChattingRoom(ChattingRoom room);
 }

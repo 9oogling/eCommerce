@@ -3,9 +3,7 @@ package com.team9oogling.codyus.domain.chatting.entity;
 import com.team9oogling.codyus.domain.user.entity.User;
 import com.team9oogling.codyus.global.entity.Timestamped;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class ChattingMember extends Timestamped {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY )
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne
