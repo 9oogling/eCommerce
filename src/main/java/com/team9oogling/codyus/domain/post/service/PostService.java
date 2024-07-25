@@ -13,6 +13,7 @@ import com.team9oogling.codyus.domain.user.entity.User;
 import com.team9oogling.codyus.domain.user.repository.UserRepository;
 import com.team9oogling.codyus.global.entity.StatusCode;
 import com.team9oogling.codyus.global.exception.CustomException;
+import com.team9oogling.codyus.global.security.UserDetailsImpl;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +32,8 @@ public class PostService {
   private final CategoryRepository categoryRepository;
 
 
-  public PostResponseDto savePost(PostRequestDto requestDto, String email) {
-    User user = userRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
+    public PostResponseDto savePost(PostRequestDto requestDto, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
 
     Category category = categoryRepository.findByCategory(requestDto.getCategoryName())
         .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_CATEGORY));
@@ -46,23 +46,21 @@ public class PostService {
   }
 
 
-  public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) {
-    Post post = findById(postId);
-    checkUserSame(post, user);
-    post.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getPrice(),
-        requestDto.getStatus(), requestDto.getSaleType(), requestDto.getHashtags(), user);
+    public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) {
+        Post post = findById(postId);
+        checkUserSame(post, user);
+        post.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getPrice(),
+                requestDto.getSaleType(), requestDto.getHashtags(), user);
 
     return new PostResponseDto(post);
   }
 
-  public String deletePost(Long postId, User user) {
-    Post post = findById(postId);
-    checkUserSame(post, user);
-    postRepository.delete(post);
+    public void deletePost(Long postId, User user) {
+        Post post = findById(postId);
+        checkUserSame(post, user);
+        postRepository.delete(post);
 
-    return postId + "번 게시물이 삭제 되었습니다.";
-  }
-
+    }
 
   public List<PostResponseDto> findAllPost(int page, int size) {
     Page<Post> postsPage = postRepository.findAll(PageRequest.of(page, size));
@@ -71,16 +69,12 @@ public class PostService {
         .collect(Collectors.toList());
   }
 
-  public long countAllPosts() {
-    return postRepository.count();
-  }
 
-  public PostResponseDto getPost(Long postId) {
-    Post post = findById(postId);
+    public PostResponseDto getPost(Long postId) {
+        Post post = findById(postId);
 
-    return new PostResponseDto(post);
-  }
-
+        return new PostResponseDto(post);
+    }
 
   public Post findById(Long postId) {
     return postRepository.findById(postId).orElseThrow(
@@ -94,32 +88,31 @@ public class PostService {
   }
 
 
-  public List<PostResponseDto> searchPosts(SearchType type, String value) {
-    List<Post> posts;
+    public Page<PostResponseDto> searchPosts(SearchType type, String value, int page, int size,
+                                             String sortBy, boolean descending) {
+        //검색 타입이나 검색어가 비어있는 경우
+        if(type == null || value == null || value.trim().isEmpty()){
+            throw new CustomException(StatusCode.INVALID_SEARCH_QUERY);
+        }
 
-    switch (type) {
-      case TITLE:
-        posts = postRepository.findByTitle(value);
-        break;
-      case CONTENT:
-        posts = postRepository.findByTitleOrContent(value);
-        break;
-      case HASHTAG:
-        posts = postRepository.findByHashTag(value);
-        break;
-      default:
-        throw new CustomException(StatusCode.NOT_FOUND_POST);
+        Sort.Direction direction = descending ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        //검색 수행
+        Page<Post> postPage = postRepository.searchPosts(type, value, pageable);
+
+        // 검색 결과가 없을 때 예외 처리
+        if (postPage.isEmpty()) {
+            throw new CustomException(StatusCode.NOT_FOUND_SEARCH);
+        }
+
+        // Post 엔티티를 PostResponseDto로 변환
+        return postPage.map(PostResponseDto::new);
     }
 
-    // Post 엔티티를 PostResponseDto로 변환
-    return posts.stream()
-        .map(PostResponseDto::new)
-        .collect(Collectors.toList());
-  }
-
-  public List<PostResponseDto> findMyPosts(String email) {
-    User user = userRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_USER));
+    public List<PostResponseDto> findMyPosts(UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
 
     List<Post> posts = postRepository.findByUser(user);
     return posts.stream()
