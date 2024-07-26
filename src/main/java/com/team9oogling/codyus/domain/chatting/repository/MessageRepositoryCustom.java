@@ -6,4 +6,5 @@ import com.team9oogling.codyus.domain.chatting.entity.ChattingMember;
 public interface MessageRepositoryCustom {
 
 	ChattingRoomFindTopResponseDto findTopMessage(ChattingMember chattingMember);
+
 }

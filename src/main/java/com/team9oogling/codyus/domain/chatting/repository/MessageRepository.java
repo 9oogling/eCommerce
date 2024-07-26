@@ -7,5 +7,5 @@ import com.team9oogling.codyus.domain.chatting.entity.Message;
 
 public interface MessageRepository extends JpaRepository<Message, Long>, MessageRepositoryCustom {
 
-	int countByChattingMemberAndIdGreaterThan(ChattingMember chattingMember, Long id);
+	int countByChattingMemberAndIdGreaterThan(ChattingMember chattingMember, Long lastMessageId);
 }

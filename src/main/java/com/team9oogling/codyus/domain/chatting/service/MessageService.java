@@ -81,6 +81,6 @@ public class MessageService {
 	}
 
 	public int unReadCount(ChattingMember chattingMember, Long lastMessageId) {
-		return messageRepository.countByChattingMemberAndIdGreaterThan(chattingMember, lastMessageId);
+		return messageRepository.countByChattingMemberAndIdGreaterThan(chattingMember, lastMessageId == null ? 0 : lastMessageId);
 	}
 }

@@ -2,9 +2,14 @@ package com.team9oogling.codyus.domain.chatting.service;
 
 import static com.team9oogling.codyus.global.entity.StatusCode.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +39,7 @@ public class ChattingRoomService {
 	private final ChattingRoomRepository chattingRoomRepository;
 	private final ChattingMemberRepository chattingMemberRepository;
 	private final MessageOffsetRepository messageOffsetRepository;
+
 	private final MessageRepositoryCustomImpl messageRepositoryCustom;
 
 	private final MessageService messageService;
@@ -66,22 +72,12 @@ public class ChattingRoomService {
 		return new ChattingRoomCreateResponseDto(chattingRoom.getId(), post);
 	}
 
-	private void ChattingRoomPostAndUser(Long postId, User user) {
-		boolean isChattingRoom = chattingRoomRepository.findByPostId(postId)
-			.stream()
-			.anyMatch(room -> chattingMemberRepository.existsByChattingRoomAndUser(room, user)
-			);
-		if (isChattingRoom) {
-			throw new CustomException(ALREADY_CHATTINGROOMS_EXISTS);
-		}
-	}
-
 	@Transactional(readOnly = true)
-	public List<ChattingRoomResponseDto> chattingRoomList(UserDetailsImpl userDetails) {
+	public Page<ChattingRoomResponseDto> chattingRoomList(UserDetailsImpl userDetails, int page, int size) {
 		User user = userDetails.getUser();
-		List<ChattingMember> chattingMemberList = chattingMemberRepository.findByUser(user);
+		List<ChattingMember> memberList = chattingMemberRepository.findByUser(user);
 
-		return chattingMemberList.stream()
+		List<ChattingRoomResponseDto> responseList = memberList.stream()
 			.map(messageRepositoryCustom::findTopMessage)
 			.map(responseDto -> {
 				MessageOffset messageOffset = messageService.messageOffsetFindById(responseDto.getChattingRoomId(),
@@ -90,6 +86,26 @@ public class ChattingRoomService {
 					messageOffset.getLastReadMessageId());
 				return new ChattingRoomResponseDto(responseDto, unReadCount);
 			})
+			.sorted(Comparator.comparing(ChattingRoomResponseDto::getLastTimestamp, Comparator.nullsLast(Comparator.reverseOrder()))
+				.thenComparing(ChattingRoomResponseDto::getChattingRoomId))
 			.toList();
+
+		Pageable pageable = PageRequest.of(page-1, size);
+		int totalSize = responseList.size();
+		int start = (int) pageable.getOffset();
+		int end = Math.min(start + pageable.getPageSize(), totalSize);
+		List<ChattingRoomResponseDto> pagedList = responseList.subList(start, end);
+
+		return new PageImpl<>(pagedList, pageable, totalSize);
+	}
+
+	private void ChattingRoomPostAndUser(Long postId, User user) {
+		boolean isChattingRoom = chattingRoomRepository.findByPostId(postId)
+			.stream()
+			.anyMatch(room -> chattingMemberRepository.existsByChattingRoomAndUser(room, user)
+			);
+		if (isChattingRoom) {
+			throw new CustomException(ALREADY_CHATTINGROOMS_EXISTS);
+		}
 	}
 }

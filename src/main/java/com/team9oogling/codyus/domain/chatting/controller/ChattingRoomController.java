@@ -4,12 +4,14 @@ import static com.team9oogling.codyus.global.entity.StatusCode.*;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomCreateResponseDto;
@@ -35,10 +37,12 @@ public class ChattingRoomController {
 		return ResponseFactory.ok(responseDto, SUCCESS_CREATE_CHATTINGROOMS);
 	}
 
-	@GetMapping("/my/chattingrooms") // -> /chattingrooms 로 바로 가야할것 같다!
-	public ResponseEntity<DataResponseDto<List<ChattingRoomResponseDto>>> chattingRoomsList(
+	@GetMapping("/chattingrooms") // -> 나중에 url 변경 예정
+	public ResponseEntity<DataResponseDto<Page<ChattingRoomResponseDto>>> chattingRoomsList(
+		@RequestParam(defaultValue = "1") int page,
+		@RequestParam(defaultValue = "30") int size,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		List<ChattingRoomResponseDto> responseDtoList = chattingRoomService.chattingRoomList(userDetails);
+		Page<ChattingRoomResponseDto> responseDtoList = chattingRoomService.chattingRoomList(userDetails, page, size);
 		return ResponseFactory.ok(responseDtoList, SUCCESS_CREATE_CHATTINGROOMS);
 	}
 }
