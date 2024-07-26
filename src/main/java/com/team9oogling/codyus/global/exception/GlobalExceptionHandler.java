@@ -38,4 +38,14 @@ public class GlobalExceptionHandler {
     });
     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
   }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  protected ResponseEntity<ExceptionResponseDto> handleIllegalArgumentException(IllegalArgumentException e,
+    HttpServletRequest request) {
+      ExceptionResponseDto exceptionResponse = ExceptionResponseDto.builder()
+              .message(e.getMessage())
+              .path(request.getRequestURI())
+              .build();
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+  }
 }

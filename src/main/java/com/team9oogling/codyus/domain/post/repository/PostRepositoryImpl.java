@@ -1,11 +1,19 @@
 package com.team9oogling.codyus.domain.post.repository;
 
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.team9oogling.codyus.domain.post.entity.Post;
 import com.team9oogling.codyus.domain.post.entity.QPost;
+import com.team9oogling.codyus.domain.post.entity.SearchType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,30 +32,39 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     }
 
     @Override
-    public List<Post> findByTitle(String title) {
+    public Page<Post> searchPosts(SearchType type, String keyword, Pageable pageable) {
         QPost post = QPost.post;
-        return queryFactory.selectFrom(post)
-                .where(post.title.containsIgnoreCase(title))
-                .fetch();
+        BooleanExpression predicate;
+
+        switch (type) {
+            case TITLE:
+                predicate = post.title.containsIgnoreCase(keyword);
+                break;
+            case TITLEORCONTENT:
+                predicate = post.title.containsIgnoreCase(keyword)
+                        .or(post.content.containsIgnoreCase(keyword));
+                break;
+            case HASHTAG:
+                predicate = post.hashtags.containsIgnoreCase(keyword);
+                break;
+            default:
+                throw new IllegalArgumentException("검색 타입이 없습니다.");
+        }
+
+
+        JPAQuery<Post> query = queryFactory.selectFrom(post)
+                .where(predicate)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        List<Post> posts = query.fetch();
+
+
+        long total = queryFactory.selectFrom(post)
+                .where(predicate)
+                .fetchCount();
+
+
+        return new PageImpl<>(posts, pageable, total);
     }
-
-
-    @Override
-    public List<Post> findByHashTag(String hashtag) {
-        QPost post = QPost.post;
-        return queryFactory.selectFrom(post)
-                .where(post.hashtags.any().eq(hashtag))
-                .fetch();
-    }
-
-    @Override
-    public List<Post> findByTitleOrContent(String keyword) {
-        QPost post = QPost.post;
-        return queryFactory.selectFrom(post)
-                .where(post.title.containsIgnoreCase(keyword)
-                        .or(post.content.containsIgnoreCase(keyword)))
-                .fetch();
-    }
-
-
 }
