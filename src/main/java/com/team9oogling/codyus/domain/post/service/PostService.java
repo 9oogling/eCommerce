@@ -28,7 +28,7 @@ public class PostService {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
   private final PostRepositoryImpl postRepositoryImpl;
-  private final CategoryRepository categoryRepository;
+  private CategoryRepository categoryRepository;
 
 
   public PostResponseDto savePost(PostRequestDto requestDto, String email) {

@@ -1,0 +1,84 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+}
+header .logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+header nav {
+  display: flex;
+  gap: 15px;
+}
+header nav a {
+  text-decoration: none;
+  color: black;
+  font-size: 14px;
+}
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.search-bar input[type="text"] {
+  padding: 5px;
+  font-size: 14px;
+}
+.slider {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+.slides {
+  display: flex;
+  width: 500%;
+  transition: transform 0.5s ease-in-out;
+}
+.slide {
+  width: 20%;
+  height: 300px;
+  background-color: #c5d3c1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.slider-nav {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+}
+.slider-nav button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+.new-arrivals {
+  padding: 20px;
+}
+.new-arrivals h2 {
+  margin-bottom: 10px;
+}
+.products {
+  display: flex;
+  gap: 10px;
+}
+.product {
+  width: 200px;
+  height: 300px;
+  background-color: #f0f0f0;
+  text-align: center;
+  padding: 10px;
+}
