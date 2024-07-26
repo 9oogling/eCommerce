@@ -4,11 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team9oogling.codyus.domain.oauth.dto.KakaoUserInfoDto;
+import com.team9oogling.codyus.domain.user.entity.User;
+import com.team9oogling.codyus.domain.user.entity.UserRole;
+import com.team9oogling.codyus.domain.user.entity.UserStatus;
 import com.team9oogling.codyus.domain.user.repository.UserRepository;
 import com.team9oogling.codyus.global.jwt.JwtProvider;
 import java.net.URI;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +29,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class KakaoService {
 
+  @Value("${kakao.api_key}")
+  private String clientId;
+
+  @Value("${kakao.redirect_uri}")
+  private String redirectUri;
+
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
   private final RestTemplate restTemplate;
@@ -36,7 +47,19 @@ public class KakaoService {
     // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
     KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
 
-    return null;
+    // 3. 필요시 사용자 정보를 저장하거나 업데이트
+    User user = saveOrUpdateUser(kakaoUserInfo);
+
+    // 4. JWT 토큰 생성
+    String jwtToken = jwtProvider.createAccessToken(kakaoUserInfo.getEmail(), UserRole.USER);
+
+    // 5. Refresh Token 생성 및 저장
+    String refreshToken = jwtProvider.createRefreshToken(kakaoUserInfo.getEmail(), UserRole.USER);
+    user.updateRefreshToken(refreshToken);
+    userRepository.save(user);
+
+    // 6. JWT 토큰 반환
+    return jwtToken;
   }
 
   private String getToken(String code) throws JsonProcessingException {
@@ -56,8 +79,8 @@ public class KakaoService {
     // HTTP Body 생성
     MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
     body.add("grant_type", "authorization_code");
-    body.add("client_id", "2a8bb218fc28dc7c54e61faf0de6060c");
-    body.add("redirect_uri", "http://localhost:8080/api/user/kakao/callback");
+    body.add("client_id", clientId);
+    body.add("redirect_uri", redirectUri);
     body.add("code", code);
 
     RequestEntity<MultiValueMap<String, String>> requestEntity = RequestEntity
@@ -104,14 +127,31 @@ public class KakaoService {
 
     JsonNode jsonNode = new ObjectMapper().readTree(response.getBody());
     Long id = jsonNode.get("id").asLong();
-    String nickname = jsonNode.get("properties")
-        .get("nickname").asText();
     String email = jsonNode.get("kakao_account")
         .get("email").asText();
+    String nickname = jsonNode.get("properties")
+        .get("nickname").asText();
 
-    log.info("카카오 사용자 정보: " + id + ", " + nickname + ", " + email);
-    return new KakaoUserInfoDto(id, nickname, email);
+    log.info("카카오 사용자 정보: " + email + ", " + nickname);
+    return new KakaoUserInfoDto(email, nickname);
   }
 
-
+  private User saveOrUpdateUser(KakaoUserInfoDto kakaoUserInfo) {
+    // UserRepository를 이용해 사용자 정보를 저장하거나 업데이트하는 로직을 구현
+    Optional<User> optionalUser = userRepository.findByEmail(kakaoUserInfo.getEmail());
+    if (optionalUser.isPresent()) {
+      User user = optionalUser.get();
+      user.updateNickname(kakaoUserInfo.getNickname());
+      return userRepository.save(user);
+    } else {
+      User user = new User(
+          kakaoUserInfo.getEmail(),
+          kakaoUserInfo.getNickname(),
+          passwordEncoder.encode("kakao_default_password"),
+          UserRole.USER,
+          UserStatus.ACTIVE
+      );
+      return userRepository.save(user);
+    }
+  }
 }

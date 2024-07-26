@@ -75,9 +75,11 @@ public class SecurityConfig {
             SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            .requestMatchers("/chatting/**","chat.html","login.html","/api/users/signup", "/api/users/token/refresh", "/api/users/login").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/user/kakao/callback", "/api/users/kakao/callback",
-                "/api/users/login/naver", "/api/users/naver/callback", "/api/posts", "/login-page", "/home").permitAll()
+            // 1. 중복 url 삭제 2. 파일명 -> API 로 변경
+            .requestMatchers("/chatting/**","chat.html","login.html","/api/users/signup",
+                "/api/users/token/refresh", "/api/users/login").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/user/kakao/callback", "/api/users/login/naver",
+                "/api/users/naver/callback", "/api/posts", "/login-page", "/home").permitAll()
             .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
             .anyRequest().authenticated())
         .exceptionHandling((exceptionHandling) -> {
