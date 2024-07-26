@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -17,7 +16,7 @@ public class PostResponseDto {
     private String content;
     private int price;
     private SaleType saleType;
-    private List<String> hashtags;
+    private String hashtags;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
