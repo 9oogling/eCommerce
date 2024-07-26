@@ -6,14 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomCreateResponseDto;
+import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomFindTopResponseDto;
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomResponseDto;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingMember;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingRoom;
@@ -73,30 +72,29 @@ public class ChattingRoomService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<ChattingRoomResponseDto> chattingRoomList(UserDetailsImpl userDetails, int page, int size) {
+	public List<ChattingRoomResponseDto> chattingRoomList(UserDetailsImpl userDetails, int page, int size) {
 		User user = userDetails.getUser();
 		List<ChattingMember> memberList = chattingMemberRepository.findByUser(user);
 
 		List<ChattingRoomResponseDto> responseList = memberList.stream()
-			.map(messageRepositoryCustom::findTopMessage)
-			.map(responseDto -> {
-				MessageOffset messageOffset = messageService.messageOffsetFindById(responseDto.getChattingRoomId(),
+			.map(chattingMember -> {
+				ChattingRoomFindTopResponseDto response = messageRepositoryCustom.findTopMessage(chattingMember);
+				MessageOffset messageOffset = messageService.messageOffsetFindById(response.getChattingRoomId(),
 					user.getId());
-				Integer unReadCount = messageService.unReadCount(responseDto.getChattingMember(),
+				Integer unReadCount = messageService.unReadCount(response.getChattingMember(),
 					messageOffset.getLastReadMessageId());
-				return new ChattingRoomResponseDto(responseDto, unReadCount);
+				return new ChattingRoomResponseDto(response, unReadCount);
 			})
-			.sorted(Comparator.comparing(ChattingRoomResponseDto::getLastTimestamp, Comparator.nullsLast(Comparator.reverseOrder()))
+			.sorted(Comparator.comparing(ChattingRoomResponseDto::getLastTimestamp,
+					Comparator.nullsLast(Comparator.reverseOrder()))
 				.thenComparing(ChattingRoomResponseDto::getChattingRoomId))
 			.toList();
 
-		Pageable pageable = PageRequest.of(page-1, size);
+		Pageable pageable = PageRequest.of(page - 1, size);
 		int totalSize = responseList.size();
-		int start = (int) pageable.getOffset();
+		int start = (int)pageable.getOffset();
 		int end = Math.min(start + pageable.getPageSize(), totalSize);
-		List<ChattingRoomResponseDto> pagedList = responseList.subList(start, end);
-
-		return new PageImpl<>(pagedList, pageable, totalSize);
+		return responseList.subList(start, end);
 	}
 
 	private void ChattingRoomPostAndUser(Long postId, User user) {

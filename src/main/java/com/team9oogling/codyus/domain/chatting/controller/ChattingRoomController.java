@@ -38,11 +38,11 @@ public class ChattingRoomController {
 	}
 
 	@GetMapping("/chattingrooms") // -> 나중에 url 변경 예정
-	public ResponseEntity<DataResponseDto<Page<ChattingRoomResponseDto>>> chattingRoomsList(
+	public ResponseEntity<DataResponseDto<List<ChattingRoomResponseDto>>> chattingRoomsList(
 		@RequestParam(defaultValue = "1") int page,
 		@RequestParam(defaultValue = "30") int size,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		Page<ChattingRoomResponseDto> responseDtoList = chattingRoomService.chattingRoomList(userDetails, page, size);
+		List<ChattingRoomResponseDto> responseDtoList = chattingRoomService.chattingRoomList(userDetails, page, size);
 		return ResponseFactory.ok(responseDtoList, SUCCESS_CREATE_CHATTINGROOMS);
 	}
 }
