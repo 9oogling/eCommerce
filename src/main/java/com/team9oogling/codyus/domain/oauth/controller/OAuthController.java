@@ -37,4 +37,9 @@ public class OAuthController {
     return "redirect:/home";
   }
 
+  @GetMapping("/login/naver")
+  public CustomResponseEntity<UserResponse.Login> naverLogin(@RequestParam(name = "code") String code) {
+    return CustomResponseEntity.success(userService.loginByOAuth(code, NAVER));
+  }
+
 }
