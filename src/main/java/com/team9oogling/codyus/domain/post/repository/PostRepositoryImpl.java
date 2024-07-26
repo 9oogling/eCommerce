@@ -9,6 +9,8 @@ import com.team9oogling.codyus.domain.post.entity.QPost;
 import com.team9oogling.codyus.domain.post.entity.SearchType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -43,11 +45,12 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         .or(post.content.containsIgnoreCase(keyword));
                 break;
             case HASHTAG:
-                predicate = post.hashtags.contains(keyword);
+                predicate = post.hashtags.containsIgnoreCase(keyword);
                 break;
             default:
                 throw new IllegalArgumentException("검색 타입이 없습니다.");
         }
+
 
         JPAQuery<Post> query = queryFactory.selectFrom(post)
                 .where(predicate)
@@ -56,9 +59,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
         List<Post> posts = query.fetch();
 
+
         long total = queryFactory.selectFrom(post)
                 .where(predicate)
                 .fetchCount();
+
 
         return new PageImpl<>(posts, pageable, total);
     }
