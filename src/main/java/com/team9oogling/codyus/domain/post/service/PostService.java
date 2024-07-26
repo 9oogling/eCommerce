@@ -34,7 +34,7 @@ public class PostService {
     private final PostRepositoryImpl postRepositoryImpl;
     private final CategoryRepository categoryRepository;
 
-
+    @Transactional
     public PostResponseDto savePost(PostRequestDto requestDto, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
 
@@ -48,16 +48,17 @@ public class PostService {
         return new PostResponseDto(post);
     }
 
-
+    @Transactional(readOnly = true)
     public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) {
         Post post = findById(postId);
         checkUserSame(post, user);
         post.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getPrice(),
-                requestDto.getSaleType(), requestDto.getHashtags(), user);
+                requestDto.getSaleType(), requestDto.getHashtags(), user, requestDto.getCategoryName());
 
         return new PostResponseDto(post);
     }
 
+    @Transactional(readOnly = true)
     public void deletePost(Long postId, User user) {
         Post post = findById(postId);
         checkUserSame(post, user);
@@ -91,10 +92,10 @@ public class PostService {
     }
 
 
-    public Page<PostResponseDto> searchPosts(SearchType type, String value, int page, int size,
+    public Page<PostResponseDto> searchPosts(SearchType type, String keyword, int page, int size,
                                              String sortBy, boolean descending) {
-        //검색 타입이나 검색어가 비어있는 경우
-        if (type == null || value == null || value.trim().isEmpty()) {
+       //검색 타입이나 검색어가 비어있는 경우
+        if (type == null || keyword == null || keyword.trim().isEmpty()) {
             throw new CustomException(StatusCode.INVALID_SEARCH_QUERY);
         }
 
@@ -103,7 +104,7 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         //검색 수행
-        Page<Post> postPage = postRepository.searchPosts(type, value, pageable);
+        Page<Post> postPage = postRepository.searchPosts(type, keyword, pageable);
 
         // 검색 결과가 없을 때 예외 처리
         if (postPage.isEmpty()) {
