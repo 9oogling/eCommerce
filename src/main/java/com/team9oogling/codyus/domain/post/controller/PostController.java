@@ -58,9 +58,9 @@ public class PostController {
   //게시물 전체조회
   @GetMapping
   public ResponseEntity<DataResponseDto<List<PostResponseDto>>> getAllPost(
-      @RequestParam(value = "page", defaultValue = "0") int page,
+      @RequestParam(value = "page", defaultValue = "1") int page,
       @RequestParam(value = "size", defaultValue = "5") int size) {
-    List<PostResponseDto> posts = postService.findAllPost(page, size);
+    List<PostResponseDto> posts = postService.findAllPost(page-1, size);
 
     return ResponseFactory.ok(posts, StatusCode.SUCCESS_GET_ALLPOST);
   }
@@ -85,15 +85,15 @@ public class PostController {
   // 게시물 검색
   @GetMapping("/search")
   public ResponseEntity<DataResponseDto<Page<PostResponseDto>>> searchPosts(
-      @RequestParam SearchType type,
-      @RequestParam String value,
-      @RequestParam(defaultValue = "0") int page,
+      @RequestParam (required = false) SearchType type,
+      @RequestParam String keyword,
+      @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(defaultValue = "id") String sortBy, // Default sort by field
       @RequestParam(defaultValue = "false") boolean descending) { // Default sort direction) {
 
-    Page<PostResponseDto> postPage = postService.searchPosts(type, value, page, size, sortBy, descending);
-    return ResponseFactory.ok(postPage, StatusCode.SUCCESS_SEARCH_POSTS);
+    Page<PostResponseDto> posts = postService.searchPosts(type, keyword, page-1, size, sortBy, descending);
+    return ResponseFactory.ok(posts, StatusCode.SUCCESS_SEARCH_POSTS);
   }
 
 
