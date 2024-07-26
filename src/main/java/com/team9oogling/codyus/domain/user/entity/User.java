@@ -57,11 +57,18 @@ public class User extends Timestamped {
       UserStatus status/*, UserOauth oauth*/) {
     this.email = requestDto.getEmail();
     this.password = requestDto.getPassword();
-    this.email = requestDto.getEmail();
     this.nickname = requestDto.getNickname();
     this.role = role;
     this.status = status;
 //     this.oauth = oauth;
+  }
+
+  public User( String email, String nickname, String password, UserRole role, UserStatus status) {
+    this.email = email;
+    this.nickname = nickname;
+    this.password = password;
+    this.role = role;
+    this.status = status;
   }
 
   public void encryptionPassword(String encryptionPassword) {
@@ -88,4 +95,7 @@ public class User extends Timestamped {
     this.phoneNumber = requestDto.getPhoneNumber();
   }
 
+  public void updateNickname(String nickname) {
+    this.nickname = nickname;
+  }
 }
