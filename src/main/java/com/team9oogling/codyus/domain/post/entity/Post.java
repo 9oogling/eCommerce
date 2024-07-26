@@ -37,10 +37,7 @@ public class Post extends Timestamped {
 
     private int price;
 
-    @ElementCollection
-    @CollectionTable(name = "post_hashtags", joinColumns = @JoinColumn(name = "post_id"))
-    @Column(name = "hashtag")
-    private List<String> hashtags = new ArrayList<>();
+    private String hashtags;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -48,11 +45,10 @@ public class Post extends Timestamped {
 
 
 
-    public Post(String title, String content, int price, SaleType saleType, List<String> hashtags, User user, Category category) {
+    public Post(String title, String content, int price, SaleType saleType, String hashtags, User user, Category category) {
         this.title = title;
         this.content = content;
         this.price = price;
-        this.status = status;
         this.saleType = saleType;
         this.hashtags = hashtags;
         this.user = user;
@@ -64,13 +60,14 @@ public class Post extends Timestamped {
     }
 
 
-    public void update(String title, String content, int price, SaleType saleType, List<String> hashtags, User user) {
+    public void update(String title, String content, int price, SaleType saleType, String hashtags, User user, String category) {
         this.title = title;
         this.content = content;
         this.price = price;
         this.saleType = saleType;
         this.hashtags = hashtags;
         this.user = user;
+        this.category = category;
     }
 
 }
