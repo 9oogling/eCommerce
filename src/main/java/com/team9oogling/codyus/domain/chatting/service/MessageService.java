@@ -5,12 +5,13 @@ import static com.team9oogling.codyus.global.entity.StatusCode.*;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.team9oogling.codyus.domain.chatting.dto.ChattingMessageRequestDto;
 import com.team9oogling.codyus.domain.chatting.dto.ChattingMessageResponseDto;
+import com.team9oogling.codyus.domain.chatting.dto.ChattingReadRequestDto;
+import com.team9oogling.codyus.domain.chatting.dto.ChattingReadResponseDto;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingMember;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingMemberStatus;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingRoom;
@@ -38,17 +39,12 @@ public class MessageService {
 
 	private final UserService userService;
 
-	private final SimpMessageSendingOperations messagingTemplate;
 
 	@Transactional
-	public void sendMessage(ChattingMessageRequestDto requestDto) {
+	public ChattingMessageResponseDto sendMessage(ChattingMessageRequestDto requestDto) {
 		User user = userService.findByToken(requestDto.getToken());
-
 		// 1. 채팅룸 존재  and 게시물이 닫혔는지 확인
-
-		ChattingRoom chattingRoom = chattingRoomRepository.findById(requestDto.getChattingRoomId()).orElseThrow(
-			() -> new CustomException(NOT_FOUND_CHATTINGROOMS)
-		);
+		ChattingRoom chattingRoom =  findByChattingRoomId(requestDto.getChattingRoomId());
 		if (chattingRoom.getPost().getStatus().equals(PostStatus.COMPLETE)) {
 			throw new CustomException(ITEM_TRANSACTION_COMPLETED);
 		}
@@ -58,19 +54,20 @@ public class MessageService {
 		Message message = new Message(user, members.get(0), requestDto);
 		messageRepository.save(message);
 		// 읽음 처리
-		updateMessageOffset(message, user, requestDto);
-
-		var responseDto = new ChattingMessageResponseDto(requestDto.getChattingRoomId(), requestDto.getToken(), message);
-		/*
-		messagingTemplate.convertAndSend: 컨트롤러 메소드 내에서 직접 특정 경로(/topic/{chatRoomId})로 메시지를 전송합니다.
-		이를 통해 특정 채팅방에 관련된 클라이언트에게 메시지를 전송할 수 있습니다.
-		*/
-		messagingTemplate.convertAndSend("/topic/" + requestDto.getChattingRoomId(), responseDto);
-		messagingTemplate.convertAndSend("/topic/user/" + members.get(1).getUser().getId()+"/"+requestDto.getChattingRoomId(), responseDto);
+		updateMessageOffset(message, user, requestDto.getChattingRoomId());
+		return new ChattingMessageResponseDto(requestDto.getChattingRoomId(), requestDto.getToken(), message);
 	}
 
-	public void updateMessageOffset(Message message, User user, ChattingMessageRequestDto requestDto) {
-		MessageOffset messageOffset = messageOffsetFindById(requestDto.getChattingRoomId(), user.getId());
+	@Transactional
+	public ChattingReadResponseDto readMessage(ChattingReadRequestDto requestDto) {
+		User user = userService.findByToken(requestDto.getToken());
+		Message message = messageRepository.findById(requestDto.getMessageId()).orElseThrow(() -> new CustomException(NOT_FOUND_MESSAGE));
+		updateMessageOffset(message, user, requestDto.getChattingRoomId());
+		return new ChattingReadResponseDto(requestDto.getChattingRoomId(), message.getId(), requestDto.getToken());
+	}
+
+	public void updateMessageOffset(Message message, User user, Long chattingRoomId) {
+		MessageOffset messageOffset = messageOffsetFindById(chattingRoomId, user.getId());
 		messageOffset.updateOffset(message);
 	}
 
@@ -101,5 +98,11 @@ public class MessageService {
 			}
 		}
 		return List.of(Objects.requireNonNull(member), Objects.requireNonNull(memberPartner));
+	}
+
+	public ChattingRoom findByChattingRoomId(Long chattingRoomId) {
+		return chattingRoomRepository.findById(chattingRoomId).orElseThrow(
+			() -> new CustomException(NOT_FOUND_CHATTINGROOMS)
+		);
 	}
 }
