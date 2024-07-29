@@ -3,6 +3,7 @@ package com.team9oogling.codyus.domain.chatting.service;
 import static com.team9oogling.codyus.global.entity.StatusCode.*;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
@@ -52,9 +53,9 @@ public class MessageService {
 			throw new CustomException(ITEM_TRANSACTION_COMPLETED);
 		}
 		// 2. 멤버 조회
-		ChattingMember member = isMemberExitedFromChattingRoom(chattingRoom, user);
+		List<ChattingMember> members = isMemberExitedFromChattingRoom(chattingRoom, user);
 		// 4. 메시지 처리
-		Message message = new Message(user, member, requestDto);
+		Message message = new Message(user, members.get(0), requestDto);
 		messageRepository.save(message);
 		// 읽음 처리
 		updateMessageOffset(message, user, requestDto);
@@ -65,7 +66,7 @@ public class MessageService {
 		이를 통해 특정 채팅방에 관련된 클라이언트에게 메시지를 전송할 수 있습니다.
 		*/
 		messagingTemplate.convertAndSend("/topic/" + requestDto.getChattingRoomId(), responseDto);
-		messagingTemplate.convertAndSend("/topic/" + user.getId(), responseDto);
+		messagingTemplate.convertAndSend("/topic/user/" + members.get(1).getUser().getId()+"/"+requestDto.getChattingRoomId(), responseDto);
 	}
 
 	public void updateMessageOffset(Message message, User user, ChattingMessageRequestDto requestDto) {
@@ -83,18 +84,22 @@ public class MessageService {
 		return messageRepository.countByChattingMemberAndIdGreaterThan(chattingMember, lastMessageId == null ? 0 : lastMessageId);
 	}
 
-	public ChattingMember isMemberExitedFromChattingRoom(ChattingRoom chattingRoom,User user) {
-		ChattingMember targetChattingMember = null;
+	public List<ChattingMember> isMemberExitedFromChattingRoom(ChattingRoom chattingRoom, User user) {
 		List<ChattingMember> chattingMemberList = chattingMemberRepository.findByChattingRoom(chattingRoom);
+
+		ChattingMember member = null;
+		ChattingMember memberPartner = null;
+
 		for (ChattingMember chattingMember : chattingMemberList) {
-			if(chattingMember.getStatus() == ChattingMemberStatus.EXIT) {
+			if (chattingMember.getStatus() == ChattingMemberStatus.EXIT) {
 				throw new CustomException(NOT_FOUND_CHATTING_PARTNER);
 			}
-			if(chattingMember.getUser().getId().equals(user.getId())) {
-				targetChattingMember = chattingMember;
+			if (chattingMember.getUser().getId().equals(user.getId())) {
+				member = chattingMember;
+			} else {
+				memberPartner = chattingMember;
 			}
 		}
-
-		return targetChattingMember;
+		return List.of(Objects.requireNonNull(member), Objects.requireNonNull(memberPartner));
 	}
 }
