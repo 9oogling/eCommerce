@@ -27,6 +27,8 @@ public enum StatusCode {
   SUCCESS_ADD_LIKE(HttpStatus.CREATED, "좋아요를 눌렀습니다."),
   SUCCESS_DELETE_LIKE(HttpStatus.OK, "좋아요가 취소되었습니다."),
   SUCCESS_SEND_MESSAGE(HttpStatus.OK, "메세지 전송에 성공했습니다."),
+  SUCCESS_GET_MESSAGE_LIST(HttpStatus.OK,"메세지 목록 조회에 성공했습니다."),
+
 
   // 400번대
   UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "접근 권한이 없습니다."),
@@ -54,6 +56,7 @@ public enum StatusCode {
   ITEM_TRANSACTION_COMPLETED(HttpStatus.CONFLICT, "이미 거래가 완료되었습니다."),
   SAME_USERID_POST_USERID(HttpStatus.CONFLICT, "게시물 작성 시 사용자 ID가 동일합니다."),
   NOT_FOUND_MESSAGE_OFFSET(HttpStatus.NOT_FOUND, "메시지오프셋이 존재하지 않습니다."),
+  NOT_FOUND_CHATTINGROOMS_USER(HttpStatus.NOT_FOUND, "채팅방에 유저가 존재하지 않습니다"),
   ALREADY_CHATTINGROOMS_EXISTS(HttpStatus.CONFLICT, "이미 채팅방이 존재합니다.");
 
 
