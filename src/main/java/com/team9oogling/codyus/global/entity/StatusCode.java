@@ -23,6 +23,7 @@ public enum StatusCode {
   SUCCESS_GET_MYPOST(HttpStatus.OK, "내 게시물 조회에 성공했습니다."),
   SUCCESS_SEARCH_POSTS(HttpStatus.OK,"게시물 검색에 성공했습니다"),
   SUCCESS_CREATE_CHATTINGROOMS(HttpStatus.CREATED, "채팅방 생성에 성공했습니다."),
+  SUCCESS_GET_CHATTINGROOMS(HttpStatus.OK, "채팅방 조회에 성공했습니다."),
   SUCCESS_GET_CHATTINGROOMS_LIST(HttpStatus.OK, "채팅방 목록 조회에 성공했습니다."),
   SUCCESS_ADD_LIKE(HttpStatus.CREATED, "좋아요를 눌렀습니다."),
   SUCCESS_DELETE_LIKE(HttpStatus.OK, "좋아요가 취소되었습니다."),
