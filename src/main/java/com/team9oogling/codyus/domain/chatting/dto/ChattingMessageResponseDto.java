@@ -2,7 +2,6 @@ package com.team9oogling.codyus.domain.chatting.dto;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.team9oogling.codyus.domain.chatting.entity.Message;
 
@@ -13,6 +12,7 @@ import lombok.Getter;
 public class ChattingMessageResponseDto {
 
 	private final Long messageId;
+	private Long chattingRoomId;
 	private final String message;
 	private final Long userId;
 	private final String nickName;
@@ -27,14 +27,13 @@ public class ChattingMessageResponseDto {
 		this.timestamp = message.getCreatedAt();
 	}
 
-	public ChattingMessageResponseDto(String token, final Message message) {
+	public ChattingMessageResponseDto(final Long chattingRoomId, String token, final Message message) {
 		this.messageId = message.getId();
+		this.chattingRoomId = chattingRoomId;
 		this.message = message.getMessage();
 		this.userId = message.getUser().getId();
 		this.token = token;
 		this.nickName = message.getUser().getNickname();
 		this.timestamp = message.getCreatedAt();
 	}
-
-
 }
