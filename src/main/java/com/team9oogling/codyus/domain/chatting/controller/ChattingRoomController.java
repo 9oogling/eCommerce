@@ -50,7 +50,7 @@ public class ChattingRoomController {
 		return ResponseFactory.ok(responseDtoList, SUCCESS_GET_CHATTINGROOMS_LIST);
 	}
 
-	@GetMapping("/chattingrooms/{chattingroomsId}/list") // -> 나중에 url 변경 예정
+	@GetMapping("/chattingrooms/{chattingroomsId}/messages") // -> 나중에 url 변경 예정
 	public ResponseEntity<DataResponseDto<List<ChattingMessageResponseDto>>> chattingRoomMessageList(
 		@PathVariable Long chattingroomsId, @RequestBody ChattingRoomMessageRequestDto requestDto,
 		@RequestParam(defaultValue = "1") int page,
