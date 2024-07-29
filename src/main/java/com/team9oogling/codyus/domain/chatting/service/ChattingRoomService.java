@@ -2,18 +2,25 @@ package com.team9oogling.codyus.domain.chatting.service;
 
 import static com.team9oogling.codyus.global.entity.StatusCode.*;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomCreateResponseDto;
+import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomFindTopResponseDto;
+import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomResponseDto;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingMember;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingRoom;
 import com.team9oogling.codyus.domain.chatting.entity.MessageOffset;
 import com.team9oogling.codyus.domain.chatting.repository.ChattingMemberRepository;
 import com.team9oogling.codyus.domain.chatting.repository.ChattingRoomRepository;
 import com.team9oogling.codyus.domain.chatting.repository.MessageOffsetRepository;
+import com.team9oogling.codyus.domain.chatting.repository.MessageRepositoryCustomImpl;
 import com.team9oogling.codyus.domain.post.entity.Post;
 import com.team9oogling.codyus.domain.post.service.PostService;
 import com.team9oogling.codyus.domain.user.entity.User;
@@ -32,6 +39,9 @@ public class ChattingRoomService {
 	private final ChattingMemberRepository chattingMemberRepository;
 	private final MessageOffsetRepository messageOffsetRepository;
 
+	private final MessageRepositoryCustomImpl messageRepositoryCustom;
+
+	private final MessageService messageService;
 	private final PostService postService;
 
 	@Transactional
@@ -47,14 +57,44 @@ public class ChattingRoomService {
 		ChattingRoom chattingRoom = new ChattingRoom(post);
 		chattingRoomRepository.save(chattingRoom);
 		ChattingMember chattingMember = new ChattingMember(user, chattingRoom);
-		chattingMemberRepository.save(chattingMember);
+		ChattingMember chattingPostMember = new ChattingMember(post.getUser(), chattingRoom);
 		chattingRoom.addMember(chattingMember);
+		chattingRoom.addMember(chattingPostMember);
+		chattingMemberRepository.save(chattingMember);
+		chattingMemberRepository.save(chattingPostMember);
+
 		MessageOffset messageOffset = new MessageOffset(user, chattingRoom);
 		MessageOffset messageOffsetPostUser = new MessageOffset(post.getUser(), chattingRoom);
 		messageOffsetRepository.save(messageOffset);
 		messageOffsetRepository.save(messageOffsetPostUser);
 
 		return new ChattingRoomCreateResponseDto(chattingRoom.getId(), post);
+	}
+
+	@Transactional(readOnly = true)
+	public List<ChattingRoomResponseDto> chattingRoomList(UserDetailsImpl userDetails, int page, int size) {
+		User user = userDetails.getUser();
+		List<ChattingMember> memberList = chattingMemberRepository.findByUser(user);
+
+		List<ChattingRoomResponseDto> responseList = memberList.stream()
+			.map(chattingMember -> {
+				ChattingRoomFindTopResponseDto response = messageRepositoryCustom.findTopMessage(chattingMember);
+				MessageOffset messageOffset = messageService.messageOffsetFindById(response.getChattingRoomId(),
+					user.getId());
+				Integer unReadCount = messageService.unReadCount(response.getChattingMember(),
+					messageOffset.getLastReadMessageId());
+				return new ChattingRoomResponseDto(response, unReadCount);
+			})
+			.sorted(Comparator.comparing(ChattingRoomResponseDto::getLastTimestamp,
+					Comparator.nullsLast(Comparator.reverseOrder()))
+				.thenComparing(ChattingRoomResponseDto::getChattingRoomId))
+			.toList();
+
+		Pageable pageable = PageRequest.of(page - 1, size);
+		int totalSize = responseList.size();
+		int start = (int)pageable.getOffset();
+		int end = Math.min(start + pageable.getPageSize(), totalSize);
+		return responseList.subList(start, end);
 	}
 
 	private void ChattingRoomPostAndUser(Long postId, User user) {
@@ -65,11 +105,5 @@ public class ChattingRoomService {
 		if (isChattingRoom) {
 			throw new CustomException(ALREADY_CHATTINGROOMS_EXISTS);
 		}
-	}
-
-	public ChattingRoom ChattingRoomFindById(Long ChattingRoomId) {
-		return chattingRoomRepository.findById(ChattingRoomId).orElseThrow(
-			() -> new CustomException(NOT_FOUND_CHATTINGROOMS)
-		);
 	}
 }

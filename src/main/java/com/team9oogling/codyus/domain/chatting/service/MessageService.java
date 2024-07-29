@@ -13,8 +13,10 @@ import com.team9oogling.codyus.domain.chatting.entity.ChattingRoom;
 import com.team9oogling.codyus.domain.chatting.entity.Message;
 import com.team9oogling.codyus.domain.chatting.entity.MessageOffset;
 import com.team9oogling.codyus.domain.chatting.repository.ChattingMemberRepository;
+import com.team9oogling.codyus.domain.chatting.repository.ChattingRoomRepository;
 import com.team9oogling.codyus.domain.chatting.repository.MessageOffsetRepository;
 import com.team9oogling.codyus.domain.chatting.repository.MessageRepository;
+import com.team9oogling.codyus.domain.post.entity.PostStatus;
 import com.team9oogling.codyus.domain.user.entity.User;
 import com.team9oogling.codyus.domain.user.service.UserService;
 import com.team9oogling.codyus.global.exception.CustomException;
@@ -28,8 +30,8 @@ public class MessageService {
 	private final MessageRepository messageRepository;
 	private final ChattingMemberRepository chattingMemberRepository;
 	private final MessageOffsetRepository messageOffsetRepository;
+	private final ChattingRoomRepository chattingRoomRepository;
 
-	private final ChattingRoomService chattingRoomService;
 	private final UserService userService;
 
 	private final SimpMessageSendingOperations messagingTemplate;
@@ -39,13 +41,16 @@ public class MessageService {
 		User user = userService.findByToken(requestDto.getToken());
 
 		// 1. 채팅룸 존재  and 게시물이 닫혔는지 확인
-		ChattingRoom chattingRoom = chattingRoomService.ChattingRoomFindById(requestDto.getChattingRoomId());
-		// if (chattingRoom.getPost().getStatus().equals(PostStatus.COMPLETE)) {
-		// 	throw new CustomException(ITEM_TRANSACTION_COMPLETED);
-		// 	// 추후 변경
-		// }
+
+		ChattingRoom chattingRoom = chattingRoomRepository.findById(requestDto.getChattingRoomId()).orElseThrow(
+			() -> new CustomException(NOT_FOUND_CHATTINGROOMS)
+		);
+		if (chattingRoom.getPost().getStatus().equals(PostStatus.COMPLETE)) {
+			throw new CustomException(ITEM_TRANSACTION_COMPLETED);
+			// 추후 변경
+		}
 		// 2. 멤버 조회
-		ChattingMember member = chattingMemberRepository.findByChattingRoom(chattingRoom);
+		ChattingMember member = chattingMemberRepository.findByChattingRoomAndUser(chattingRoom, user);
 
 		// 4. 메시지 처리
 		Message message = new Message(user, member, requestDto);
@@ -65,9 +70,17 @@ public class MessageService {
 	}
 
 	public void updateMessageOffset(Message message, User user, ChattingMessageRequestDto requestDto) {
-		MessageOffset messageOffset = messageOffsetRepository.findByChattingRoomIdAndUserId(
-				requestDto.getChattingRoomId(), user.getId())
-			.orElseThrow(() -> new CustomException(NOT_FOUND_MESSAGE_OFFSET));
+		MessageOffset messageOffset = messageOffsetFindById(requestDto.getChattingRoomId(), user.getId());
 		messageOffset.updateOffset(message);
+	}
+
+	public MessageOffset messageOffsetFindById(Long ChattingRoomId, Long userId) {
+		return messageOffsetRepository.findByChattingRoomIdAndUserId(ChattingRoomId, userId).orElseThrow(
+			() -> new CustomException(NOT_FOUND_MESSAGE_OFFSET)
+		);
+	}
+
+	public int unReadCount(ChattingMember chattingMember, Long lastMessageId) {
+		return messageRepository.countByChattingMemberAndIdGreaterThan(chattingMember, lastMessageId == null ? 0 : lastMessageId);
 	}
 }
