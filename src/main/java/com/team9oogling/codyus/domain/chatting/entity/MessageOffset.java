@@ -25,10 +25,6 @@ public class MessageOffset extends Timestamped {
 
 	private Long userId;
 
-	public MessageOffset(Message message) {
-		this.lastReadMessageId = message.getId();
-	}
-
 	public MessageOffset(User user, ChattingRoom chattingRoom) {
 		this.chattingRoomId = chattingRoom.getId();
 		this.userId = user.getId();
