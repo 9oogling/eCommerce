@@ -4,6 +4,8 @@ import com.team9oogling.codyus.domain.user.entity.User;
 import com.team9oogling.codyus.global.entity.Timestamped;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,8 +31,16 @@ public class ChattingMember extends Timestamped {
 	@JoinColumn(name = "chatting_room_id")
 	private ChattingRoom chattingRoom;
 
+	@Enumerated(EnumType.STRING)
+	private ChattingMemberStatus status;
+
 	public ChattingMember(User user, ChattingRoom chattingRoom) {
 		this.user = user;
 		this.chattingRoom = chattingRoom;
+		this.status = ChattingMemberStatus.ACTIVE;
+	}
+
+	public void updateChattingMemberStatusExit() {
+		this.status = ChattingMemberStatus.EXIT;
 	}
 }
