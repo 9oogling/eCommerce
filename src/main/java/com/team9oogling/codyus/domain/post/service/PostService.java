@@ -14,6 +14,8 @@ import com.team9oogling.codyus.domain.user.repository.UserRepository;
 import com.team9oogling.codyus.global.entity.StatusCode;
 import com.team9oogling.codyus.global.exception.CustomException;
 import com.team9oogling.codyus.global.security.UserDetailsImpl;
+import com.team9oogling.codyus.upload.AwsS3Uploader;
+import com.team9oogling.codyus.upload.ImageType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,9 +36,10 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostRepositoryImpl postRepositoryImpl;
     private final CategoryRepository categoryRepository;
+    private final AwsS3Uploader awsS3Uploader;
 
     @Transactional
-    public PostResponseDto savePost(PostRequestDto requestDto, UserDetailsImpl userDetails) {
+    public PostResponseDto savePost(PostRequestDto requestDto, UserDetailsImpl userDetails, List<MultipartFile> images) {
         User user = userDetails.getUser();
 
         Category category = categoryRepository.findByCategory(requestDto.getCategoryName())
@@ -44,6 +48,8 @@ public class PostService {
         Post post = new Post(requestDto.getTitle(), requestDto.getContent(), requestDto.getPrice(),
                 requestDto.getSaleType(), requestDto.getHashtags(), user, category);
         post = postRepository.save(post);
+
+        awsS3Uploader.uploadImage(images, ImageType.POST, post.getId());
 
         return new PostResponseDto(post);
     }
@@ -96,7 +102,7 @@ public class PostService {
 
     public Page<PostResponseDto> searchPosts(SearchType type, String keyword, int page, int size,
                                              String sortBy, boolean descending) {
-       //검색 타입이나 검색어가 비어있는 경우
+        //검색 타입이나 검색어가 비어있는 경우
         if (type == null || keyword == null || keyword.trim().isEmpty()) {
             throw new CustomException(StatusCode.INVALID_SEARCH_QUERY);
         }
