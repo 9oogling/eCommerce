@@ -1,5 +1,6 @@
 package com.team9oogling.codyus.domain.user.controller;
 
+import com.team9oogling.codyus.domain.user.dto.FindEmailDto;
 import com.team9oogling.codyus.domain.user.dto.UpdateProfileAddressRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UpdateProfilePasswordRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UpdateProfilePhoneNumberRequestDto;
@@ -8,6 +9,7 @@ import com.team9oogling.codyus.domain.user.dto.UserSignupRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UserWithDrawalRequestDto;
 import com.team9oogling.codyus.domain.user.entity.UserRole;
 import com.team9oogling.codyus.domain.user.service.UserService;
+import com.team9oogling.codyus.global.dto.DataResponseDto;
 import com.team9oogling.codyus.global.dto.MessageResponseDto;
 import com.team9oogling.codyus.global.entity.ResponseFactory;
 import com.team9oogling.codyus.global.entity.StatusCode;
@@ -38,12 +40,14 @@ public class UserController {
   // 회원 관련 정보 받기
   @GetMapping("/user-info")
   @ResponseBody
-  public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+  public ResponseEntity<DataResponseDto<UserInfoDto>> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
     String email = userDetails.getUser().getEmail();
     UserRole role = userDetails.getUser().getRole();
     boolean isAdmin = (role == UserRole.ADMIN);
 
-    return new UserInfoDto(email, isAdmin);
+    UserInfoDto responseDto = new UserInfoDto(email, isAdmin);
+
+    return ResponseFactory.ok(responseDto, StatusCode.SUCCESS_GET_USERINFO);
   }
 
   @PostMapping("/users/signup")
@@ -102,6 +106,14 @@ public class UserController {
     userService.updatePhoneNumber(requestDto, userDetails);
 
     return ResponseFactory.ok(StatusCode.SUCCESS_UPDATE_PHONE_NUMBER);
+  }
+
+  @GetMapping("/users/email")
+  public ResponseEntity<DataResponseDto<FindEmailDto>> FindEmail(@Valid @RequestBody FindEmailDto requestDto) {
+
+    FindEmailDto responseDto = userService.FindEmail(requestDto);
+
+    return ResponseFactory.ok(responseDto, StatusCode.SUCCESS_FIND_EMAIL);
   }
 
 }
