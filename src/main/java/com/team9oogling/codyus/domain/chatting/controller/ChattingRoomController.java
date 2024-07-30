@@ -41,6 +41,13 @@ public class ChattingRoomController {
 		return ResponseFactory.ok(responseDto, SUCCESS_CREATE_CHATTINGROOMS);
 	}
 
+	@GetMapping("/chattingrooms/{chattingroomsId}")
+	public ResponseEntity<DataResponseDto<ChattingRoomResponseDto>> getChattingRoom(@PathVariable Long chattingroomsId,
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		ChattingRoomResponseDto responseDto = chattingRoomService.getChattingRoom(chattingroomsId, userDetails);
+		return ResponseFactory.ok(responseDto, SUCCESS_GET_CHATTINGROOMS);
+	}
+
 	@GetMapping("/chattingrooms") // -> 나중에 url 변경 예정
 	public ResponseEntity<DataResponseDto<List<ChattingRoomResponseDto>>> chattingRoomsList(
 		@RequestParam(defaultValue = "1") int page,
