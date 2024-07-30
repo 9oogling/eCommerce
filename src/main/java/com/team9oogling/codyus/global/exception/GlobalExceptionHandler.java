@@ -48,4 +48,14 @@ public class GlobalExceptionHandler {
               .build();
     return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
   }
+
+  @ExceptionHandler(NullPointerException.class)
+  protected ResponseEntity<ExceptionResponseDto> handleIllegalArgumentException(NullPointerException e,
+      HttpServletRequest request) {
+    ExceptionResponseDto exceptionResponse = ExceptionResponseDto.builder()
+        .message(e.getMessage())
+        .path(request.getRequestURI())
+        .build();
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+  }
 }
