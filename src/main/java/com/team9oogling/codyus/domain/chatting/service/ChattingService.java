@@ -17,6 +17,7 @@ import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomFindTopResponseDt
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomMessageRequestDto;
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomResponseDto;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingMember;
+import com.team9oogling.codyus.domain.chatting.entity.ChattingMemberStatus;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingRoom;
 import com.team9oogling.codyus.domain.chatting.entity.Message;
 import com.team9oogling.codyus.domain.chatting.entity.MessageOffset;
@@ -77,8 +78,7 @@ public class ChattingService {
 	@Transactional(readOnly = true)
 	public List<ChattingRoomResponseDto> chattingRoomList(UserDetailsImpl userDetails, int page, int size) {
 		User user = userDetails.getUser();
-		List<ChattingMember> memberList = chattingMemberRepository.findByUser(user);
-
+		var memberList = chattingMemberRepository.findByUserAndStatus(user, ChattingMemberStatus.ACTIVE);
 		List<ChattingRoomResponseDto> responseList = memberList.stream()
 			.map(chattingMember -> {
 				ChattingRoomFindTopResponseDto response = messageRepositoryCustom.findTopMessage(chattingMember);
@@ -101,22 +101,29 @@ public class ChattingService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ChattingMessageResponseDto> chattingRoomMessageList(Long chattingroomsId,
+	public List<ChattingMessageResponseDto> chattingRoomMessageList(Long chattingRoomId,
 		ChattingRoomMessageRequestDto requestDto, int page, int size, UserDetailsImpl userDetails) {
 		User user = userDetails.getUser();
-		existsChattingRoomUser(chattingroomsId, user);
+		existsChattingRoomUser(chattingRoomId, user);
 
-		Pageable pageable = PageRequest.of(page-1, size);
+		Pageable pageable = PageRequest.of(page - 1, size);
 		List<Message> messageList = messageRepositoryCustom.getMessageList(user, requestDto.getMessageId(),
-			chattingroomsId, pageable);
+			chattingRoomId, pageable);
 		return messageList.stream()
 			.map(ChattingMessageResponseDto::new)
 			.toList();
 	}
 
+	@Transactional
+	public void chattingRoomExit(Long chattingRoomId, UserDetailsImpl userDetails) {
+		User user = userDetails.getUser();
+		existsChattingRoomUser(chattingRoomId, user);
+		var chattingMember = findByChattingRoomIdAndUser(chattingRoomId, user);
+		chattingMember.updateChattingMemberStatusExit();
+	}
+
 	private void chattingRoomPostAndUser(Long postId, User user) {
-		boolean isChattingRoom = chattingRoomRepository.findByPostId(postId)
-			.stream()
+		boolean isChattingRoom = chattingRoomRepository.findByPostId(postId).stream()
 			.anyMatch(room -> chattingMemberRepository.existsByChattingRoomAndUser(room, user)
 			);
 		if (isChattingRoom) {
@@ -124,10 +131,17 @@ public class ChattingService {
 		}
 	}
 
-	public void existsChattingRoomUser(Long chattingRoomId,User user) {
-		 if(!chattingRoomRepository.existsByIdAndMembersUser(chattingRoomId, user)){
-			 throw new CustomException(NOT_FOUND_CHATTINGROOMS_USER);
-		 }
+	public void existsChattingRoomUser(Long chattingRoomId, User user) {
+		if (chattingRoomRepository.existsByIdAndMembersUserAndMembersStatus(chattingRoomId, user,
+			ChattingMemberStatus.EXIT)) {
+			throw new CustomException(NOT_FOUND_CHATTINGROOMS_USER);
+		}
+	}
+
+	public ChattingMember findByChattingRoomIdAndUser(Long chattingRoomId, User user) {
+		return chattingMemberRepository.findByChattingRoomIdAndUser(chattingRoomId, user).orElseThrow(
+			() -> new CustomException(NOT_FOUND_CHATTINGROOMS_USER)
+		);
 	}
 }
 

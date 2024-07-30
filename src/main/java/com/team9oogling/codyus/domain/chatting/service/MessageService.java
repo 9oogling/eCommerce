@@ -2,6 +2,9 @@ package com.team9oogling.codyus.domain.chatting.service;
 
 import static com.team9oogling.codyus.global.entity.StatusCode.*;
 
+import java.util.List;
+import java.util.Objects;
+
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.team9oogling.codyus.domain.chatting.dto.ChattingMessageRequestDto;
 import com.team9oogling.codyus.domain.chatting.dto.ChattingMessageResponseDto;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingMember;
+import com.team9oogling.codyus.domain.chatting.entity.ChattingMemberStatus;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingRoom;
 import com.team9oogling.codyus.domain.chatting.entity.Message;
 import com.team9oogling.codyus.domain.chatting.entity.MessageOffset;
@@ -37,7 +41,7 @@ public class MessageService {
 	private final SimpMessageSendingOperations messagingTemplate;
 
 	@Transactional
-	public ChattingMessageResponseDto sendMessage(ChattingMessageRequestDto requestDto) {
+	public void sendMessage(ChattingMessageRequestDto requestDto) {
 		User user = userService.findByToken(requestDto.getToken());
 
 		// 1. 채팅룸 존재  and 게시물이 닫혔는지 확인
@@ -47,26 +51,22 @@ public class MessageService {
 		);
 		if (chattingRoom.getPost().getStatus().equals(PostStatus.COMPLETE)) {
 			throw new CustomException(ITEM_TRANSACTION_COMPLETED);
-			// 추후 변경
 		}
 		// 2. 멤버 조회
-		ChattingMember member = chattingMemberRepository.findByChattingRoomAndUser(chattingRoom, user);
-
+		List<ChattingMember> members = isMemberExitedFromChattingRoom(chattingRoom, user);
 		// 4. 메시지 처리
-		Message message = new Message(user, member, requestDto);
+		Message message = new Message(user, members.get(0), requestDto);
 		messageRepository.save(message);
-		// 생성되있으면 업데이트!!
+		// 읽음 처리
 		updateMessageOffset(message, user, requestDto);
 
-		// 읽음 처리
-		ChattingMessageResponseDto responseDto = new ChattingMessageResponseDto(requestDto.getToken(), message);
+		var responseDto = new ChattingMessageResponseDto(requestDto.getChattingRoomId(), requestDto.getToken(), message);
 		/*
 		messagingTemplate.convertAndSend: 컨트롤러 메소드 내에서 직접 특정 경로(/topic/{chatRoomId})로 메시지를 전송합니다.
 		이를 통해 특정 채팅방에 관련된 클라이언트에게 메시지를 전송할 수 있습니다.
 		*/
 		messagingTemplate.convertAndSend("/topic/" + requestDto.getChattingRoomId(), responseDto);
-
-		return responseDto;
+		messagingTemplate.convertAndSend("/topic/user/" + members.get(1).getUser().getId()+"/"+requestDto.getChattingRoomId(), responseDto);
 	}
 
 	public void updateMessageOffset(Message message, User user, ChattingMessageRequestDto requestDto) {
@@ -82,5 +82,24 @@ public class MessageService {
 
 	public int unReadCount(ChattingMember chattingMember, Long lastMessageId) {
 		return messageRepository.countByChattingMemberAndIdGreaterThan(chattingMember, lastMessageId == null ? 0 : lastMessageId);
+	}
+
+	public List<ChattingMember> isMemberExitedFromChattingRoom(ChattingRoom chattingRoom, User user) {
+		List<ChattingMember> chattingMemberList = chattingMemberRepository.findByChattingRoom(chattingRoom);
+
+		ChattingMember member = null;
+		ChattingMember memberPartner = null;
+
+		for (ChattingMember chattingMember : chattingMemberList) {
+			if (chattingMember.getStatus() == ChattingMemberStatus.EXIT) {
+				throw new CustomException(NOT_FOUND_CHATTING_PARTNER);
+			}
+			if (chattingMember.getUser().getId().equals(user.getId())) {
+				member = chattingMember;
+			} else {
+				memberPartner = chattingMember;
+			}
+		}
+		return List.of(Objects.requireNonNull(member), Objects.requireNonNull(memberPartner));
 	}
 }
