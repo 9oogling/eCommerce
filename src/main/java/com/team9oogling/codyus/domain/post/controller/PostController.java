@@ -41,7 +41,7 @@ public class PostController {
   public ResponseEntity<DataResponseDto<PostResponseDto>> updatePost(@PathVariable Long postId,
       @RequestBody PostRequestDto requestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    PostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
+    PostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails);
 
     return ResponseFactory.ok(responseDto, StatusCode.SUCCESS_UPDATE_POST);
   }
@@ -50,7 +50,7 @@ public class PostController {
   @DeleteMapping("/{postId}")
   public ResponseEntity<MessageResponseDto> deletePost(@PathVariable Long postId,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    postService.deletePost(postId, userDetails.getUser());
+    postService.deletePost(postId, userDetails);
 
     return ResponseFactory.ok(StatusCode.SUCCESS_DELETE_POST);
   }

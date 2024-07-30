@@ -48,8 +48,9 @@ public class PostService {
         return new PostResponseDto(post);
     }
 
-    @Transactional(readOnly = true)
-    public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) {
+    @Transactional
+    public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
         Post post = findById(postId);
         checkUserSame(post, user);
         post.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getPrice(),
@@ -59,7 +60,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public void deletePost(Long postId, User user) {
+    public void deletePost(Long postId, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
         Post post = findById(postId);
         checkUserSame(post, user);
         postRepository.delete(post);
