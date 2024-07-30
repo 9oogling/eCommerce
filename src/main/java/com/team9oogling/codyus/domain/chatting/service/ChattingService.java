@@ -76,18 +76,19 @@ public class ChattingService {
 	}
 
 	@Transactional(readOnly = true)
+	public ChattingRoomResponseDto getChattingRoom(Long chattingRoomId, UserDetailsImpl userDetails) {
+		User user = userDetails.getUser();
+		ChattingMember chattingMember = findByChattingRoomIdAndUser(chattingRoomId, user);
+		return getChattingRoomResponseDto(chattingMember, user);
+
+	}
+
+	@Transactional(readOnly = true)
 	public List<ChattingRoomResponseDto> chattingRoomList(UserDetailsImpl userDetails, int page, int size) {
 		User user = userDetails.getUser();
 		var memberList = chattingMemberRepository.findByUserAndStatus(user, ChattingMemberStatus.ACTIVE);
 		List<ChattingRoomResponseDto> responseList = memberList.stream()
-			.map(chattingMember -> {
-				ChattingRoomFindTopResponseDto response = messageRepositoryCustom.findTopMessage(chattingMember);
-				MessageOffset messageOffset = messageService.messageOffsetFindById(response.getChattingRoomId(),
-					user.getId());
-				Integer unReadCount = messageService.unReadCount(response.getChattingMember(),
-					messageOffset.getLastReadMessageId());
-				return new ChattingRoomResponseDto(response, unReadCount);
-			})
+			.map(chattingMember -> getChattingRoomResponseDto(chattingMember, user))
 			.sorted(Comparator.comparing(ChattingRoomResponseDto::getLastTimestamp,
 					Comparator.nullsLast(Comparator.reverseOrder()))
 				.thenComparing(ChattingRoomResponseDto::getChattingRoomId))
@@ -142,6 +143,15 @@ public class ChattingService {
 		return chattingMemberRepository.findByChattingRoomIdAndUser(chattingRoomId, user).orElseThrow(
 			() -> new CustomException(NOT_FOUND_CHATTINGROOMS_USER)
 		);
+	}
+
+	private ChattingRoomResponseDto getChattingRoomResponseDto(ChattingMember chattingMember, User user){
+		ChattingRoomFindTopResponseDto response = messageRepositoryCustom.findTopMessage(chattingMember);
+		MessageOffset messageOffset = messageService.messageOffsetFindById(response.getChattingRoomId(),
+			user.getId());
+		Integer unReadCount = messageService.unReadCount(response.getChattingMember(),
+			messageOffset.getLastReadMessageId());
+		return new ChattingRoomResponseDto(response, unReadCount);
 	}
 }
 
