@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodyUs</title>
+</head>
+<body>
+<div th:fragment="header-content">
+  <header>
+    <header class="header-container">
+      <div class="top-header">
+        <div class="logo-nav">
+          <div class="logo">
+            <img src="https://blog.kakaocdn.net/dn/mIwzR/btsIPJWnjak/UCnJ8xed0QEKCMU0TJV9GK/img.png" alt="CodyUsLogo">
+          </div>
+          <nav class="sub-categories">
+            <a href="<!--여기에 링크 넣어주세요-->">랭킹</a>
+            <a href="<!--여기에 링크 넣어주세요-->">남자</a>
+            <a href="<!--여기에 링크 넣어주세요-->">여자</a>
+            <a href="<!--여기에 링크 넣어주세요-->">계절</a>
+          </nav>
+        </div>
+        <div class="user-actions">
+          <a href="<!--여기에 링크 넣어주세요-->">고객센터</a>
+          <a href="<!--여기에 링크 넣어주세요-->">마이페이지</a>
+          <a href="<!--여기에 링크 넣어주세요-->">채팅</a>
+          <a href="#" onclick="location.href='login.html'">로그인</a>
+        </div>
+      </div>
+      <div class="bottom-header">
+        <div class="search-section">
+          <nav class="main-categories">
+            <a href="<!--여기에 링크 넣어주세요-->">HOME</a>
+            <a href="<!--여기에 링크 넣어주세요-->">STYLE</a>
+            <a href="<!--여기에 링크 넣어주세요-->">SHOP</a>
+          </nav>
+          <div class="search-bar">
+            <input type="text" placeholder="Search...">
+            <select class="search-type-select">
+              <option value="title">제목</option>
+              <option value="title-content">제목 + 내용</option>
+              <option value="hashtags">해시태그</option>
+            </select>
+            <button>Search</button>
+          </div>
+        </div>
+      </div>
+    </header>
+  </header>
+</div>
+<script>
+  document.querySelector('.search-bar button').addEventListener('click', function() {
+    const searchQuery = document.querySelector('.search-bar input').value;
+    const searchType = document.querySelector('.search-type-select').value;
+    alert(`Searching for: "${searchQuery}" in ${searchType}`);
+    // Here you would typically send the search query and type to a server
+  });
+
+  document.querySelector('.search-bar input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      const searchQuery = this.value;
+      const searchType = document.querySelector('.search-type-select').value;
+      alert(`Searching for: "${searchQuery}" in ${searchType}`);
+      // Here you would typically send the search query and type to a server
+    }
+  });
+
+  // Add hover effect to main category links
+  const mainCategoryLinks = document.querySelectorAll('.main-categories a');
+  mainCategoryLinks.forEach(link => {
+    link.addEventListener('mouseover', function() {
+      this.style.color = '#4CAF50';
+    });
+    link.addEventListener('mouseout', function() {
+      this.style.color = '#333';
+    });
+  });
+</script>
+</body>
+</html>

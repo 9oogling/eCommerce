@@ -4,24 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Codyus</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/css/footer.css">
+  <link rel="stylesheet" type="text/css" href="/css/header.css">
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
-<header>
-  <div class="logo">CODYUS</div>
-  <nav>
-    <a href="#">랭킹</a>
-    <a href="#">핫시즌</a>
-    <a href="#">남성</a>
-    <a href="#">여성</a>
-    <a href="#">게임</a>
-  </nav>
-  <div class="search-bar">
-    <input type="text" placeholder="검색">
-    <a href="#">로그인</a>
-  </div>
-</header>
+<div th:insert="header :: header-content"></div>
 
 <div class="slider">
   <div class="slides">
@@ -62,7 +51,7 @@
     </div>
   </div>
 </div>
-
+<div th:insert="footer :: footer-content"></div>
 <script src="basic.js"></script>
 </body>
 </html>
