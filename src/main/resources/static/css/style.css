@@ -13,35 +13,7 @@ body {
   margin: 0;
   padding: 0;
 }
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  border-bottom: 1px solid #ddd;
-}
-header .logo {
-  font-size: 24px;
-  font-weight: bold;
-}
-header nav {
-  display: flex;
-  gap: 15px;
-}
-header nav a {
-  text-decoration: none;
-  color: black;
-  font-size: 14px;
-}
-.search-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.search-bar input[type="text"] {
-  padding: 5px;
-  font-size: 14px;
-}
+
 .slider {
   position: relative;
   width: 100%;
