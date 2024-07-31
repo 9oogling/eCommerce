@@ -1,0 +1,155 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.header-container {
+  max-width: 1200px;
+  height: 156px; /* 고정된 높이 */
+  width: 100%; /* 전체 너비 */
+  box-sizing: border-box; /* 패딩과 보더를 포함 */
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.logo-nav {
+  display: flex;
+  align-items: center;
+  gap: 130px;
+}
+
+.logo {
+  width: 100px;
+  height: 30px;
+}
+.logo img {
+  width: 180%;
+  margin-bottom: 250px;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sub-categories {
+  display: flex;
+  gap: 30px;
+}
+
+.sub-categories a {
+  text-decoration: none;
+  font-weight: bold;
+  color: #555;
+  font-size: 20px;
+  transition: color 0.3s ease;
+  margin: 10px;
+}
+
+.sub-categories a:hover {
+  color: #000;
+}
+
+.user-actions {
+  display: flex;
+  gap: 20px;
+}
+
+.user-actions a {
+  text-decoration: none;
+  color: #666;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.user-actions a:hover {
+  color: #000;
+}
+
+.bottom-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.main-categories {
+  display: flex;
+  gap: 30px;
+}
+
+.main-categories a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 18px;
+  transition: color 0.3s ease;
+}
+
+.main-categories a:hover {
+  color: #000;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 25px;
+  padding: 5px;
+  transition: all 0.3s ease;
+}
+.search-bar:focus-within {
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.search-bar input {
+  border: none;
+  background: transparent;
+  padding: 10px 15px;
+  font-size: 14px;
+  width: 200px;
+  outline: none;
+}
+.search-type-select {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: #555;
+  padding: 10px;
+  cursor: pointer;
+  outline: none;
+  border-left: 1px solid #ddd;
+}
+
+.search-bar button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.search-bar button:hover {
+  background-color: #45a049;
+}

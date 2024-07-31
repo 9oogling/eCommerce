@@ -76,17 +76,16 @@ public class SecurityConfig {
         .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             // 1. 중복 url 삭제 2. 파일명 -> API 로 변경
-            .requestMatchers("/chatting/**","chat.html","login.html","/api/users/signup",
-                "/api/users/token/refresh", "/api/users/login").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/user/kakao/callback", "/api/users/login/naver",
-                "/api/users/naver/callback", "/api/posts", "/login-page", "/home", "/api/users/email").permitAll()
+            .requestMatchers("/chatting/**","chat.html","/api/users/signup", "/main.html",
+                "/api/users/token/refresh", "/api/users/login", "/login-page", "/home", "/signup-page").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/user/kakao/callback", "/api/posts", "/api/users/email").permitAll()
             .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
             .anyRequest().authenticated())
         .exceptionHandling((exceptionHandling) -> {
           exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint);
         })
         .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-        .addFilterAfter(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+        .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
 
     return http.build();
   }
