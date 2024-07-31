@@ -1,5 +1,6 @@
 package com.team9oogling.codyus.domain.user.service;
 
+import com.team9oogling.codyus.domain.user.dto.FindEmailDto;
 import com.team9oogling.codyus.domain.user.dto.UpdateProfileAddressRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UpdateProfilePasswordRequestDto;
 import com.team9oogling.codyus.domain.user.dto.UpdateProfilePhoneNumberRequestDto;
@@ -163,6 +164,17 @@ public class UserService {
     user.updatePhoneNumber(requestDto);
 
     userRepository.save(user);
+  }
+
+  @Transactional
+  public FindEmailDto FindEmail(FindEmailDto requestDto) {
+
+    User user = userRepository.findByEmail(requestDto.getEmail()).orElseThrow(()
+        -> new CustomException(StatusCode.NOT_FOUND_EMAIL));
+
+    String email = user.getEmail();
+
+    return new FindEmailDto(email);
   }
 
   private void addToBlacklist(String token) {

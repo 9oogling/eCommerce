@@ -3,7 +3,6 @@ package com.team9oogling.codyus.domain.oauth.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.team9oogling.codyus.domain.oauth.service.KakaoService;
-import com.team9oogling.codyus.domain.oauth.service.NaverService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
@@ -16,11 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class OAuthController {
 
   private final KakaoService kakaoService;
-  private final NaverService naverService;
 
-  public OAuthController(KakaoService kakaoService, NaverService naverService) {
+  public OAuthController(KakaoService kakaoService) {
     this.kakaoService = kakaoService;
-    this.naverService = naverService;
   }
 
   @GetMapping("/user/kakao/callback")
