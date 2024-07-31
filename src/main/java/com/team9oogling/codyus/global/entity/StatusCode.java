@@ -30,6 +30,8 @@ public enum StatusCode {
   SUCCESS_SEND_MESSAGE(HttpStatus.OK, "메세지 전송에 성공했습니다."),
   SUCCESS_GET_MESSAGE_LIST(HttpStatus.OK,"메세지 목록 조회에 성공했습니다."),
   SUCCESS_CHATTINGROOMS_EXIT(HttpStatus.OK, "채팅방 나가기에 성공했습니다."),
+  SUCCESS_GET_USERINFO(HttpStatus.OK, "사용자 정보 조회에 성공했습니다."),
+  SUCCESS_FIND_EMAIL(HttpStatus.OK, "이메일 찾기에 성공했습니다."),
 
 
   // 400번대
@@ -52,6 +54,7 @@ public enum StatusCode {
   ALREADY_EXIST_LIKE(HttpStatus.BAD_REQUEST, "이미 좋아요를 누른 게시글입니다."),
   NOT_FOUND_CATEGORY(HttpStatus.NOT_FOUND, "해당 카테고리를 찾을 수 없습니다."),
   FILE_CONVERT_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "File Convert Error"),
+  NOT_FOUND_EMAIL(HttpStatus.NOT_FOUND, "해당 이메일을 찾을 수 없습니다."),
 
   // Chatting
   NOT_FOUND_POST(HttpStatus.NOT_FOUND, "게시물이 없습니다."),
