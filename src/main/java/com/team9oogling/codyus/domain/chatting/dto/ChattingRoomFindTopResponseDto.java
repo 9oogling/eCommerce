@@ -11,20 +11,26 @@ import lombok.Getter;
 
 @Getter
 public class ChattingRoomFindTopResponseDto {
-	private final Long chattingRoomId;
-	private User user;
-	private ChattingMember chattingMember;
-	private String message;
-	private LocalDateTime createdAt;
 
-	public ChattingRoomFindTopResponseDto(Long chattingRoomId, Optional<Message> optionalMessage) {
-		this.chattingRoomId = chattingRoomId;
+	private final Long chattingRoomId;
+	private final User user;
+	private final ChattingMember chattingMember;
+	private final String message;
+	private final LocalDateTime createdAt;
+
+	public ChattingRoomFindTopResponseDto(ChattingMember chattingMember, Optional<Message> optionalMessage) {
+		this.chattingRoomId = chattingMember.getChattingRoom().getId();
 		if (optionalMessage.isPresent()) {
 			Message message = optionalMessage.get();
 			this.user = message.getUser();
 			this.chattingMember = message.getChattingMember();
 			this.message = message.getMessage();
 			this.createdAt = message.getCreatedAt();
+		} else {
+			this.user = null;
+			this.chattingMember = chattingMember;
+			this.message = null;
+			this.createdAt = null;
 		}
 	}
 }

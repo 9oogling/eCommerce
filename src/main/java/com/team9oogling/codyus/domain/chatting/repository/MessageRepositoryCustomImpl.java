@@ -24,7 +24,6 @@ public class MessageRepositoryCustomImpl implements MessageRepositoryCustom {
 	public ChattingRoomFindTopResponseDto findTopMessage(ChattingMember chattingMember) {
 		QMessage qMessage = QMessage.message1;
 		QChattingMember qChattingMember = QChattingMember.chattingMember;
-
 		Long chattingRoomId = chattingMember.getChattingRoom().getId();
 		Long currentUserId = chattingMember.getUser().getId();
 
@@ -40,7 +39,7 @@ public class MessageRepositoryCustomImpl implements MessageRepositoryCustom {
 			.orderBy(qMessage.createdAt.desc())
 			.fetchFirst()
 		);
-		return new ChattingRoomFindTopResponseDto(chattingRoomId, message);
+		return new ChattingRoomFindTopResponseDto(chattingMember, message);
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserInfoDto {
 
-  String username;
-  boolean isAdmin;
-
+	String username;
+	boolean isAdmin;
+	String nickName;
 }

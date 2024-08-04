@@ -43,9 +43,10 @@ public class UserController {
   public ResponseEntity<DataResponseDto<UserInfoDto>> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
     String email = userDetails.getUser().getEmail();
     UserRole role = userDetails.getUser().getRole();
+    String nickName = userDetails.getUser().getNickname();
     boolean isAdmin = (role == UserRole.ADMIN);
 
-    UserInfoDto responseDto = new UserInfoDto(email, isAdmin);
+    UserInfoDto responseDto = new UserInfoDto(email, isAdmin,nickName);
 
     return ResponseFactory.ok(responseDto, StatusCode.SUCCESS_GET_USERINFO);
   }
