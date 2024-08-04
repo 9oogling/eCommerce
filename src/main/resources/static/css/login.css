@@ -1,111 +1,46 @@
-body {
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: -16px auto auto auto;
-  background-color: #ffffff;
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
 }
 
-/*
-메뉴1 생성 (고객센터, 마이페이지, 관심, 채팅, 로그인)
- */
-.nav1 {
-  background-color: transparent;
-  color: #a9a9a9;
-  text-align: center;
-  padding: 10px 0;
-  position: fixed;
-  top: 20px;
-  right: 300px;
-  font-size: 10px;
-}
-
-/*
-메뉴2 생성 (HOME, STYLE, SHOP)
- */
-.nav2 {
-  background-color: transparent;
-  color: #575757;
-  text-align: center;
-  padding: 10px 0;
-  position: fixed;
-  top: 50px;
-  right: 300px;
-  font-size: 15px;
-}
-
-/*
-메뉴1,2 정렬
- */
-nav ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-nav ul li {
-  display: inline;
-  margin-right: 20px;
-}
-
-/*
-메뉴1 효과 (고객센터, 마이페이지, 관심, 채팅, 로그인)
- */
-.nav1 ul li a {
-  color: #ababab;
-  text-decoration: none;
-  font-size: 13px;
-}
-
-.nav1 ul li a:hover {
-  color: #dadada;
-}
-
-/*
-메뉴2 효과 (HOME, STYLE, SHOP)
- */
-.nav2 ul li a {
-  color: #575757;
-  text-decoration: none;
-  font-size: 15px;
-}
-
-.nav2 ul li a:hover {
-  color: #adadad;
-  font-weight: normal;
+* {
+  font-family: 'Pretendard-Regular';
 }
 
 /*
 로그인 화면 크기 조절
  */
 .container {
-  text-align: center;
-  width: 100%;
-  max-width: 380px;
-  padding: 20px;
+  margin: 0 auto;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
 }
 
 /*
 로고 크기 조절
  */
-.logo img {
+.login-logo img {
   width: 100%;
   display: flex;
-  margin-bottom: 70px;
+  margin-top: 50px;
+  margin-bottom: 30px;
   margin-left: 3px;
 }
 
 /*
 이메일, 비밀번호 입력란 정렬
  */
-.login-form input {
+#login-form > input {
   display: block;
   border: none;
   border-bottom: 1px solid rgba(115, 115, 115, 0.3);
   color: #808080;
   padding: 7px 3px;
-  margin: 40px 0 40px;
+  margin-top: 5px;
+  margin-bottom: 40px;
   width: 100%;
   outline: none;
 }
@@ -113,23 +48,23 @@ nav ul li {
 /*
 ex) . . .  예시 색상
  */
-input::placeholder {
+#login-form > input::placeholder {
   color: #cecece;
   opacity: 5;
 }
 
-input::-webkit-input-placeholder {
+#login-form > input::-webkit-input-placeholder {
   color: #cecece;
 }
 
-input:-ms-input-placeholder {
+#login-form > input:-ms-input-placeholder {
   color: #cecece;
 }
 
 /*
 로그인 버튼 생성
  */
-.login-form button {
+.button-container > button {
   width: 100%;
   padding: 7px;
   border: 1px solid #b0b0b0;
@@ -142,14 +77,14 @@ input:-ms-input-placeholder {
 /*
 로그인 버튼 효과
  */
-.login-form button:hover {
+.button-container > button:hover {
   background-color: #f1f1f1;
 }
 
 /*
 입력란 위 이메일, 비밀번호 글자 크기 및 위치 조절
  */
-.login-form span {
+#login-form span {
   display: flex;
   color: #818181;
   font-size: 13px;
@@ -183,12 +118,12 @@ input:-ms-input-placeholder {
 카카오 버튼 크기 및 위치 조절
  */
 .kakao-button {
-  width: calc(50% - 5px);
+  width: 100%;
   padding: 7px;
   border: none;
   cursor: pointer;
   font-size: 13px;
-  margin: 50px 2.5px auto auto;
+  margin-bottom: 50px;
 }
 
 /*
@@ -202,64 +137,4 @@ input:-ms-input-placeholder {
 
 .kakao-button:hover {
   background-color: #ebc400;
-}
-
-/*
-검색창
- */
-.search-box input {
-  width: 310px;
-  padding: 7px;
-  border: 1px solid #b0b0b0;
-  cursor: pointer;
-  background-color: #ffffff;
-  color: #818181;
-  font-size: 13px;
-  float: left;
-  outline: none;
-}
-
-/*
-검색창 내부 글자
- */
-.search-text input {
-  width: 310px;
-  padding: 7px;
-  border: 1px solid #b0b0b0;
-  cursor: pointer;
-  background-color: #ffffff;
-  color: #818181;
-  font-size: 13px;
-  float: left;
-  outline: none;
-}
-
-/*
-검색 버튼 생성 및 효과
- */
-.search-box button {
-  width: 40px;
-  height: 31px;
-  border: none;
-  margin: auto 10px auto auto;
-  float: right;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 13px;
-  color: #a2a2a2;
-  background-color: #ffffff;
-}
-
-.search-box button:hover {
-  color: #dadada;
-}
-
-/*
-검색창 위치 조절
- */
-.left-header {
-  position: fixed;
-  top: 50px;
-  left: 300px;
 }

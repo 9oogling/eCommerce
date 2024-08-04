@@ -20,4 +20,9 @@ public class HomeController {
   public String signupPage() {
     return "signup";
   }
+
+  @GetMapping("/shop-page")
+  public String shopPage() {
+    return "shop";
+  }
 }
