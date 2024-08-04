@@ -77,7 +77,7 @@ public class SecurityConfig {
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             // 1. 중복 url 삭제 2. 파일명 -> API 로 변경
             .requestMatchers("/chatting/**","chat.html","/api/users/signup", "/main.html",
-                "/api/users/token/refresh", "/api/users/login", "/login-page", "/home", "/signup-page").permitAll()
+                "/api/users/token/refresh", "/api/users/login", "/login-page", "/home", "/signup-page", "/shop-page").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/user/kakao/callback", "/api/posts", "/api/users/email").permitAll()
             .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
             .anyRequest().authenticated())
