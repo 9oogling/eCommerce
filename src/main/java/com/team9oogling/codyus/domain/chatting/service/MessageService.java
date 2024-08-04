@@ -39,12 +39,11 @@ public class MessageService {
 
 	private final UserService userService;
 
-
 	@Transactional
 	public ChattingMessageResponseDto sendMessage(ChattingMessageRequestDto requestDto) {
 		User user = userService.findByToken(requestDto.getToken());
 		// 1. 채팅룸 존재  and 게시물이 닫혔는지 확인
-		ChattingRoom chattingRoom =  findByChattingRoomId(requestDto.getChattingRoomId());
+		ChattingRoom chattingRoom = findByChattingRoomId(requestDto.getChattingRoomId());
 		if (chattingRoom.getPost().getStatus().equals(PostStatus.COMPLETE)) {
 			throw new CustomException(ITEM_TRANSACTION_COMPLETED);
 		}
@@ -55,15 +54,17 @@ public class MessageService {
 		messageRepository.save(message);
 		// 읽음 처리
 		updateMessageOffset(message, user, requestDto.getChattingRoomId());
-		return new ChattingMessageResponseDto(requestDto.getChattingRoomId(), requestDto.getToken(), message);
+		return new ChattingMessageResponseDto(requestDto.getChattingRoomId(), message, members);
 	}
 
 	@Transactional
 	public ChattingReadResponseDto readMessage(ChattingReadRequestDto requestDto) {
 		User user = userService.findByToken(requestDto.getToken());
+		ChattingRoom chattingRoom = findByChattingRoomId(requestDto.getChattingRoomId());
 		Message message = messageRepository.findById(requestDto.getMessageId()).orElseThrow(() -> new CustomException(NOT_FOUND_MESSAGE));
+		List<ChattingMember> members = isMemberExitedFromChattingRoom(chattingRoom, user);
 		updateMessageOffset(message, user, requestDto.getChattingRoomId());
-		return new ChattingReadResponseDto(requestDto.getChattingRoomId(), message.getId(), requestDto.getToken());
+		return new ChattingReadResponseDto(members, requestDto.getChattingRoomId(), message.getId());
 	}
 
 	public void updateMessageOffset(Message message, User user, Long chattingRoomId) {

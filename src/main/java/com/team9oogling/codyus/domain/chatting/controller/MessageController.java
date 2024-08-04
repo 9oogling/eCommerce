@@ -28,13 +28,13 @@ public class MessageController {
 		이를 통해 특정 채팅방에 관련된 클라이언트에게 메시지를 전송할 수 있습니다.
 		*/
 		messagingTemplate.convertAndSend("/topic/" + requestDto.getChattingRoomId(), responseDto);
-		messagingTemplate.convertAndSend(
-			"/topic/user/" + responseDto.getUserId() + "/" + responseDto.getChattingRoomId(), responseDto);
+		messagingTemplate.convertAndSend("/topic/user/" + responseDto.getPartnerEmail(), responseDto);
+		messagingTemplate.convertAndSend("/topic/user/" + responseDto.getUserEmail(), responseDto);
 	}
 
 	@MessageMapping("/chattingrooms/read")
 	public void readMessage(final ChattingReadRequestDto requestDto) {
 		ChattingReadResponseDto responseDto = messageService.readMessage(requestDto);
-		messagingTemplate.convertAndSend("/topic/" + responseDto.getChattingRoomId() + "/read", responseDto);
+		messagingTemplate.convertAndSend("/topic/" + responseDto.getChattingRoomId() + "/read/" + responseDto.getPartnerEmail(), responseDto);
 	}
 }

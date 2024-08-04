@@ -14,8 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.team9oogling.codyus.domain.chatting.dto.ChattingMessageResponseDto;
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomCreateResponseDto;
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomFindTopResponseDto;
-import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomMessageRequestDto;
+import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomGetPostResponseDto;
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomResponseDto;
+import com.team9oogling.codyus.domain.chatting.dto.MessageOffsetResponseDto;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingMember;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingMemberStatus;
 import com.team9oogling.codyus.domain.chatting.entity.ChattingRoom;
@@ -26,6 +27,7 @@ import com.team9oogling.codyus.domain.chatting.repository.ChattingRoomRepository
 import com.team9oogling.codyus.domain.chatting.repository.MessageOffsetRepository;
 import com.team9oogling.codyus.domain.chatting.repository.MessageRepositoryCustomImpl;
 import com.team9oogling.codyus.domain.post.entity.Post;
+import com.team9oogling.codyus.domain.post.entity.PostImage;
 import com.team9oogling.codyus.domain.post.service.PostService;
 import com.team9oogling.codyus.domain.user.entity.User;
 import com.team9oogling.codyus.global.exception.CustomException;
@@ -103,16 +105,24 @@ public class ChattingService {
 
 	@Transactional(readOnly = true)
 	public List<ChattingMessageResponseDto> chattingRoomMessageList(Long chattingRoomId,
-		ChattingRoomMessageRequestDto requestDto, int page, int size, UserDetailsImpl userDetails) {
+		Long messageId, int page, int size, UserDetailsImpl userDetails) {
 		User user = userDetails.getUser();
 		existsChattingRoomUser(chattingRoomId, user);
 
 		Pageable pageable = PageRequest.of(page - 1, size);
-		List<Message> messageList = messageRepositoryCustom.getMessageList(user, requestDto.getMessageId(),
+		List<Message> messageList = messageRepositoryCustom.getMessageList(user,messageId,
 			chattingRoomId, pageable);
 		return messageList.stream()
 			.map(ChattingMessageResponseDto::new)
 			.toList();
+	}
+
+	@Transactional(readOnly = true)
+	public ChattingRoomGetPostResponseDto getChattingRoomPost(Long chattingroomsId, UserDetailsImpl userDetails) {
+		ChattingRoom chattingRoom = messageService.findByChattingRoomId(chattingroomsId);
+		Post post = chattingRoom.getPost();
+		PostImage postImage = postService.findFirstByPost(post);
+		return new ChattingRoomGetPostResponseDto(post, postImage);
 	}
 
 	@Transactional
@@ -121,6 +131,11 @@ public class ChattingService {
 		existsChattingRoomUser(chattingRoomId, user);
 		var chattingMember = findByChattingRoomIdAndUser(chattingRoomId, user);
 		chattingMember.updateChattingMemberStatusExit();
+	}
+
+	public MessageOffsetResponseDto getChattingRoomReadMessage(Long chattingroomsId, UserDetailsImpl userDetails) {
+		MessageOffset messageOffset = messageOffsetRepository.findByChattingRoomIdAndUserIdNot(chattingroomsId, userDetails.getUser().getId()).orElse(null);
+		return new MessageOffsetResponseDto(messageOffset);
 	}
 
 	private void chattingRoomPostAndUser(Long postId, User user) {
@@ -147,11 +162,10 @@ public class ChattingService {
 
 	private ChattingRoomResponseDto getChattingRoomResponseDto(ChattingMember chattingMember, User user){
 		ChattingRoomFindTopResponseDto response = messageRepositoryCustom.findTopMessage(chattingMember);
-		MessageOffset messageOffset = messageService.messageOffsetFindById(response.getChattingRoomId(),
-			user.getId());
-		Integer unReadCount = messageService.unReadCount(response.getChattingMember(),
-			messageOffset.getLastReadMessageId());
-		return new ChattingRoomResponseDto(response, unReadCount);
+		var messageOffset = messageService.messageOffsetFindById(response.getChattingRoomId(), user.getId());
+		Integer unReadCount = messageService.unReadCount(response.getChattingMember(), messageOffset.getLastReadMessageId());
+		var member = chattingMemberRepository.findByChattingRoom(response.getChattingMember().getChattingRoom());
+		return new ChattingRoomResponseDto(response, unReadCount, member, user);
 	}
 }
 
