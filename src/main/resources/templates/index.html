@@ -8,6 +8,9 @@
   <link rel="stylesheet" type="text/css" href="/css/footer.css">
   <link rel="stylesheet" type="text/css" href="/css/header.css">
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+          integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 </head>
 <body>
 <div th:insert="header :: header-content"></div>
@@ -52,6 +55,7 @@
   </div>
 </div>
 <div th:insert="footer :: footer-content"></div>
-<script src="basic.js"></script>
+<script src="/js/header.js"></script>
+<script src="/js/basic.js"></script>
 </body>
 </html>

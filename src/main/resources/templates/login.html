@@ -6,48 +6,31 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="/css/login.css">
+    <link rel="stylesheet" type="text/css" href="/css/header.css">
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <title>로그인</title>
 </head>
 <body>
-<div class="left-header">
-    <form class="search-box" action="" method="get">
-        <input class="search-text" type="text" name="?q=" placeholder="">
-        <button class="search-btn" type="submit">검색</button>
-    </form>
-</div>
-<div class="nav1">
-    <nav>
-        <ul>
-            <li><a href="#">고객센터</a></li>
-            <li><a href="#">마이페이지</a></li>
-            <li><a href="#">관심</a></li>
-            <li><a href="#">채팅</a></li>
-        </ul>
-    </nav>
-</div>
-<div class="nav2">
-    <nav>
-        <ul>
-            <li><a href="/home">HOME</a> &emsp; |</li>
-            <li><a href="#">STYLE</a> &emsp; |</li>
-            <li><a href="#">SHOP</a></li>
-        </ul>
-    </nav>
-</div>
+<div th:insert="header :: header-content"></div>
+
 <div class="container">
-    <div class="logo">
+    <div class="login-logo">
         <img src="https://blog.kakaocdn.net/dn/mIwzR/btsIPJWnjak/UCnJ8xed0QEKCMU0TJV9GK/img.png" alt="CodyUsLogo">
     </div>
-    <form class="login-form">
+
+    <form id="login-form" method="post">
         <span>이메일</span>
-        <input type="email" placeholder="ex) codyus@email.com" required>
+        <input id="email" name="email" type="text" placeholder="ex) codyus@email.com">
         <span>비밀번호</span>
-        <input type="password" placeholder="ex) 영문, 숫자, 특수문자 포함 8~16자" required>
-        <button type="submit">로그인</button>
+        <input id="password" name="password" type="password" placeholder="ex) 영문, 숫자, 특수문자 포함 8~16자">
+        <div class="button-container">
+            <button type="submit">로그인</button>
+        </div>
     </form>
+
     <div class="links">
         <a href="/signup-page">이메일 가입</a> |
         <a href="#" onclick="location.href='find-email.html'">이메일 찾기</a> |
@@ -58,6 +41,8 @@
         카카오 로그인
     </button>
 </div>
+
+<div th:insert="footer :: footer-content"></div>
 <script src="/js/login.js"></script>
 </body>
 </html>

@@ -1,0 +1,71 @@
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+* {
+  font-family: 'Pretendard-Regular';
+}
+
+.container {
+  margin: 0 auto;
+  width: 1320px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+}
+
+.col {
+  flex: 1;
+  max-width: calc(1320px / 12);
+}
+
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.product-item {
+  width: calc(1320px / 5 - 10px);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.product-item img {
+  width: 250px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.product-name {
+  margin-top: 4px;
+  margin-left: 4px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.category-title {
+  font-size: 17px;
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: left;
+  width: 100%;
+  margin-left: 4px;
+}
+
+.category_sub_title {
+  font-size: 16px;
+  text-align: left;
+  color: #afafaf;
+  margin-bottom: 4px;
+  margin-left: 4px;
+}
