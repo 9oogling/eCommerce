@@ -32,6 +32,8 @@ public enum StatusCode {
   SUCCESS_CHATTINGROOMS_EXIT(HttpStatus.OK, "채팅방 나가기에 성공했습니다."),
   SUCCESS_GET_USERINFO(HttpStatus.OK, "사용자 정보 조회에 성공했습니다."),
   SUCCESS_FIND_EMAIL(HttpStatus.OK, "이메일 찾기에 성공했습니다."),
+  SUCCESS_FIND_CHATTING_ROOM_POST(HttpStatus.OK, "채팅방 게시물을 조회에 성공했습니다."),
+  SUCCESS_FIND_CHATTING_ROOM_MESSAGE_OFFSET(HttpStatus.OK, "메세지 오프셋 조회에 성공했습니다."),
 
 
   // 400번대

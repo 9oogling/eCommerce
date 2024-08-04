@@ -25,4 +25,10 @@ public class HomeController {
   public String shopPage() {
     return "shop";
   }
+
+  @GetMapping("/chat")
+  public String chatPage() {
+    return "chat";
+  }
+
 }

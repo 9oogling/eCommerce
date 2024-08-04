@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.team9oogling.codyus.domain.chatting.dto.ChattingMessageResponseDto;
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomCreateResponseDto;
-import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomMessageRequestDto;
+import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomGetPostResponseDto;
 import com.team9oogling.codyus.domain.chatting.dto.ChattingRoomResponseDto;
+import com.team9oogling.codyus.domain.chatting.dto.MessageOffsetResponseDto;
 import com.team9oogling.codyus.domain.chatting.service.ChattingService;
 import com.team9oogling.codyus.global.dto.DataResponseDto;
 import com.team9oogling.codyus.global.dto.MessageResponseDto;
@@ -59,13 +59,31 @@ public class ChattingRoomController {
 
 	@GetMapping("/chattingrooms/{chattingroomsId}/messages") // -> 나중에 url 변경 예정
 	public ResponseEntity<DataResponseDto<List<ChattingMessageResponseDto>>> chattingRoomMessageList(
-		@PathVariable Long chattingroomsId, @RequestBody ChattingRoomMessageRequestDto requestDto,
+		@PathVariable Long chattingroomsId,
+		@RequestParam(required = false) Long messageId,
 		@RequestParam(defaultValue = "1") int page,
 		@RequestParam(defaultValue = "100") int size,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		List<ChattingMessageResponseDto> responseDtoList = chattingRoomService.chattingRoomMessageList(chattingroomsId,
-			requestDto, page, size, userDetails);
+			messageId, page, size, userDetails);
 		return ResponseFactory.ok(responseDtoList, SUCCESS_GET_MESSAGE_LIST);
+	}
+
+	@GetMapping("/chattingrooms/{chattingroomsId}/post")
+	public ResponseEntity<DataResponseDto<ChattingRoomGetPostResponseDto>> getChattingRoomPost(
+		@PathVariable Long chattingroomsId,
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		ChattingRoomGetPostResponseDto responseDto = chattingRoomService.getChattingRoomPost(chattingroomsId,
+			userDetails);
+		return ResponseFactory.ok(responseDto, SUCCESS_FIND_CHATTING_ROOM_POST);
+	}
+
+	@GetMapping("/chattingrooms/{chattingroomsId}/messagesoffset")
+	public ResponseEntity<DataResponseDto<MessageOffsetResponseDto>> getChattingRoomReadMessage(
+		@PathVariable Long chattingroomsId,
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		var responseDto = chattingRoomService.getChattingRoomReadMessage(chattingroomsId, userDetails);
+		return ResponseFactory.ok(responseDto, SUCCESS_FIND_CHATTING_ROOM_MESSAGE_OFFSET);
 	}
 
 	@PutMapping("/chattingrooms/{chattingroomsId}/exit")

@@ -5,8 +5,10 @@ import com.team9oogling.codyus.domain.post.dto.PostRequestDto;
 import com.team9oogling.codyus.domain.post.dto.PostResponseDto;
 import com.team9oogling.codyus.domain.post.entity.Category;
 import com.team9oogling.codyus.domain.post.entity.Post;
+import com.team9oogling.codyus.domain.post.entity.PostImage;
 import com.team9oogling.codyus.domain.post.entity.SearchType;
 import com.team9oogling.codyus.domain.post.repository.CategoryRepository;
+import com.team9oogling.codyus.domain.post.repository.PostImageRepository;
 import com.team9oogling.codyus.domain.post.repository.PostRepository;
 import com.team9oogling.codyus.domain.post.repository.PostRepositoryImpl;
 import com.team9oogling.codyus.domain.user.entity.User;
@@ -37,6 +39,7 @@ public class PostService {
     private final PostRepositoryImpl postRepositoryImpl;
     private final CategoryRepository categoryRepository;
     private final AwsS3Uploader awsS3Uploader;
+    private final PostImageRepository postImageRepository;
 
     @Transactional
     public PostResponseDto savePost(PostRequestDto requestDto, UserDetailsImpl userDetails, List<MultipartFile> images) {
@@ -139,5 +142,13 @@ public class PostService {
             category.addCategory(categoryName);
             return categoryRepository.save(category);
         });
+    }
+
+    public List<PostImage> findAllByPost(Post post) {
+        return postImageRepository.findByPost(post);
+    }
+
+    public PostImage findFirstByPost(Post post) {
+        return postImageRepository.findFirstByPost(post).orElse(null);
     }
 }
