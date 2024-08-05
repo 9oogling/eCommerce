@@ -43,6 +43,12 @@ public class Post extends Timestamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostImage> postImages = new ArrayList<>();
+
+    public String getNickname() {
+        return user.getNickname(); // User 엔티티에서 nickname 가져오기
+    }
 
 
     public Post(String title, String content, int price, SaleType saleType, String hashtags, User user, Category category) {

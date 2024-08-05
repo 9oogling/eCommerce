@@ -32,8 +32,9 @@ public class PostController {
     @PostMapping
     public ResponseEntity<DataResponseDto<PostResponseDto>> savePost(@Valid @RequestPart(value = "request") PostRequestDto requestDto,
                                                                      @RequestPart(value = "image", required = false) List<MultipartFile> images,
+                                                                     @RequestPart(value = "productImage", required = false) List<MultipartFile> productImages,
                                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        PostResponseDto responseDto = postService.savePost(requestDto, userDetails, images);
+        PostResponseDto responseDto = postService.savePost(requestDto, userDetails, images, productImages);
 
         return ResponseFactory.created(responseDto, StatusCode.SUCCESS_CREATE_POST);
     }
@@ -43,7 +44,7 @@ public class PostController {
     public ResponseEntity<DataResponseDto<PostResponseDto>> updatePost(@PathVariable Long postId,
                                                                        @RequestBody PostRequestDto requestDto,
                                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        PostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
+        PostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails);
 
         return ResponseFactory.ok(responseDto, StatusCode.SUCCESS_UPDATE_POST);
     }
@@ -52,7 +53,7 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<MessageResponseDto> deletePost(@PathVariable Long postId,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postService.deletePost(postId, userDetails.getUser());
+        postService.deletePost(postId, userDetails);
 
         return ResponseFactory.ok(StatusCode.SUCCESS_DELETE_POST);
     }
@@ -61,7 +62,7 @@ public class PostController {
     @GetMapping
     public ResponseEntity<DataResponseDto<List<PostResponseDto>>> getAllPost(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size) {
+            @RequestParam(value = "size", defaultValue = "20") int size) {
         List<PostResponseDto> posts = postService.findAllPost(page - 1, size);
 
         return ResponseFactory.ok(posts, StatusCode.SUCCESS_GET_ALLPOST);

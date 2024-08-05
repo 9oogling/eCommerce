@@ -1,0 +1,66 @@
+.post {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 20px auto;
+    max-width: 800px;
+    padding: 15px;
+    background-color: #fff;
+}
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.post-image-container {
+    position: relative;
+    width: 100%;
+}
+
+.post-avatar {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+.post-username {
+    font-weight: bold;
+}
+.post-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+.post-actions {
+    display: flex;
+    margin-bottom: 10px;
+}
+.action-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+.post-likes {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.post-caption {
+    margin-top: 10px;
+}
+.product-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.product-item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    width: 150px;
+}
+.product-item img {
+    width: 100%;
+    height: auto;
+}

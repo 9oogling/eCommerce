@@ -20,10 +20,22 @@ public class CategoryInitializer {
   @Bean
   public CommandLineRunner initCategory() {
     return args -> {
+
       // 메뉴 카테고리
       postService.addCategoryIfNotExists(categoryRepository, "MAN");
       postService.addCategoryIfNotExists(categoryRepository, "WOMAN");
+      postService.addCategoryIfNotExists(categoryRepository, "UNISEX");
+      postService.addCategoryIfNotExists(categoryRepository, "MAN, SPRING");
+
+
+
+
       postService.addCategoryIfNotExists(categoryRepository, "SEASON");
+      postService.addCategoryIfNotExists(categoryRepository, "SPRING");
+      postService.addCategoryIfNotExists(categoryRepository, "SUMMER");
+      postService.addCategoryIfNotExists(categoryRepository, "FALL");
+      postService.addCategoryIfNotExists(categoryRepository, "WINTER");
+
 
       // 분류 카테고리
       postService.addCategoryIfNotExists(categoryRepository, "TOPS");
