@@ -32,6 +32,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<DataResponseDto<PostResponseDto>> savePost(@Valid @RequestPart(value = "request") PostRequestDto requestDto,
                                                                      @RequestPart(value = "image", required = false) List<MultipartFile> images,
+        @RequestPart(value = "productImage", required = false) List<MultipartFile> productImages,
                                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
         PostResponseDto responseDto = postService.savePost(requestDto, userDetails, images);
 
