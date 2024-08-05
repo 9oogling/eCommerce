@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>STYLE 페이지 </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="/css/posts.css">
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/header.css">
+</head>
+<body>
+<div th:insert="header :: header-content"></div>
+<div class="create-post">
+    <div class="create-button">
+        <button type="button" class="btn btn-primary" onclick="location.href='/posts/postCreate'">게시물 등록하기</button>
+    </div>
+</div>
+
+<div id="posts-container" class="post-container">
+    <!-- 게시물이 여기에 로드됩니다. -->
+</div>
+
+<div id="loading" class="loading">게시물을 불러오는 중...</div>
+
+<script src="/js/posts.js"></script>
+</body>
+<div th:insert="footer :: footer-content"></div>
+</html>
