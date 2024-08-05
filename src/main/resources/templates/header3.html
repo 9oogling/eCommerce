@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodyUs</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+</head>
+<body>
+<div th:fragment="header-content">
+    <header>
+        <header class="header-container">
+            <div class="top-header">
+                <div class="logo-nav">
+                    <div class="logo">
+                        <img src="https://blog.kakaocdn.net/dn/mIwzR/btsIPJWnjak/UCnJ8xed0QEKCMU0TJV9GK/img.png" alt="CodyUsLogo">
+                    </div>
+                    <nav class="sub-categories">
+                        <a href="<!--여기에 링크 넣어주세요-->">랭킹</a>
+                        <a href="<!--여기에 링크 넣어주세요-->">남자</a>
+                        <a href="<!--여기에 링크 넣어주세요-->">여자</a>
+                        <a href="<!--여기에 링크 넣어주세요-->">계절</a>
+                    </nav>
+                </div>
+                <div class="user-actions">
+                    <a href="<!--여기에 링크 넣어주세요-->">고객센터</a>
+                    <a href="<!--여기에 링크 넣어주세요-->">마이페이지</a>
+                    <a href="chat">채팅</a>
+                    <a href="#" id="login-logout-link" onclick="location.href='login.html'">로그인</a>
+                </div>
+            </div>
+            <div class="bottom-header">
+                <div class="search-section">
+                    <nav class="main-categories">
+                        <a href="/home">HOME</a>
+                        <a href="/posts">STYLE</a>
+                        <a href="/shop-page">SHOP</a>
+                    </nav>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search...">
+                        <select class="search-type-select">
+                            <option value="title">제목</option>
+                            <option value="title-content">제목 + 내용</option>
+                            <option value="hashtags">해시태그</option>
+                        </select>
+                        <button>Search</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </header>
+</div>
+</body>
+</html>
