@@ -1,0 +1,69 @@
+.create-post {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 650px;
+    margin-bottom: 20px;
+    margin-top : 30px;  /*헤더 사이 여백*/
+}
+
+
+
+.post-container {
+    max-width: 1200px; /* 최대 너비 설정 */
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 0 20px; /* 양옆 여백 설정 */
+    display: flex;
+    flex-wrap: wrap; /* 여러 줄로 감싸기 */
+    gap: 20px; /* 게시물 간격 */
+    box-sizing: border-box; /* 패딩을 포함하여 크기 계산 */
+}
+
+.post {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    flex: 1 1 calc(25% - 20px); /* 4개씩 배치하고 간격을 고려하여 크기 설정 */
+    box-sizing: border-box; /* padding을 포함하여 크기 계산 */
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9;
+    text-align: center;
+    cursor: pointer; /* 마우스 커서를 손 모양으로 변경 */
+    transition: transform 0.2s; /* 부드러운 변환 효과 추가 */
+}
+
+.post img {
+    width: 500px;
+    height: 500px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.post .nickname {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.post p {
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+.post small {
+    color: #666;
+}
+
+.image-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+img {
+    max-width: 100%; /* 화면 크기에 맞게 조정 */
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}

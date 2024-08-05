@@ -1,0 +1,144 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.create-container {
+    max-width: 600px; /* 고정된 너비 */
+    margin: 0 auto;
+    padding: 20px; /* 페이지 내 여백 */
+}
+
+h1 {
+    text-align: center;
+    color: #262626;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.price-label::before {
+    content: '💲';
+    margin-right: 5px; /* Add some space between the symbol and the label */
+}
+
+label {
+    margin-top: 16px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #262626;
+}
+.post-create-form .image-upload{
+    display: flex;
+    gap: 20px;
+}
+
+input[type="number"],
+textarea,
+.post-create-form select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dbdbdb;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #ffffff; /* 필요한 경우 배경 색상 추가 */
+}
+
+.gender-section, .season-section {
+    display: flex;
+    gap: 10px;
+}
+.gender-option, .season-option {
+    flex: 1;
+    text-align: center;
+}
+.gender-option input, .season-option input {
+    display: none;
+}
+.gender-option label, .season-option label {
+    display: block;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.gender-option input:checked + label, .season-option input:checked + label {
+    background-color: #ff4081;
+    color: white;
+}
+
+
+.post-create-form div {
+    margin-bottom: 15px; /* 입력 칸 사이의 여백을 설정합니다 */
+}
+
+#title,
+#hashtags {
+    width: 100%; /* 전체 너비를 사용 */
+    padding: 15px; /* 내부 여백을 증가시켜 더 많은 공간을 제공 */
+    font-size: 16px; /* 폰트 크기를 키워 가독성을 높임 */
+    border: 1px solid #dbdbdb; /* 테두리 스타일 */
+    border-radius: 3px; /* 테두리 모서리를 둥글게 */
+    box-sizing: border-box; /* padding과 border를 포함한 너비 조정 */
+}
+
+input[type="file"] {
+    margin-top: 5px;
+}
+
+/* 이미지 미리보기 스타일 */
+#imagePreview {
+    margin-top: 10px;
+    /* 필요에 따라 추가 스타일 적용 */
+}
+#imagePreview img,
+#productImagePreview img {
+    max-width: 100%; /* 이미지가 부모 컨테이너를 초과하지 않도록 함 */
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    height: auto; /* 이미지의 비율을 유지하면서 높이를 자동 조정 */
+}
+
+
+button {
+    background-color: #0095f6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #0077c5;
+}
+
+.hashtag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.hashtag {
+    display: inline-flex;
+    align-items: center;
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.hashtag span {
+    margin-left: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
