@@ -1,4 +1,8 @@
 // 게시물을 가져오는 함수
+function getToken() {
+    return Cookies.get('Authorization');
+}
+
 function fetchPosts() {
     $.ajax({
         url: '/api/posts',
