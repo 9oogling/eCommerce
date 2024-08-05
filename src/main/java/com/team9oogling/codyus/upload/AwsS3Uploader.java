@@ -30,11 +30,11 @@ public class AwsS3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
-    public void uploadImage(List<MultipartFile> files, ImageType type, Long typeId) {
+    public List<String> uploadImage(List<MultipartFile> files, ImageType type, Long typeId) {
 
         // NullCheck
         if (files.size() == 0) {
-            return;
+            return null;
         }
 
         ArrayList<String> imageUrls = new ArrayList<>();
@@ -56,7 +56,8 @@ public class AwsS3Uploader {
         }
 
         switch (type) {
-            case POST -> {
+            case POST:
+            case PRODUCT:
                 Post post = postRepository.findById(typeId).orElseThrow(() ->
                         new CustomException(StatusCode.NOT_FOUND_POST));
 
@@ -64,19 +65,18 @@ public class AwsS3Uploader {
                     PostImage postImage = new PostImage(post, imageUrl);
                     postImageRepository.save(postImage);
                 }
-            }
-            case LIKES -> {
+                break;
 
-            }
+            case LIKES:
+            case MESSAGE:
+                // 처리 로직이 필요한 경우 추가
+                break;
 
-            case MESSAGE -> {
-
-            }
-
+            default:
+                // 처리하지 않는 경우
+                break;
         }
 
-
+        return imageUrls; // 모든 경우에서 반환
     }
-
-
 }
