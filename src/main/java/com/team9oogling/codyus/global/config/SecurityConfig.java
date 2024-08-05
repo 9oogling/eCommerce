@@ -33,9 +33,9 @@ public class SecurityConfig {
   private final UserService userService;
 
   public SecurityConfig(JwtProvider jwtProvider, UserDetailsServiceImpl userDetailsService,
-      AuthenticationConfiguration authenticationConfiguration, UserRepository userRepository,
-      CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
-      SecurityResponse securityResponse, UserService userService) {
+                        AuthenticationConfiguration authenticationConfiguration, UserRepository userRepository,
+                        CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
+                        SecurityResponse securityResponse, UserService userService) {
     this.jwtProvider = jwtProvider;
     this.userDetailsService = userDetailsService;
     this.authenticationConfiguration = authenticationConfiguration;
@@ -47,7 +47,7 @@ public class SecurityConfig {
 
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
-      throws Exception {
+          throws Exception {
     return configuration.getAuthenticationManager();
   }
 
@@ -55,7 +55,7 @@ public class SecurityConfig {
   public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
 
     JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtProvider, userRepository,
-        securityResponse);
+            securityResponse);
     filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
 
     return filter;
@@ -72,20 +72,22 @@ public class SecurityConfig {
     http.csrf((csrf) -> csrf.disable());
 
     http.sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(
-            SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            // 1. 중복 url 삭제 2. 파일명 -> API 로 변경
-            .requestMatchers("/chatting/**","chat.html","/api/users/signup", "/main.html",
-                "/api/users/token/refresh", "/api/users/login", "/login-page", "/home", "/signup-page", "/shop-page").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/user/kakao/callback", "/api/posts", "/api/users/email").permitAll()
-            .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-            .anyRequest().authenticated())
-        .exceptionHandling((exceptionHandling) -> {
-          exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint);
-        })
-        .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-        .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+                    SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                    // 1. 중복 url 삭제 2. 파일명 -> API 로 변경
+                    .requestMatchers("chat", "/chatting/**","/api/users/signup", "/main.html","login.html"
+                            ,"/posts","/api/posts","/api/posts/**","/posts/postCreate","posts/postDetail/",
+                            "/api/users/token/refresh", "/api/users/login", "/login-page", "/home","/api/user-info", "/signup-page", "/shop-page").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/user/kakao/callback", "/api/posts", "/api/users/email",
+                            "/api/user-info","/login-page","/posts/**","posts/postCreate").permitAll()
+                    .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                    .anyRequest().authenticated())
+            .exceptionHandling((exceptionHandling) -> {
+              exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint);
+            })
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
 
     return http.build();
   }

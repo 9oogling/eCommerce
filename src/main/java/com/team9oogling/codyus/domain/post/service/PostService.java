@@ -42,23 +42,37 @@ public class PostService {
     private final PostImageRepository postImageRepository;
 
     @Transactional
-    public PostResponseDto savePost(PostRequestDto requestDto, UserDetailsImpl userDetails, List<MultipartFile> images) {
+    public PostResponseDto savePost(PostRequestDto requestDto, UserDetailsImpl userDetails, List<MultipartFile> images, List<MultipartFile> productImages) {
         User user = userDetails.getUser();
 
         Category category = categoryRepository.findByCategory(requestDto.getCategoryName())
                 .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND_CATEGORY));
 
-        Post post = new Post(requestDto.getTitle(), requestDto.getContent(), requestDto.getPrice(),
+        final Post post = new Post(requestDto.getTitle(), requestDto.getContent(), requestDto.getPrice(),
                 requestDto.getSaleType(), requestDto.getHashtags(), user, category);
-        post = postRepository.save(post);
+         postRepository.save(post);
 
-        awsS3Uploader.uploadImage(images, ImageType.POST, post.getId());
+        // 2. 이미지 업로드 및 URL 저장
+        List<String> imageUrls = awsS3Uploader.uploadImage(images, ImageType.POST, post.getId());
+        List<String> productImageUrls = awsS3Uploader.uploadImage(productImages, ImageType.PRODUCT, post.getId());
 
+        // 3. PostImage 엔티티 생성 및 게시물에 추가
+        List<PostImage> postImages = imageUrls.stream()
+                .map(url -> new PostImage(post, url))
+                .collect(Collectors.toList());
+        postImages.addAll(productImageUrls.stream()
+                .map(url -> new PostImage(post, url))
+                .collect(Collectors.toList()));
+
+        // 4. 게시물에 이미지 추가 및 저장
+        post.getPostImages().addAll(postImages);
+        postRepository.save(post); // Save the post with images
         return new PostResponseDto(post);
     }
 
-    @Transactional(readOnly = true)
-    public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) {
+    @Transactional
+    public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
         Post post = findById(postId);
         checkUserSame(post, user);
         post.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getPrice(),
@@ -68,7 +82,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public void deletePost(Long postId, User user) {
+    public void deletePost(Long postId, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
         Post post = findById(postId);
         checkUserSame(post, user);
         postRepository.delete(post);

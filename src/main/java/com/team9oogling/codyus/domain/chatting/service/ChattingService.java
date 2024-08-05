@@ -2,6 +2,7 @@ package com.team9oogling.codyus.domain.chatting.service;
 
 import static com.team9oogling.codyus.global.entity.StatusCode.*;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -100,6 +101,9 @@ public class ChattingService {
 		int totalSize = responseList.size();
 		int start = (int)pageable.getOffset();
 		int end = Math.min(start + pageable.getPageSize(), totalSize);
+		if(page > (totalSize + size +1 ) / size) {
+			return new ArrayList<>();
+		}
 		return responseList.subList(start, end);
 	}
 

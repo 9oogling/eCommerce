@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시물 생성</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/postCreate.css"> <!-- 페이지 고유의 스타일 포함 -->
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/header.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+</head>
+
+<body>
+<div th:insert="header :: header-content"></div>
+
+<div class="create-container">
+    <h1> 게시물 생성하기</h1>
+    <form id="createPostForm" class="post-create-form">
+        <div>
+            <label for="title">제목</label>
+            <textarea id="title" name="title" required></textarea>
+        </div>
+        <div>
+            <label for="content">내용</label>
+            <textarea id="content" name="content" rows="4" required></textarea>
+        </div>
+        <div>
+            <label for="price" class="price-label">가격 </label>
+            <input type="number" id="price" name="price" required>
+        </div>
+
+        <div>
+            <div class="image-upload">
+                <div class="upload-group">
+                    <label for="image">스타일 이미지 업로드</label>
+                    <input type="file" id="image" name="image" accept="image/*" required>
+                    <div id="imagePreview"></div> <!-- 이미지 미리보기 공간 추가 -->
+                </div>
+                <div class="upload-group">
+                    <label for="productImage">상품 이미지 업로드</label>
+                    <input type="file" id="productImage" name="productImage" accept="image/*" required>
+                    <div id="productImagePreview"></div> <!-- 상품 이미지 미리보기 공간 추가 -->
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <label for="saleType">판매 유형</label>
+            <select id="saleType" name="saleType" required>
+                <option value="">선택해주세요</option>
+                <option value="NEW">새상품</option>
+                <option value="USED">중고</option>
+            </select>
+        </div>
+
+        <div>
+            <label>성별</label>
+            <div class="gender-section">
+                <div class="gender-option">
+                    <input type="radio" id="MAN" name="gender" value="MAN">
+                    <label for="MAN">남자</label>
+                </div>
+                <div class="gender-option">
+                    <input type="radio" id="WOMAN" name="gender" value="WOMAN">
+                    <label for="WOMAN">여자</label>
+                </div>
+                <div class="gender-option">
+                    <input type="radio" id="UNISEX" name="gender" value="UNISEX">
+                    <label for="UNISEX">남녀공용</label>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <label>계절</label>
+            <div class="season-section">
+                <div class="season-option">
+                    <input type="checkbox" id="SPRING" name="season" value="SPRING">
+                    <label for="SPRING">봄</label>
+                </div>
+                <div class="season-option">
+                    <input type="checkbox" id="SUMMER" name="season" value="SUMMER">
+                    <label for="SUMMER">여름</label>
+                </div>
+                <div class="season-option">
+                    <input type="checkbox" id="FALL" name="season" value="FALL">
+                    <label for="FALL">가을</label>
+                </div>
+                <div class="season-option">
+                    <input type="checkbox" id="WINTER" name="season" value="WINTER">
+                    <label for="WINTER">겨울</label>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <label for="hashtags">해시태그 (쉼표로 구분)</label>
+            <input type="text" id="hashtags" name="hashtags" placeholder="#example, #sample">
+            <div id="hashtagContainer" class="hashtag-container"></div>
+        </div>
+
+
+        <button type="submit"> 게시물 생성</button>
+    </form>
+</div>
+<script src="/js/postCreate.js"></script>
+<div th:insert="footer :: footer-content"></div>
+</body>
+</html>

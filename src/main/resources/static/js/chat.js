@@ -6,6 +6,8 @@ let chattingroomsId = null;
 let stompClient = null;
 let chatSubscriptions = null;
 let readSubscriptions = null;
+let page = 1;
+const size = 30;
 
 document.addEventListener('DOMContentLoaded',
     () => {
@@ -139,48 +141,61 @@ document.addEventListener('DOMContentLoaded',
                 }
             );
         }
+        chattingRoomList(page, size);
 
-        const page = 1;
-        const size = 30;
 
-        const chattingRoomUrl = `/api/chattingrooms?page=${page}&size=${size}`;
+    });
 
-        fetch(chattingRoomUrl, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
+
+function chattingRoomList(page, size){
+    const chattingRoomUrl = `/api/chattingrooms?page=${page}&size=${size}`;
+
+    fetch(chattingRoomUrl, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('네트워크 응답이 좋지 않습니다.');
             }
+            return response.json();
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('네트워크 응답이 좋지 않습니다.');
+        .then(data => {
+            const chatList = document.querySelector('.chat-list');
+            const chats = data.data;
+            if(chats.length <= 0 ){
+                document.getElementById('loadMoreChats').style.display = 'none';
+                return;
+            }else{
+                document.getElementById('loadMoreChats').style.display = 'block';
+            }
+            chats.forEach(chat => {
+                const listItemId ='chat-room-' + chat.chattingRoomId;
+                if(document.getElementById(listItemId)){
+                    return;
                 }
-                return response.json();
-            })
-            .then(data => {
-                const chatList = document.querySelector('.chat-list');
-                chatList.innerHTML = ''; // 기존 내용을 지우기
-                const chats = data.data;
-                chats.forEach(chat => {
-                    const listItem = document.createElement('li');
-                    listItem.className = 'chat-item';
-                    listItem.id = 'chat-room-' + chat.chattingRoomId;
-                    listItem.onclick = () => openChat(chat.chattingRoomId, chat.partnerNickname); // 클릭 시 openChat 호출
 
-                    const unreadCount =
-                        `<span class="unread-count${chat.unReadMessageCount === 0 ||
-                        chat.unReadMessageCount === null ? ' hidden' : ''}">
+                const listItem = document.createElement('li');
+                listItem.className = 'chat-item';
+                listItem.id = 'chat-room-' + chat.chattingRoomId;
+                listItem.onclick = () => openChat(chat.chattingRoomId, chat.partnerNickname); // 클릭 시 openChat 호출
+
+                const unreadCount =
+                    `<span class="unread-count${chat.unReadMessageCount === 0 ||
+                    chat.unReadMessageCount === null ? ' hidden' : ''}">
                       ${chat.unReadMessageCount !== null ? chat.unReadMessageCount : ''}
                     </span>`;
-                    const lastTimestamp = chat.lastTimestamp
-                        ? new Date(chat.lastTimestamp).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        })
-                        : '';
+                const lastTimestamp = chat.lastTimestamp
+                    ? new Date(chat.lastTimestamp).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                    : '';
 
-                    listItem.innerHTML = `
+                listItem.innerHTML = `
                 <img src="../images/minji.jfif" alt="Avatar" class="chat-avatar">
                 <div class="chat-info">
                     <div class="chat-name">
@@ -191,15 +206,19 @@ document.addEventListener('DOMContentLoaded',
                 <div class="chat-lastTimeStamp">${lastTimestamp}</div>
             `;
 
-                    chatList.appendChild(listItem);
-                })
+                chatList.appendChild(listItem);
             })
-            .catch(error => {
-                console.error('문제가 발생했습니다.', error)
-            });
-    })
-;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
 
+function loadMoreChats() {
+    page++;
+    chattingRoomList(page,size);
+    console.log(page + " page " + size + " ");
+}
 function topicChattingRoom(chattingRoomId) {
     chatSubscriptions = stompClient.subscribe('/topic/' + chattingRoomId, (message) => {
         const container = document.querySelector('.chat-messages');
@@ -268,7 +287,10 @@ function topicMessageRead(chattingRoomId) {
 // 클릭시 채팅방이 열린다.
 function openChat(chattingRoomId, partnerNickname) {
     const chatHeader = document.getElementsByClassName('chat-header')[0]; // [0]을 추가하여 첫 번째 요소를 선택
-
+    const button =document.getElementById('loadMoreButton');
+    button.style.opacity = '1';
+    button.style.pointerEvents = 'auto';
+    button.textContent='더보기';
     // chatHeader의 display 속성을 'block'으로 변경
     if (chatHeader) {
         chatHeader.style.display = 'block'; // 또는 'flex', 'grid' 등 필요에 따라 변경

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>STYLE 페이지 </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/postDetail.css">
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/header.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script></head>
+<body>
+<div th:insert="header :: header-content"></div>
+<div class="container">
+    <div class="post">
+        <div id="post-detail" class="post-header">
+            <!-- 게시물 정보가 여기에 로드됩니다. -->
+        </div>
+        <div id="post-image" class="post-image">
+        </div>
+
+        <div class="post-actions">
+            <button id="like-button" class="action-btn">❤️</button>
+        </div>
+        <div id="post-likes" class="post-likes">0 likes</div>
+        <div id="post-caption" class="post-caption">
+            <!-- 게시물 캡션이 여기에 로드됩니다. -->
+        </div>
+    </div>
+
+    <div class="product-gallery">
+        <!-- 여기에 상품 목록이 동적으로 로드됩니다. -->
+    </div>
+</div>
+<div th:insert="footer :: footer-content"></div>
+
+
+<script src="/js/postDetail.js"></script>
+
+</body>
+
+</html>
