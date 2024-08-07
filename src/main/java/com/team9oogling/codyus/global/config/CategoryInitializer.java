@@ -25,7 +25,7 @@ public class CategoryInitializer {
       postService.addCategoryIfNotExists(categoryRepository, "MAN");
       postService.addCategoryIfNotExists(categoryRepository, "WOMAN");
       postService.addCategoryIfNotExists(categoryRepository, "UNISEX");
-      postService.addCategoryIfNotExists(categoryRepository, "MAN, SPRING");
+      postService.addCategoryIfNotExists(categoryRepository, "MAN,SPRING");
 
 
 
