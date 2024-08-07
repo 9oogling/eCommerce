@@ -12,9 +12,6 @@ $(document).ready(function () {
     $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
       jqXHR.setRequestHeader('Authorization', auth);
     });
-  } else {
-    window.location.href = host + '/login-page';
-    return;
   }
 
   $.ajax({

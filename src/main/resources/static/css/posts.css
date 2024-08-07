@@ -56,6 +56,11 @@
     font-size: 1.2em;
     margin-bottom: 10px;
     color: #333;
+    text-align: left;
+}
+.post .nickname::before {
+    content: "@"; /* @ 기호를 추가 */
+    margin-right: 5px; /* @ 기호와 닉네임 사이에 간격 추가 */
 }
 
 .post p {
@@ -105,4 +110,12 @@ img {
 /* 버튼을 클릭할 때 스타일 */
 .post-create-btn:active {
     background-color: #3e8e41; /* 클릭 시 배경색 */
+}
+
+/* 빈 공간을 추가하여 4개 칸을 유지하도록 설정 */
+.post-container::after {
+    content: "";
+    flex: 1 1 calc(25% - 20px); /* 빈 공간과 같은 크기 설정 */
+    min-width: calc(25% - 20px); /* 빈 공간 크기 설정 */
+    box-sizing: border-box; /* padding을 포함하여 크기 계산 */
 }

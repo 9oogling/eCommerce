@@ -9,8 +9,6 @@ import com.team9oogling.codyus.domain.post.entity.QPost;
 import com.team9oogling.codyus.domain.post.entity.SearchType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +42,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 predicate = post.title.containsIgnoreCase(keyword)
                         .or(post.content.containsIgnoreCase(keyword));
                 break;
-            case HASHTAG:
+            case HASHTAGS:
                 predicate = post.hashtags.containsIgnoreCase(keyword);
                 break;
             default:

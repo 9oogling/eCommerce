@@ -8,31 +8,70 @@ $(document).ready(function() {
     $('#login-logout-link').text('로그인').attr('onclick', "location.href='login-page'");
   }
 
-  // Logout function
+  // 로그아웃 함수
   window.logout = function() {
     Cookies.remove('Authorization', { path: '/' });
     alert('로그아웃 되었습니다.');
-    location.href = '/login-page';
+    location.href = '/home';
   };
 
-  // Search functionality
-  document.querySelector('.search-bar button').addEventListener('click', function() {
-    const searchQuery = document.querySelector('.search-bar input').value;
-    const searchType = document.querySelector('.search-type-select').value;
-    alert(`Searching for: "${searchQuery}" in ${searchType}`);
-    // Here you would typically send the search query and type to a server
+
+  // 검색 기능
+  $('.search-bar button').click(function() {
+    const searchQuery = $('.search-bar input').val();
+    let searchType = $('.search-type-select').val();
+    if (searchQuery.trim() === '') {
+      alert('검색어를 입력해 주세요.');
+      return;
+    }
+    searchType = searchType.toUpperCase(); // 검색 타입을 대문자로 변환
+    // 검색 페이지로 이동
+    window.location.href = `/posts/search?&type=${searchType}&keyword=${encodeURIComponent(searchQuery)}&page=1&size=10`;
   });
 
-  document.querySelector('.search-bar input').addEventListener('keypress', function(e) {
+  $('.search-bar input').keypress(function(e) {
     if (e.key === 'Enter') {
-      const searchQuery = this.value;
-      const searchType = document.querySelector('.search-type-select').value;
-      alert(`Searching for: "${searchQuery}" in ${searchType}`);
-      // Here you would typically send the search query and type to a server
+      const searchQuery = $(this).val();
+
+      let searchType = $('.search-type-select').val();
+
+      if (searchQuery.trim() === '') {
+        alert('검색어를 입력해 주세요.');
+        return;
+      }
+      searchType = searchType.toUpperCase(); // 검색 타입을 대문자로 변환
+      // 검색 페이지로 이동
+      window.location.href = `/posts/search?&type=${searchType}&keyword=${encodeURIComponent(searchQuery)}&page=1&size=10`;
     }
   });
 
-  // Add hover effect to main category links
+  // 페이지 변경 시 URL 업데이트
+  function changePage(newPage) {
+    const searchQuery = $('.search-bar input').val();
+    let searchType = $('.search-type-select').val();
+    searchType = searchType ? searchType.toUpperCase() : 'TITLE'; // 검색 타입을 대문자로 변환
+    window.location.href = `/posts/search?keyword=${encodeURIComponent(searchQuery)}&type=${searchType}&page=${newPage}&size=10`;
+  }
+
+  // 검색 버튼 클릭 시 검색 수행
+  $('.search-bar button').click(function() {
+    const searchQuery = $('.search-bar input').val();
+    let searchType = $('.search-type-select').val();
+    searchType = searchType ? searchType.toUpperCase() : 'TITLE'; // 검색 타입을 대문자로 변환
+    window.location.href = `/posts/search?keyword=${encodeURIComponent(searchQuery)}&type=${searchType}&page=1&size=10`;
+  });
+
+  // Enter 키 입력 시 검색 수행
+  $('.search-bar input').keypress(function(e) {
+    if (e.key === 'Enter') {
+      const searchQuery = $(this).val();
+      let searchType = $('.search-type-select').val();
+      searchType = searchType ? searchType.toUpperCase() : 'TITLE'; // 검색 타입을 대문자로 변환
+      window.location.href = `/posts/search?keyword=${encodeURIComponent(searchQuery)}&type=${searchType}&page=1&size=10`;
+    }
+  });
+
+  // 메인 카테고리 링크에 호버 효과 추가
   const mainCategoryLinks = document.querySelectorAll('.main-categories a');
   mainCategoryLinks.forEach(link => {
     link.addEventListener('mouseover', function() {
@@ -43,64 +82,3 @@ $(document).ready(function() {
     });
   });
 });
-
-// 왼쪽 메뉴바
-$('#toggle').click(function() {
-  $('#toggle .bar').toggleClass('animate');
-  $('#page').toggleClass('overlay');
-});
-
-// 가운데 상단바
-console.clear();
-
-const { gsap } = window;
-
-let currentLink;
-let currentIndex = 0;
-const links = document.querySelectorAll("nav a");
-
-links.forEach((link, index) => {
-  link.addEventListener("click", (e) => {
-    addActive(e, index);
-  });
-});
-
-function addActive(e, i) {
-  const target = e.currentTarget;
-  if (target != currentLink) {
-    let direction;
-    if (currentIndex < i) direction = "right";
-    else direction = "left";
-    const slide = target.querySelector(".slide");
-
-    gsap.timeline()
-    .call(() => {
-      links.forEach((link) => {
-        link.classList.remove("active");
-      });
-    })
-    .fromTo(
-        slide,
-        {
-          transformOrigin: `${direction == "left" ? "right" : "left"} center`,
-          scaleX: 0,
-        },
-        {
-          delay: 0.1,
-          duration: 0.25,
-          scaleX: 1,
-        }
-    )
-    .call(() => {
-      target.classList.add("active");
-    })
-    .to(slide, {
-      delay: 0.25,
-      duration: 0.25,
-      transformOrigin: `${direction} center`,
-      scaleX: 0,
-    });
-    currentLink = target;
-    currentIndex = i;
-  }
-}
