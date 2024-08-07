@@ -1,0 +1,407 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    /*margin: -5px auto auto auto;*/
+    background-color: #ffffff;
+    position: relative;
+}
+
+/* 공통 박스 스타일 */
+.box1, .box2 {
+    width: 430px;
+    height: 270px;
+    border: 1px solid black;
+    padding: 25px 35px;
+    font-weight: 300;
+    font-size: 15px;
+    margin-bottom: 20px; /* 박스 사이 간격 */
+}
+
+.box3, .box4 {
+    width: 300px;
+    height: 270px;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    padding: 25px 35px;
+    font-weight: 300;
+    font-size: 15px;
+    margin-bottom: 20px; /* 박스 사이 간격 */
+}
+
+.box {
+    position: relative;
+    top: -75px;
+    left: 115%;
+}
+
+.box p {
+    color: #818181;
+    font-weight: 400;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.more1:hover {
+    background-color: #efefef;
+    cursor: pointer;
+}
+.more2:hover {
+    background-color: #efefef;
+    cursor: pointer;
+}
+
+.more1, .more2 {
+    width: 130px;
+    height: 270px;
+    border: 1px solid black;
+    padding: 25px 35px;
+    /*font-weight: 300;*/
+    /*font-size: 15px;*/
+    margin-bottom: 20px;
+}
+
+/* 박스 배치 */
+.form {
+    width: 100%;
+    height: 100%;
+    /*flex-wrap: wrap;*/
+    /*gap: 20px; !* 박스 사이 간격 *!*/
+}
+
+.wrap, .wrap1 {
+    position: relative;
+    top:50%;
+    /*left:50%;*/
+    transform: translate(-50%,-50%);
+    align-content: center;
+}
+
+.wrap {
+    flex-direction: column;
+    position: absolute;
+    margin: 50px auto auto auto;
+    left: 635px;
+    /*top: 180px;*/
+}
+
+.wrap1 {
+    flex-direction: column;
+    position: absolute;
+    margin: 50px auto auto auto;
+    left: 1020px;
+    /*top: 180px;*/
+}
+
+.title {
+    font-weight: 500;
+    font-size: 22px;
+}
+
+.email, .password, .phone, .address {
+    font-weight: 400;
+    color: #ababab;
+}
+
+.email1, .password1, .phone1, .address1 {
+    font-weight: 400;
+    color: #4d4d4d;
+    border-bottom: 1px solid rgba(115, 115, 115, 0.3);
+    padding: 10px 0
+}
+
+.email, .email1, .password, .password1, .phone, .phone1, .address, .address1{
+    line-height: 3px;
+}
+
+.con1, .con2 {
+    margin-top: 43px;
+}
+
+/* 버튼 스타일 */
+.button {
+    width: 60px;
+    text-align: center;
+    color: #818181;
+    font-size: 13px;
+    font-weight: 400;
+    background-color: #ffffff;
+}
+
+.open-modal-button {
+    border: 1px solid rgba(115, 115, 115, 0.39);
+    position: relative;
+    bottom: 45px;
+    left: 298px;
+    background-color: #ffffff;
+    color: #8c8c8c;
+}
+
+.open-modal-button:hover {
+    background-color: #efefef;
+    color: #696969;
+}
+
+.button-close {
+    border: none;
+    margin: 20px 0 0 0;
+    align-self: flex-end;
+    background-color: transparent;
+    box-shadow: none;
+    color: #000000;
+}
+
+.button-close:hover {
+    background-color: transparent;
+}
+
+dialog {
+    padding: 0;
+    border: 1px solid #000000;
+    animation: appear 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+    box-shadow: 15px 15px 15px -20px #000000;
+    position: fixed;
+}
+
+.dialog__animate-out {
+    animation: dissappear 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.dialog__inner {
+    display: flex;
+    flex-direction: column;
+    color: #000000;
+}
+
+.dialog__close-btn {
+    align-self: flex-end;
+}
+
+.dialog__content {
+    padding: 0 55px 25px 55px;
+    width: 500px;
+    height: 480px;
+}
+
+.dialog__footer {
+    width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dialog__footer button {
+    border: 1px solid rgba(0, 0, 0, 0.32);
+    color: #656565;
+    width: 200px;
+    height: 30px;
+    bottom: 45px;
+    font-size: 13px;
+    font-weight: 400;
+    margin-right: 10px;
+    background-color: #ffffff;
+}
+
+.dialog__footer button:hover {
+    background-color: #efefef;
+    color: #656565;
+}
+
+button.close1 {
+    background-color: black;
+    color: white;
+}
+
+button.close1:hover {
+    border: 1px solid rgb(49, 49, 49);
+    background-color: rgb(49, 49, 49);
+    color: white;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes dissappear {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+/* 팝업창 내용 입력칸 */
+.CgPw input, .CgInfo input, .CgInfo1 input{
+    display: block;
+    border: none;
+    border-bottom: 1px solid rgba(115, 115, 115, 0.3);
+    color: #808080;
+    padding: 7px 3px;
+    margin-top: 5px;
+    margin-bottom: 40px;
+    width: 100%;
+    outline: none;
+    font-size: 13px;
+}
+
+input::placeholder {
+    color: #cecece;
+    opacity: 5;
+    font-weight: 400;
+}
+
+input::-webkit-input-placeholder {
+    color: #cecece;
+}
+
+input:-ms-input-placeholder {
+    color: #cecece;
+}
+
+.CgPw span, .CgInfo span, .CgInfo1 span {
+    font-weight: 400;
+    font-size: 14px;
+    color: #000000;
+}
+
+.CgInfo label, .CgInfo1 label {
+    font-weight: 400;
+    font-size: 14px;
+    color: #000000;
+}
+
+.tel {
+    border: 1px solid #bebebe;
+    color: #9d9d9d;
+    outline: 0;
+    margin-top: 10px;
+}
+
+.dialog__footer1 {
+    width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dialog__footer1 button {
+    border: 1px solid rgba(0, 0, 0, 0.32);
+    color: #656565;
+    width: 200px;
+    height: 30px;
+    bottom: 45px;
+    font-size: 13px;
+    font-weight: 400;
+    margin-top: 20px;
+    margin-right: 10px;
+    background-color: #ffffff;
+}
+
+.dialog__footer1 button:hover {
+    background-color: #efefef;
+    color: #656565;
+}
+
+button.save-phone {
+    background-color: black;
+    color: white;
+}
+
+button.save-phone:hover {
+    border: 1px solid rgb(49, 49, 49);
+    background-color: rgb(49, 49, 49);
+    color: white;
+}
+
+.dialog__footer2 {
+    width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dialog__footer2 button {
+    border: 1px solid rgba(0, 0, 0, 0.32);
+    color: #656565;
+    width: 200px;
+    height: 30px;
+    bottom: 45px;
+    font-size: 13px;
+    font-weight: 400;
+    margin-top: 20px;
+    margin-right: 10px;
+    background-color: #ffffff;
+}
+
+.dialog__content0 {
+    width: 500px;
+    height: 350px;
+    padding: 0 55px 25px 55px;
+}
+
+.dialog__content1 {
+    width: 500px;
+    height: 650px;
+    padding: 0 55px 25px 55px;
+    line-height: normal;
+}
+
+.dialog__footer2 button:hover {
+    background-color: #efefef;
+    color: #656565;
+}
+
+button.save-address {
+    background-color: black;
+    color: white;
+}
+
+button.save-address:hover {
+    border: 1px solid rgb(49, 49, 49);
+    background-color: rgb(49, 49, 49);
+    color: white;
+}
+
+.like {
+    line-height: 13px;
+    font-weight: 400;
+    color: #a4a4a4;
+    cursor: pointer;
+
+    position: relative;
+    top: -290px;
+}
+
+.like:hover {
+    text-decoration: underline #818181;
+}
+
+.sale {
+    line-height: 13px;
+    font-weight: 400;
+    color: #a4a4a4;
+    cursor: pointer;
+
+    position: relative;
+    top: -290px;
+}
+
+.sale:hover {
+    text-decoration: underline #818181;
+}
