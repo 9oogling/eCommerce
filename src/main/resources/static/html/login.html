@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>비밀번호 찾기</title>
+    <title>로그인</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,10 +11,13 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: -5px auto auto auto;
+            margin: -16px auto auto auto;
             background-color: #ffffff;
         }
 
+        /*
+        메뉴1 생성 (고객센터, 마이페이지, 관심, 채팅, 로그인)
+         */
         .nav1 {
             background-color: transparent;
             color: #a9a9a9;
@@ -26,6 +29,9 @@
             font-size: 10px;
         }
 
+        /*
+        메뉴2 생성 (HOME, STYLE, SHOP)
+         */
         .nav2 {
             background-color: transparent;
             color: #575757;
@@ -37,6 +43,9 @@
             font-size: 15px;
         }
 
+        /*
+        메뉴1,2 정렬
+         */
         nav ul {
             list-style-type: none;
             padding: 0;
@@ -47,6 +56,9 @@
             margin-right: 20px;
         }
 
+        /*
+        메뉴1 효과 (고객센터, 마이페이지, 관심, 채팅, 로그인)
+         */
         .nav1 ul li a {
             color: #ababab;
             text-decoration: none;
@@ -57,6 +69,9 @@
             color: #dadada;
         }
 
+        /*
+        메뉴2 효과 (HOME, STYLE, SHOP)
+         */
         .nav2 ul li a {
             color: #575757;
             text-decoration: none;
@@ -68,6 +83,9 @@
             font-weight: normal;
         }
 
+        /*
+        로그인 화면 크기 조절
+         */
         .container {
             text-align: center;
             width: 100%;
@@ -75,6 +93,9 @@
             padding: 20px;
         }
 
+        /*
+        로고 크기 조절
+         */
         .logo img {
             width: 100%;
             display: flex;
@@ -82,7 +103,10 @@
             margin-left: 3px;
         }
 
-        .email-form input {
+        /*
+        이메일, 비밀번호 입력란 정렬
+         */
+        .login-form input {
             display: block;
             border: none;
             border-bottom: 1px solid rgba(115, 115, 115, 0.3);
@@ -93,52 +117,116 @@
             outline: none;
         }
 
+        /*
+        ex) . . .  예시 색상
+         */
         input::placeholder {
             color: #cecece;
             opacity: 5;
         }
 
-        input::-webkit-input-placeholder{
+        input::-webkit-input-placeholder {
             color: #cecece;
         }
 
-        input:-ms-input-placeholder{
+        input:-ms-input-placeholder {
             color: #cecece;
         }
 
-        .email-form button {
+        /*
+        로그인 버튼 생성
+         */
+        .login-form button {
             width: 100%;
             padding: 7px;
-            margin: 32px 0;
             border: 1px solid #b0b0b0;
             cursor: pointer;
-            background-color: #000000;
-            color: #e5e5e5;
+            background-color: #ffffff;
+            color: #818181;
             font-size: 13px;
         }
 
-        .email-form button:hover {
-            background-color: #f3f3f3;
-            color: #818181;
+        /*
+        로그인 버튼 효과
+         */
+        .login-form button:hover {
+            background-color: #f1f1f1;
         }
 
-        .email-form span {
+        /*
+        입력란 위 이메일, 비밀번호 글자 크기 및 위치 조절
+         */
+        .login-form span {
             display: flex;
             color: #818181;
             font-size: 13px;
             float: left;
-            margin: 30px auto auto auto;
-
         }
 
-        .find-email span {
-            display: flex;
-            color: #000000;
-            font-size: 15px;
-            float: left;
-            margin: auto auto 5px auto;
+        /*
+        이메일 가입, 이메일 찾기, 비밀번호 찾기 페이지 이동
+         */
+        .links {
+            color: #818181;
+            margin-top: 10px;
+            margin-bottom: 20px;
         }
 
+        /*
+        이메일 가입, 이메일 찾기, 비밀번호 찾기 위치 조절 및 효과
+         */
+        .links a {
+            margin: 0 10px;
+            color: #818181;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        /*
+        네이버, 카카오 버튼 크기 및 위치 조절
+         */
+        .naver-button, .kakao-button {
+            width: calc(50% - 5px);
+            padding: 7px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            margin: 50px 2.5px auto auto;
+        }
+
+        /*
+        네이버 로그인 버튼 생성 및 효과
+         */
+        /*.naver-button {*/
+        /*    float: left;*/
+        /*    background-color: #1ec800;*/
+        /*    color: white;*/
+        /*}*/
+
+        /*.naver-button:hover {*/
+        /*    background-color: #17b000;*/
+        /*}*/
+
+        /*
+        카카오 로그인 버튼 생성 및 효과
+         */
+        .kakao-button {
+            background-color: #fed400;
+            color: #805e44;
+            width: 100%;
+        }
+
+        .kakao-button:hover {
+            background-color: #ebc400;
+        }
+
+        /*
+        검색창
+         */
         .search-box input {
             width: 310px;
             padding: 7px;
@@ -151,6 +239,9 @@
             outline: none;
         }
 
+        /*
+        검색창 내부 글자
+         */
         .search-text input {
             width: 310px;
             padding: 7px;
@@ -163,6 +254,9 @@
             outline: none;
         }
 
+        /*
+        검색 버튼 생성 및 효과
+         */
         .search-box button {
             width: 40px;
             height: 31px;
@@ -181,6 +275,9 @@
             color: #dadada;
         }
 
+        /*
+        검색창 위치 조절
+         */
         .left-header {
             position: fixed;
             top: 50px;
@@ -199,8 +296,8 @@
     <nav>
         <ul>
             <li><a href="#">고객센터</a></li>
-            <li><a href="#">마이페이지</a></li>
-            <li><a href="#">관심</a></li>
+            <li><a href="#" onclick="location.href='test.html'">마이페이지</a></li>
+            <li><a href="#" onclick="location.href='back.html'">관심</a></li>
             <li><a href="#">채팅</a></li>
         </ul>
     </nav>
@@ -218,15 +315,24 @@
     <div class="logo">
         <img src="https://blog.kakaocdn.net/dn/bUc9Tm/btsIScKh0Zv/6aeidAbRZ9xRa2lNY9gEK1/img.png" alt="CodyUsLogo">
     </div>
-    <div class="find-email">
-        <span>가입 시 등록한 이메일을 입력하세요.</span>
-        <span>이메일로 임시 비밀번호를 전송해 드립니다.</span>
-    </div>
-    <form class="email-form">
-        <br><br><br><span>이메일</span>
+    <form class="login-form">
+        <span>이메일</span>
         <input type="email" placeholder="ex) codyus@email.com" required>
-        <button type="submit">임시 비밀번호 발송하기</button>
+        <span>비밀번호</span>
+        <input type="password" placeholder="ex) 영문, 숫자, 특수문자 포함 8~16자" required>
+        <button type="submit">로그인</button>
     </form>
+    <div class="links">
+        <a href="#" onclick="location.href='signup.html'">이메일 가입</a> |
+        <a href="#" onclick="location.href='find-email.html'">이메일 찾기</a> |
+        <a href="#" onclick="location.href='find-password.html'">비밀번호 찾기</a>
+    </div>
+<!--    <button class="naver-button">네이버 로그인</button>-->
+    <button class="kakao-button"
+            onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=2a8bb218fc28dc7c54e61faf0de6060c&redirect_uri=http://localhost:8080/api/user/kakao/callback&response_type=code'">
+        카카오 로그인
+    </button>
 </div>
 </body>
 </html>
+
