@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/posts.css">
+    <link rel="stylesheet" type="text/css" href="/css/header.css">
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+
+    <style>
+        .tabs {
+            display: flex;
+            cursor: pointer;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ccc; /* 밑줄 추가 */
+
+        }
+
+        .tab {
+            padding: 10px 20px;
+            margin-right: 5px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px 4px 0 0;
+            transition: background-color 0.3s;
+            border-bottom: 1px solid #fff;
+        }
+
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+            font-weight: bold;
+        }
+
+        .tab:hover {
+            background-color: #e0e0e0;
+        }
+
+        /*.tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 0 0 4px 4px;
+        }*/
+    </style>
+</head>
+<body>
+<div th:insert="header :: header-content"></div>
+
+<div class="create-post">
+    <div class="create-button">
+        <button type="button" class="btn btn-primary" onclick="location.href='/posts/postCreate'">게시물 등록하기</button>
+    </div>
+</div>
+
+<div class ="tabs" w-tid="8">
+    <div class ="tab active" id ="product-tab" w-tid="12">
+        상품
+    </div>
+    <div class="tab" id="style-tab" w-tid="13"> 스타일</div>
+</div>
+
+<div class="post-container" id="search-results">
+    <!-- 검색 결과가 여기에 표시됩니다. -->
+</div>
+
+<div class="pagination" id="pagination">
+    <!-- 페이지네이션 링크가 여기에 표시됩니다. -->
+</div>
+
+<div th:insert="footer :: footer-content"></div>
+
+<script src="/js/header.js"></script>
+<script src="/js/searchResult.js"></script>
+</body>
+</html>
