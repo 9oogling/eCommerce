@@ -1,15 +1,5 @@
-$(document).ready(function () {
-  function getToken() {
-    return Cookies.get('Authorization');
-  }
-
-  const auth = getToken();
-
-  $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-    jqXHR.setRequestHeader('Authorization', auth);
-  });
-
-  function fetchPosts() {
+// 게시물을 가져오는 함수
+function fetchPosts() {
     $.ajax({
       url: '/api/posts',
       method: 'GET',
@@ -72,5 +62,4 @@ $(document).ready(function () {
   $(document).ready(function () {
     fetchPosts();
   });
-});
 
