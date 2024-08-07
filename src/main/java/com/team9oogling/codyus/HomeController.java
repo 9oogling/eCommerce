@@ -37,9 +37,9 @@ public class HomeController {
     return "postDetail";
   }
 
-  @GetMapping("/posts/postSearch")
+  @GetMapping("/posts/search")
   public String postSearchPage() {
-    return "postSearch";
+    return "searchResult";
   }
 
   @GetMapping("/shop-page")
