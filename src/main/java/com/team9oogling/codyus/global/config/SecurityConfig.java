@@ -76,11 +76,12 @@ public class SecurityConfig {
             .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                     // 1. 중복 url 삭제 2. 파일명 -> API 로 변경
-                    .requestMatchers("chat", "/chatting/**","/api/users/signup", "/main.html","login.html"
-                            ,"/posts","/api/posts","/api/posts/**","/posts/postCreate","posts/postDetail/",
-                            "/api/users/token/refresh", "/api/users/login", "/login-page", "/home","/api/user-info", "/signup-page", "/shop-page").permitAll()
+                    .requestMatchers("/api/users/signup", "/main.html","login.html"
+                            ,"/posts","/api/posts","posts/postDetail/", "/chat", "/chatting/**","/posts/**", "/posts/postCreate",
+                            "/api/users/token/refresh", "/api/users/login", "/login-page", "/home",
+                            "/api/user-info", "/signup-page", "/shop-page","/searchResult.html","api/posts/search").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/user/kakao/callback", "/api/posts", "/api/users/email",
-                            "/api/user-info","/login-page","/posts/**","posts/postCreate").permitAll()
+                            "/api/user-info","/login-page","/api/posts/{postId}","/posts/search","/posts/postCreate","api/posts/search/**").permitAll()
                     .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                     .anyRequest().authenticated())
             .exceptionHandling((exceptionHandling) -> {
