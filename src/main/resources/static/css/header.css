@@ -9,7 +9,7 @@
 }
 
 #toggle {
-  position: fixed;
+  position: absolute;
   top: 53px;
   left: 16%;
   /*left: 270px;*/
@@ -180,7 +180,7 @@
 }
 
 .logo img {
-  position: fixed;
+  position: absolute;
   top: 50px;
   left: 20%;
   /*left: 330px;*/
@@ -192,7 +192,7 @@
 }
 
 .all-search {
-  position: fixed;
+  position: absolute;
   top: 50px;
   right: 16%;
   z-index: 1000;
@@ -281,7 +281,7 @@ body .dribbble img {
 }
 
 .center-bar {
-  position: fixed;
+  position: absolute;
   top: 50px;
   left: 44%;
   z-index: 1000;
@@ -353,7 +353,7 @@ nav a:focus {
 .right-container ul{
   color: #a9a9a9;
   text-align: center;
-  position: fixed;
+  position: absolute;
   top: 10px;
   right: 15%;
   z-index: 1000;
