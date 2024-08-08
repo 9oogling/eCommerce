@@ -1,14 +1,9 @@
-@font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-}
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 
-* {
-  font-family: 'Pretendard-Regular';
+/* 기본 폰트 설정 */
+body {
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
-
 /*
 로그인 화면 크기 조절
  */
@@ -25,7 +20,7 @@
 .login-logo img {
   width: 100%;
   display: flex;
-  margin-top: 50px;
+  margin-top: 100px;
   margin-bottom: 30px;
   margin-left: 3px;
 }
@@ -124,7 +119,7 @@ ex) . . .  예시 색상
   border: none;
   cursor: pointer;
   font-size: 13px;
-  margin-bottom: 50px;
+  margin-bottom: 100px;
 }
 
 /*
