@@ -1,0 +1,375 @@
+
+.header-container {
+  max-width: 1200px;
+  height: 115px; /* 고정된 높이 */
+  width: 100%; /* 전체 너비 */
+  box-sizing: border-box; /* 패딩과 보더를 포함 */
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+#toggle {
+  position: absolute;
+  top: 53px;
+  left: 16%;
+  /*left: 270px;*/
+  width: 23px;
+  height: 20px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#toggle div.bar,
+#toggle div.bar:before,
+#toggle div.bar:after {
+  width: 100%;
+  height: 1.5px;
+  background: #333;
+}
+
+#toggle div.bar {
+  position: relative;
+  transform: translateY(9px);
+  transition: all 0.3s 0.3s ease;
+}
+
+#toggle div.bar:before {
+  content: " ";
+  position: absolute;
+  bottom: 9px;
+  transition: bottom 0.3s 0.3s ease, transform 0.3s ease;
+}
+
+#toggle div.bar:after {
+  content: " ";
+  position: absolute;
+  top: 9px;
+  transition: top 0.3s 0.3s ease, transform 0.3s ease;
+}
+
+/* Animation */
+
+#toggle div.bar.animate {
+  background: rgba(255, 255, 255, 0);
+}
+
+#toggle div.bar.animate:after {
+  top: 0;
+  transform: rotate(45deg);
+  transition: top 0.3s ease, transform 0.3s 0.3s ease;
+}
+
+#toggle div.bar.animate:before {
+  bottom: 0;
+  transform: rotate(-45deg);
+  transition: bottom 0.3s ease, transform 0.3s 0.3s ease;
+}
+
+
+#overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease, max-height 0s 0.6s ease;
+  z-index: 100;
+  opacity: 1;
+  backdrop-filter: blur(7px);
+}
+
+#overlay nav {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+}
+
+#overlay nav ul,
+#overlay nav ul li {
+  margin: 0;
+  padding: 0;
+  display: block;
+  position: static;
+}
+
+#overlay nav ul {
+  padding: 30px;
+}
+
+#overlay nav ul li {
+  margin-bottom: 10px;
+  opacity: 0;
+  transition: all 0.9s 0s ease;
+  margin-left: 60px;
+}
+
+#overlay nav ul li a {
+  position: relative;
+  height: 50px;
+  display: inline-block;
+  color: #000000;
+  transition: all 0.6s 0s ease;
+}
+
+#overlay nav ul li a:after {
+  content: " ";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  opacity: 0;
+  height: 1px;
+  background: #000000;
+  transition: all 0.6s 0s ease;
+}
+
+#overlay nav ul li a:hover:after {
+  width: 100%;
+  opacity: 1;
+}
+
+#overlay nav ul li a:hover {
+  color: #888888;
+}
+
+#page.overlay #overlay nav ul li:nth-child(1) {
+  transition: all 1.2s 0s ease;
+}
+#page.overlay #overlay nav ul li:nth-child(2) {
+  transition: all 1.2s 0.3s ease;
+}
+#page.overlay #overlay nav ul li:nth-child(3) {
+  transition: all 1.2s 0.6s ease;
+}
+#page.overlay #overlay nav ul li:nth-child(4) {
+  transition: all 1.2s 0.9s ease;
+}
+#page.overlay #overlay nav ul li:nth-child(5) {
+  transition: all 1.2s 1.2s ease;
+}
+
+
+#overlay nav ul li a {
+  text-transform: normal;
+  font-size: 30px;
+  font-weight: 300;
+  color: #000000;
+  text-decoration: none;
+
+  /*font-family: 'Raleway', sans-serif;*/
+}
+
+#page.overlay #overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  max-height: 1200px;
+  opacity: 1;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+#page.overlay #overlay nav ul li {
+
+  margin-left: 0;
+  opacity: 1;
+}
+
+.all-search {
+  position: absolute;
+  top: 50px;
+  right: 16%;
+  z-index: 1000;
+}
+
+.search {
+  display: table;
+}
+.search input {
+  background: none;
+  border: none;
+  outline: none;
+  width: 28px;
+  min-width: 0;
+  padding: 0;
+  z-index: 1;
+  position: relative;
+  line-height: 18px;
+  margin: 5px 0;
+  font-size: 14px;
+  -webkit-appearance: none;
+  transition: all .6s ease;
+  cursor: pointer;
+  color: #000000;
+}
+.search input + div {
+  position: relative;
+  height: 28px;
+  width: 100%;
+  margin: -28px 0 0 0;
+}
+.search input + div svg {
+  display: block;
+  position: absolute;
+  height: 28px;
+  width: 160px;
+  right: 0;
+  top: 0;
+  fill: none;
+  stroke: #000000;
+  stroke-width: 1.5px;
+  stroke-dashoffset: calc(212.908 + 59);
+  stroke-dasharray: 59 212.908;
+  transition: all .6s ease;
+}
+.search input:not(:placeholder-shown),
+.search input:focus {
+  width: 160px;
+  padding: 0 4px;
+  cursor: text;
+}
+.search input:not(:placeholder-shown) + div svg,
+.search input:focus + div svg {
+  stroke-dasharray: 150 212.908;
+  stroke-dashoffset: 300;
+}
+
+.search-type-select {
+  border: 1px solid #000000;
+  color: #000000;
+  outline: 0;
+  font-size: 14.5px;
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.2);
+}
+::-moz-selection {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+html {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+
+body .dribbble {
+  position: fixed;
+  display: block;
+  right: 24px;
+  bottom: 24px;
+}
+body .dribbble img {
+  display: block;
+  width: 76px;
+}
+
+.center-bar {
+  width: 100%;
+  position: fixed;
+  top: 50px;
+  left: 0;
+  z-index: 1000;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+nav a {
+  position: relative;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 600;
+  color: #000000;
+  margin: 0 1rem;
+  /*transition: text-shadow 300ms ease, color 300ms ease;*/
+}
+
+nav a .slide {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(0, 0, 0);
+  /*background-color: transparent;*/
+  transform: scaleX(0);
+}
+
+nav a.active {
+  color: #000000;
+  text-decoration: underline;
+  /*text-shadow: 0 0 20px rgb(143, 143, 143);*/
+}
+
+nav a:hover {
+  color: #b7b7b7;
+}
+
+nav a:focus {
+  outline: none;
+  border: none;
+}
+
+.support {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 10px;
+  display: flex;
+}
+
+.support a {
+  margin: 0 10px;
+  color: #fff;
+  font-size: 1.8rem;
+  backface-visibility: hidden;
+  transition: all 150ms ease;
+}
+
+.support a:hover {
+  transform: scale(1.1);
+}
+
+
+.right-container ul{
+  color: #a9a9a9;
+  text-align: center;
+  position: absolute;
+  top: 10px;
+  right: 15%;
+  z-index: 1000;
+  list-style-type: none;
+}
+
+.right-container li{
+  margin: 0;
+  padding: 0;
+  float: left;
+}
+
+.right-container ul li a {
+  color: #818181;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 400;
+  display: inline;
+}
+
+.right-container ul li a:hover {
+  color: #b7b7b7;
+}
