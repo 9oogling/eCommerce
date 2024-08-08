@@ -16,7 +16,7 @@ body {
     top: 55%;
 
     flex-direction: column;
-    transform: translate(180px ,-50%);
+    transform: translate(200px ,-50%);
     display: inline;
 }
 
