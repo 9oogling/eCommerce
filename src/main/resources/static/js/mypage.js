@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
     const openModalButtons = document.querySelectorAll('.open-modal-button');
     const closeModalButtons = document.querySelectorAll('.close, .close2');
@@ -7,8 +6,10 @@ document.addEventListener('DOMContentLoaded', function () {
     openModalButtons.forEach(button => {
         button.addEventListener('click', function () {
             const targetDialog = document.querySelector(button.getAttribute('data-target'));
+            const overlay = document.querySelector('.overlay');
             if (targetDialog) {
                 targetDialog.showModal();
+                overlay.style.display = 'block'; // Show overlay
             }
         });
     });
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     closeModalButtons.forEach(button => {
         button.addEventListener('click', function () {
             const dialog = button.closest('dialog');
+            const overlay = document.querySelector('.overlay');
             if (dialog && !dialog.classList.contains('no-close')) {
                 dialog.classList.add("dialog__animate-out");
                 dialog.addEventListener('animationend', () => {
@@ -24,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     dialog.close();
                     // 모달 닫힐 때 내용 초기화
                     dialog.querySelectorAll('input').forEach(input => input.value = '');
+                    overlay.style.display = 'none'; // Hide overlay
                 }, { once: true });
             }
         });
@@ -32,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Click on background event listener
     document.querySelectorAll('dialog').forEach(dialog => {
         dialog.addEventListener('click', function (event) {
+            const overlay = document.querySelector('.overlay');
             if (event.target === dialog && !dialog.classList.contains('no-close')) {
                 dialog.classList.add("dialog__animate-out");
                 dialog.addEventListener('animationend', () => {
@@ -39,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     dialog.close();
                     // 모달 닫힐 때 내용 초기화
                     dialog.querySelectorAll('input').forEach(input => input.value = '');
+                    overlay.style.display = 'none'; // Hide overlay
                 }, { once: true });
             }
         });
@@ -107,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     saveAddressButton.addEventListener("click", (event) => {
         event.preventDefault();
         const dialog = saveAddressButton.closest('dialog');
+        const overlay = document.querySelector('.overlay');
         if (dialog) {
             dialog.classList.add("dialog__animate-out");
             dialog.addEventListener('animationend', () => {
@@ -114,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 dialog.close();
                 // 모달 닫힐 때 내용 초기화
                 dialog.querySelectorAll('input').forEach(input => input.value = '');
+                overlay.style.display = 'none'; // Hide overlay
             }, { once: true });
         }
     });
@@ -122,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     savePhoneButton.addEventListener("click", (event) => {
         event.preventDefault();
         const dialog = savePhoneButton.closest('dialog');
+        const overlay = document.querySelector('.overlay');
         if (dialog) {
             dialog.classList.add("dialog__animate-out");
             dialog.addEventListener('animationend', () => {
@@ -129,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 dialog.close();
                 // 모달 닫힐 때 내용 초기화
                 dialog.querySelectorAll('input').forEach(input => input.value = '');
+                overlay.style.display = 'none'; // Hide overlay
             }, { once: true });
         }
     });
