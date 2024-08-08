@@ -1,7 +1,3 @@
-$(document).ready(function () {
-    $("#header").load("../html/header2.html");
-    $("#footer").load("../templates/footer.html");
-});
 
 document.addEventListener('DOMContentLoaded', function () {
     const openModalButtons = document.querySelectorAll('.open-modal-button');
