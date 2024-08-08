@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  const token = Cookies.get('Authorization');
+  const token = localStorage.getItem('Authorization');
   console.log('Authorization token:', token);
 
   if (token) {
@@ -10,7 +10,7 @@ $(document).ready(function() {
 
   // 로그아웃 함수
   window.logout = function() {
-    Cookies.remove('Authorization', { path: '/' });
+    localStorage.removeItem('Authorization');
     alert('로그아웃 되었습니다.');
     location.href = '/home';
   };

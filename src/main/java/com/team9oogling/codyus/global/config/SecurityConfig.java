@@ -93,7 +93,7 @@ public class SecurityConfig {
           exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint);
         })
         .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-        .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+        .addFilterAfter(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }

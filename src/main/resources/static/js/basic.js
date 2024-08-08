@@ -1,16 +1,15 @@
 const host = 'http://' + window.location.host;
 
 function getToken() {
-  return Cookies.get('Authorization');
+  return localStorage.getItem('Authorization');
 }
 
 $(document).ready(function () {
-
   const auth = getToken();
 
   if (auth !== undefined && auth !== '') {
     $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-      jqXHR.setRequestHeader('Authorization', auth);
+      jqXHR.setRequestHeader('Authorization', 'Bearer ' + auth);
     });
   }
 

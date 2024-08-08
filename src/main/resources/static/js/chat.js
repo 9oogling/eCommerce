@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded',
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': token
+                'Authorization': 'Bearer ' + token
             }
         })
             .then(response => {
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded',
             const socket = new SockJS('/chatting', null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
             stompClient = Stomp.over(socket);
 
-            let headers = {Authorization: token};
+            let headers = {Authorization: 'Bearer ' + token};
 
             stompClient.connect(headers, (frame) => {
 
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded',
                                 method: 'GET',
                                 headers: {
                                     'Content-Type': 'application/json',
-                                    'Authorization': token
+                                    'Authorization': 'Bearer ' + token
                                 }
                             })
                                 .then(response => {
@@ -154,7 +154,7 @@ function chattingRoomList(page, size){
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token
+            'Authorization': 'Bearer ' + token
         }
     })
         .then(response => {
@@ -347,7 +347,7 @@ function fetchChattingRoomGetPost(chattingRoomId) {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token
+            'Authorization': 'Bearer ' + token
         }
     })
         .then(response => {
@@ -387,7 +387,7 @@ function fetchMessages(chattingRoomId, messageId) {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token
+            'Authorization': 'Bearer ' + token
         }
     })
         .then(response => {
@@ -425,7 +425,7 @@ function messageOffset(chattingroomsId) {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token
+            'Authorization': 'Bearer ' + token
         }
     })
         .then(response => {
