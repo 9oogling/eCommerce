@@ -167,6 +167,10 @@ document.addEventListener('DOMContentLoaded',
 
     });
 
+function getToken() {
+    return localStorage.getItem('Authorization');
+}
+
 
 function chattingRoomList(page, size){
     const chattingRoomUrl = `/api/chattingrooms?page=${page}&size=${size}`;

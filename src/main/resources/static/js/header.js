@@ -81,4 +81,10 @@ $(document).ready(function() {
       this.style.color = '#333';
     });
   });
+
+  // 왼쪽 메뉴바
+  $('#toggle').click(function() {
+    $('#toggle .bar').toggleClass('animate');
+    $('#page').toggleClass('overlay');
+  });
 });
