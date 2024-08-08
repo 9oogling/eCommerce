@@ -6,6 +6,7 @@
     <title>CODYUS Chat</title>
     <link rel="stylesheet" type="text/css" href="/css/header.css">
     <link rel="stylesheet" type="text/css" href="/css/chat.css">
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -19,8 +20,7 @@
 <div class="chat-container">
     <div class="chat-sidebar">
         <div class="user-info">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX8UQ6ZMYilNurkx10IhPNUO0uxQQM6tVPyQ&s"
-                 alt="User Avatar" class="user-avatar">
+            <img src="" alt="User Avatar" class="user-avatar">
             <div class="user-name" id="userName"></div>
         </div>
         <ul class="chat-list">
@@ -30,6 +30,7 @@
     </div>
     <div class="chat-area" id="chatArea">
         <div class="chat-header">
+            <img id="partnerAvatar" class="partner-avatar" src="" alt="Partner Avatar"/>
             <h2 id="chatName"></h2>
             <div id="chatting-room-post" class="chat-post">
             </div>
@@ -43,7 +44,7 @@
         </div>
     </div>
 </div>
-
+<div th:insert="footer :: footer-content"></div>
 <script src="/js/basic.js"></script>
 <script src="/js/chat.js"></script>
 <script src="/js/header.js"></script>

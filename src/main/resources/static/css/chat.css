@@ -1,16 +1,26 @@
 .chat-container {
     display: flex;
-    height: 100vh;
     max-width: 1400px;
-    margin: 0 auto;
+    margin: 30px auto;
+    min-height: calc(100vh - 130px);
+    max-height: calc(100vh - 130px);
+    background-color: #fff;
+    background-image:url("../images/codyus.png");
+    background-size: auto; /* 배경 이미지가 요소를 덮도록 설정 */
+    background-repeat: no-repeat; /* 배경 이미지 반복 방지 */
+    background-position: right; /* 배경 이미지 중앙 정렬 */
 }
 
 .chat-sidebar {
     width: 300px;
-    background-color: #f8f8f8;
-    border-right: 1px solid #e0e0e0;
+    background-color: white;
+    border-radius: 20px 10px 5px 20px;
+    border: 1px solid #e0e0e0;
     padding: 20px;
     overflow-y: auto;
+    min-height: 100%;
+    max-height: 100%;
+    flex-shrink: 0; /* 크기 축소 방지 */
 }
 
 .user-info {
@@ -31,7 +41,7 @@
 
 .user-name {
     font-weight: bold;
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .chat-list {
@@ -44,7 +54,7 @@
     display: block; /* 기본적으로 블록 형태로 설정 */
     margin: 20px auto; /* 위아래 여백 추가 및 가운데 정렬 */
     padding: 10px 20px; /* 안쪽 여백 추가 */
-    background-color: #ff6600; /* 배경색 */
+    background-color: #262626; /* 배경색 */
     color: white; /* 글자 색 */
     border: none; /* 테두리 제거 */
     border-radius: 20px; /* 둥근 모서리 */
@@ -52,6 +62,10 @@
     font-size: 16px; /* 글자 크기 */
     text-align: center; /* 텍스트 가운데 정렬 */
     transition: background-color 0.3s; /* 호버 효과를 위한 전환 */
+}
+
+#loadMoreChats:hover {
+    background-color: #8b95a1; /* 호버 시 배경색 변경 */
 }
 
 .date-separator {
@@ -76,6 +90,7 @@
 .chat-item {
     display: flex;
     align-items: center;
+    width: 100%;
     padding: 15px 0;
     border-bottom: 1px solid #e0e0e0;
     cursor: pointer;
@@ -93,6 +108,14 @@
     margin-right: 15px;
 }
 
+.partner-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px; /* 텍스트와의 간격 */
+    display: inline-block; /* 인라인 블록으로 설정 */
+    vertical-align: middle; /* 수직 가운데 정렬 */
+}
 .chat-info {
     flex: 1;
 }
@@ -110,7 +133,7 @@
     white-space: nowrap; /* 한 줄로 표시 */
     overflow: hidden; /* 넘치는 부분 숨김 */
     text-overflow: ellipsis;
-    max-width: 180px;
+    max-width: 130px;
 }
 
 .chat-lastTimeStamp {
@@ -120,7 +143,7 @@
 }
 
 .unread-count {
-    background-color: #ff6600;
+    background-color: dimgray;
     color: white;
     border-radius: 50%;
     padding: 2px 8px;
@@ -137,13 +160,18 @@
     background-size: auto; /* 이미지 크기를 요소에 맞춤 */
     background-repeat: no-repeat; /* 이미지 반복하지 않음 */
     background-position: center; /* 중앙 정렬 */
+    flex-shrink: 0; /* 크기 축소 방지 */
 }
 
 .chat-header {
     padding: 15px;
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #e0e0e0;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px 20px 20px 5px;
+    /*border-left: none;*/
     display: none;
+    min-height: 100%;
+    max-height: 100%;
 }
 
 
@@ -154,8 +182,12 @@
     flex-direction: column-reverse;
     overflow-y: auto;
     scroll-behavior: smooth;
-    min-height: calc(80vh - 200px);
-    max-height: calc(80vh - 200px);
+    min-height: calc(50vh);
+    max-height: calc(50vh);
+    background-image:url("../images/codyus.png");
+    background-size: 70% auto; /* 배경 이미지가 요소를 덮도록 설정 */
+    background-repeat: no-repeat; /* 배경 이미지 반복 방지 */
+    background-position: center; /* 배경 이미지 중앙 정렬 */
 }
 
 .message {
@@ -171,7 +203,8 @@
     padding: 8px 12px;
     position: relative;
     font-size: 14px;
-
+    min-width: 0;
+    max-width: 400px;
 }
 
 .user-message {
@@ -179,7 +212,7 @@
 }
 
 .user-message .message-content {
-    background-color: #ff6600;
+    background-color: lightslategray;
     color: white;
 }
 
@@ -214,6 +247,7 @@
     border-top: 1px solid #e0e0e0;
     display: flex;
     flex-shrink: 0;
+
 }
 
 .input-area input {
@@ -226,7 +260,7 @@
 
 .input-area button {
     padding: 10px 20px;
-    background-color: #ff6600;
+    background-color: #262626;
     color: white;
     border: none;
     border-radius: 20px;
@@ -236,12 +270,13 @@
 .hidden {
     display: none;
 }
-
 /*post */
 #chatName {
     margin: 0;
     font-size: 22px;
     font-weight: bold;
+    display: inline-block; /* 인라인 블록으로 설정 */
+    vertical-align: middle; /* 수직 가운데 정렬 */
 }
 
 .chat-post {
@@ -298,7 +333,7 @@
     display: block; /* 기본적으로 블록 형태로 설정 */
     margin: 20px auto; /* 위아래 여백 추가 및 가운데 정렬 */
     padding: 10px 20px; /* 안쪽 여백 추가 */
-    background-color: #ff6600; /* 배경색 */
+    background-color: #262626; /* 배경색 */
     color: white; /* 글자 색 */
     border: none; /* 테두리 제거 */
     border-radius: 20px; /* 둥근 모서리 */
@@ -309,7 +344,7 @@
 }
 
 #loadMoreButton:hover {
-    background-color: #e65c00; /* 호버 시 배경색 변경 */
+    background-color: #8b95a1; /* 호버 시 배경색 변경 */
 }
 
 ::-webkit-scrollbar {
@@ -331,3 +366,4 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #6b7684; /* 핸들 색상 변경 */
 }
+
