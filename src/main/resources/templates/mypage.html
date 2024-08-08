@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>마이페이지</title>
     <link rel="stylesheet" href="../static/css/mypage.css">
+<!--    <link rel="stylesheet" href="../static/css/header.css">-->
+<!--        <link rel="stylesheet" href="../static/css/footer2.css">-->
     <script defer src="../static/js/mypage.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -14,142 +16,147 @@
             integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 </head>
 <body>
-<div id="header"></div>
+<div th:insert="header :: header-content"></div>
+
 <div class="container">
-    <div class="wrap">
-        <!-- box1 -->
-        <div class="box1">
-            <p class="title">내 계정</p>
-            <div class="con1">
-                <p class="email">이메일</p>
-                <p class="email1">codyus@email.com</p>
+    <div class="wrapper">
+        <div class="wrap">
+            <!-- box1 -->
+            <div class="box1">
+                <p class="title">내 계정</p>
+                <div class="con1">
+                    <p class="email">이메일</p>
+                    <p class="email1">codyus@email.com</p>
+                    <br>
+                    <p class="password">비밀번호</p>
+                    <p class="password1">********</p>
+                </div>
+                <button class="button open-modal-button" type="button" data-target="#modal1">변경</button>
+                <div class="overlay"></div>
+                <dialog id="modal1">
+                    <div class="dialog__inner">
+                        <button class="button button-close close">╳</button>
+                        <div class="dialog__content">
+                            <h4>비밀번호 변경</h4>
+                            <p>주기적인 비밀번호 변경을 통해 개인정보를 안전하게 보호하세요.</p>
+                            <br>
+                            <div class="CgPw">
+                                <span>현재 비밀번호</span>
+                                <input id="change0" name="pw0" type="password" placeholder="* 현재 비밀번호를 입력해 주세요.">
+                                <span>새 비밀번호</span>
+                                <input id="change1" name="pw1" type="password" placeholder="* 영문, 숫자, 특수문자 포함 8~16자">
+                                <span>비밀번호 확인</span>
+                                <input id="change2" name="pw2" type="password" placeholder="* 비밀번호를 다시 입력해 주세요.">
+                            </div>
+                            <footer class="dialog__footer">
+                                <button class="close1" type="submit">저장</button>
+                                <button class="close2">취소</button>
+                            </footer>
+                        </div>
+                    </div>
+                </dialog>
+            </div>
+            <!-- box2 -->
+            <div class="box2">
+                <p class="title">개인 정보</p>
+                <div class="con2">
+                    <p class="phone">휴대폰 번호</p>
+                    <p class="phone1">010-1***-*678</p>
+                </div>
+                <button class="button open-modal-button" type="button" data-target="#modal2">변경</button>
+                <dialog id="modal2">
+                    <div class="dialog__inner">
+                        <button class="button button-close close">╳</button>
+                        <div class="dialog__content0">
+                            <h4>휴대폰 번호 수정</h4>
+                            <p>개인정보를 최신 상태로 유지하세요.</p>
+                            <div class="CgInfo">
+                                <br>
+                                <select class="tel" name="tel">
+                                    <option value="통신사 선택">통신사 선택</option>
+                                    <option value="LG U+">LG U+</option>
+                                    <option value="SKT">SKT</option>
+                                    <option value="KT">KT</option>
+                                    <option value="LG U+ 알뜰폰">LG U+ 알뜰폰</option>
+                                    <option value="SKT 알뜰폰">SKT 알뜰폰</option>
+                                    <option value="KT 알뜰폰">KT 알뜰폰</option>
+                                </select>
+                                <br><br>
+                                <label>휴대폰 번호</label>
+                                <input id="change3" name="name" type="text" placeholder="'-'를 제외하고 입력해 주세요.">
+                            </div>
+                            <footer class="dialog__footer1">
+                                <button class="save-phone" type="submit">저장</button>
+                                <button class="close2">취소</button>
+                            </footer>
+                        </div>
+                    </div>
+                </dialog>
                 <br>
-                <p class="password">비밀번호</p>
-                <p class="password1">********</p>
-            </div>
-            <button class="button open-modal-button" type="button" data-target="#modal1">변경</button>
-            <dialog id="modal1">
-                <div class="dialog__inner">
-                    <button class="button button-close close">╳</button>
-                    <div class="dialog__content">
-                        <h4>비밀번호 변경</h4>
-                        <p>주기적인 비밀번호 변경을 통해 개인정보를 안전하게 보호하세요.</p>
-                        <br>
-                        <div class="CgPw">
-                            <span>현재 비밀번호</span>
-                            <input id="change0" name="pw0" type="password" placeholder="* 현재 비밀번호를 입력해 주세요.">
-                            <span>새 비밀번호</span>
-                            <input id="change1" name="pw1" type="password" placeholder="* 영문, 숫자, 특수문자 포함 8~16자">
-                            <span>비밀번호 확인</span>
-                            <input id="change2" name="pw2" type="password" placeholder="* 비밀번호를 다시 입력해 주세요.">
-                        </div>
-                        <footer class="dialog__footer">
-                            <button class="close1" type="submit">저장</button>
-                            <button class="close2">취소</button>
-                        </footer>
-                    </div>
+                <div class="con3">
+                    <p class="address">주소</p>
+                    <p class="address1">서울특별시 종로구 세종대로 172</p>
                 </div>
-            </dialog>
+                <button class="button open-modal-button" type="button" data-target="#modal3">변경</button>
+                <dialog id="modal3">
+                    <div class="dialog__inner">
+                        <button class="button button-close close">╳</button>
+                        <div class="dialog__content1">
+                            <h4>주소 수정</h4>
+                            <p>개인정보를 최신 상태로 유지하세요.</p>
+                            <br>
+                            <div class="CgInfo1">
+                                <br>
+                                <div class="address-ch"></div>
+                                <label>우편번호</label>
+                                <input type="text" id="sample6_postcode" placeholder="">
+                                <button class="addr-btn" onclick="sample6_execDaumPostcode()">우편번호 찾기</button><br><br><br>
+                                <label>주소</label>
+                                <input type="text" id="sample6_address" placeholder="">
+                                <label id="change4">상세주소</label>
+                                <input type="text" id="sample6_detailAddress" placeholder="">
+                                <label id="change5">참고항목</label>
+                                <input type="text" id="sample6_extraAddress" placeholder="">
+                            </div>
+                            <footer class="dialog__footer2">
+                                <button class="save-address" type="submit">저장</button>
+                                <button class="close2">취소</button>
+                            </footer>
+                        </div>
+                    </div>
+                </dialog>
+            </div>
         </div>
-        <!-- box2 -->
-        <div class="box2">
-            <p class="title">개인 정보</p>
-            <div class="con2">
-                <p class="phone">휴대폰 번호</p>
-                <p class="phone1">010-1***-*678</p>
-            </div>
-            <button class="button open-modal-button" type="button" data-target="#modal2">변경</button>
-            <dialog id="modal2">
-                <div class="dialog__inner">
-                    <button class="button button-close close">╳</button>
-                    <div class="dialog__content0">
-                        <h4>휴대폰 번호 수정</h4>
-                        <p>개인정보를 최신 상태로 유지하세요.</p>
-                        <div class="CgInfo">
-                            <br>
-                            <select class="tel" name="tel">
-                                <option value="통신사 선택">통신사 선택</option>
-                                <option value="LG U+">LG U+</option>
-                                <option value="SKT">SKT</option>
-                                <option value="KT">KT</option>
-                                <option value="LG U+ 알뜰폰">LG U+ 알뜰폰</option>
-                                <option value="SKT 알뜰폰">SKT 알뜰폰</option>
-                                <option value="KT 알뜰폰">KT 알뜰폰</option>
-                            </select>
-                            <br><br>
-                            <label>휴대폰 번호</label>
-                            <input id="change3" name="name" type="text" placeholder="'-'를 제외하고 입력해 주세요.">
-                        </div>
-                        <footer class="dialog__footer1">
-                            <button class="save-phone" type="submit">저장</button>
-                            <button class="close2">취소</button>
-                        </footer>
-                    </div>
+        <div class="wrap1">
+            <div class="box3">
+                <p class="title">관심</p>
+                <div class="box">
+                    <p class="more1">더보기</p>
                 </div>
-            </dialog>
-            <br>
-            <div class="con3">
-                <p class="address">주소</p>
-                <p class="address1">서울특별시 종로구 세종대로 172</p>
+                <br>
+                <p class="like"> - 셀린느 로고 티셔츠 [L] </p>
+                <p class="like"> - 코디어스 와이드 팬츠 [M] </p>
+                <p class="like"> - COS 코튼 와이셔츠 [100] </p>
+                <p class="like"> - 슈프림 백팩 [OS] </p>
+                <p class="like"> - 메종마르지엘라 지갑 </p>
             </div>
-            <button class="button open-modal-button" type="button" data-target="#modal3">변경</button>
-            <dialog id="modal3">
-                <div class="dialog__inner">
-                    <button class="button button-close close">╳</button>
-                    <div class="dialog__content1">
-                        <h4>주소 수정</h4>
-                        <p>개인정보를 최신 상태로 유지하세요.</p>
-                        <br>
-                        <div class="CgInfo1">
-                            <br>
-                            <div class="address-ch"></div>
-                            <label>우편번호</label>
-                            <input type="text" id="sample6_postcode" placeholder="">
-                            <input class="addr-btn" type="button" onclick="sample6_execDaumPostcode()"
-                                   value="우편번호 찾기">
-                            <label>주소</label>
-                            <input type="text" id="sample6_address" placeholder="">
-                            <label id="change4">상세주소</label>
-                            <input type="text" id="sample6_detailAddress" placeholder="">
-                            <label id="change5">참고항목</label>
-                            <input type="text" id="sample6_extraAddress" placeholder="">
-                        </div>
-                        <footer class="dialog__footer2">
-                            <button class="save-address" type="submit">저장</button>
-                            <button class="close2">취소</button>
-                        </footer>
-                    </div>
+            <div class="box4">
+                <p class="title">판매 상품 목록</p>
+                <div class="box">
+                    <p class="more2">더보기</p>
                 </div>
-            </dialog>
+                <br>
+                <p class="sale"> - 메종키츠네 반팔 [M] </p>
+                <p class="sale"> - 코디어스 블레이져 [XL] </p>
+                <p class="sale"> - 루이비통 카드지갑 </p>
+                <p class="sale"> - 카시오 시계 </p>
+                <p class="sale"> - 나이키 에어포스 [260] </p>
+            </div>
         </div>
     </div>
-    <div class="wrap1">
-        <!-- box3 and box4 aligned to the right -->
-        <div class="box3">
-            <p class="title">관심</p>
-            <div class="box">
-                <p class="more1">더보기</p>
-            </div><br>
-            <p class="like"> - 셀린느 로고 티셔츠 [L] </p>
-            <p class="like"> - 코디어스 와이드 팬츠 [M] </p>
-            <p class="like"> - COS 코튼 와이셔츠 [100] </p>
-            <p class="like"> - 슈프림 백팩 [OS] </p>
-            <p class="like"> - 메종마르지엘라 지갑 </p>
-        </div>
-        <div class="box4">
-            <p class="title">판매 상품 목록</p>
-            <div class="box">
-                <p class="more2">더보기</p>
-            </div><br>
-            <p class="sale"> - 메종키츠네 반팔 [M] </p>
-            <p class="sale"> - 코디어스 블레이져 [XL] </p>
-            <p class="sale"> - 루이비통 카드지갑 </p>
-            <p class="sale"> - 카시오 시계 </p>
-            <p class="sale"> - 나이키 에어포스 [260] </p>
-        </div>
-    </div>
+    <div id="footer"></div>
+   <div th:insert="footer :: footer-content"></div>
 </div>
-<div id="footer"></div>
 </body>
 <script src="./js/join.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
