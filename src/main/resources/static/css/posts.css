@@ -8,15 +8,15 @@ body {
 .create-post {
     display: flex;
     justify-content: flex-end;
-    padding: 0 650px;
-    margin-bottom: 20px;
-    margin-top : 30px;  /*헤더 사이 여백*/
+    width: 100%;
+    max-width: 1080px;
+    margin: 30px auto 20px;
 }
 
 
 
 .post-container {
-    max-width: 1200px; /* 최대 너비 설정 */
+    max-width: 1400px; /* 최대 너비 설정 */
     margin: 0 auto; /* 중앙 정렬 */
     padding: 0 20px; /* 양옆 여백 설정 */
     display: flex;
@@ -26,9 +26,8 @@ body {
 }
 
 .post {
-    border: 1px solid #ddd;
+    border: 2px solid black;
     border-radius: 10px;
-    padding: 10px;
     flex: 1 1 calc(25% - 20px); /* 4개씩 배치하고 간격을 고려하여 크기 설정 */
     box-sizing: border-box; /* padding을 포함하여 크기 계산 */
     margin-bottom: 20px;
@@ -39,6 +38,7 @@ body {
     text-align: center;
     cursor: pointer; /* 마우스 커서를 손 모양으로 변경 */
     transition: transform 0.2s; /* 부드러운 변환 효과 추가 */
+
 }
 
 .post img {

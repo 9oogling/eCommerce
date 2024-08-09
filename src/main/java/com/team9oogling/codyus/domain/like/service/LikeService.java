@@ -58,4 +58,16 @@ public class LikeService {
 
         likeRepository.delete(checkLike);
     }
+
+    @Transactional
+    public int likecount(Long postId){
+        return likeRepository.countByPostId(postId);
+    }
+
+    public boolean isLiked(Long postId, UserDetailsImpl userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(()
+                -> new CustomException(StatusCode.NOT_FOUND_USER));
+
+        return likeRepository.findByPostIdAndUserId(postId, user.getId()).isPresent();
+    }
 }
