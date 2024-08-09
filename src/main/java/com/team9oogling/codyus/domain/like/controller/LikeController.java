@@ -1,6 +1,7 @@
 package com.team9oogling.codyus.domain.like.controller;
 
 import com.team9oogling.codyus.domain.like.service.LikeService;
+import com.team9oogling.codyus.global.dto.DataResponseDto;
 import com.team9oogling.codyus.global.security.UserDetailsImpl;
 import com.team9oogling.codyus.global.dto.MessageResponseDto;
 import com.team9oogling.codyus.global.entity.ResponseFactory;
@@ -33,4 +34,19 @@ public class LikeController {
 
         return ResponseFactory.ok(StatusCode.SUCCESS_DELETE_LIKE);
     }
+
+    @GetMapping("/{postId}/likes/count")
+    public ResponseEntity<DataResponseDto<Integer>> getLikeCount(@PathVariable Long postId) {
+        int likeCount = likeService.likecount(postId);
+        return ResponseFactory.ok(likeCount, StatusCode.SUCCESS_GET_LIKECOUNT);
+
+    }
+
+    @GetMapping("/{postId}/likes/status")
+    public ResponseEntity<DataResponseDto<Boolean>> getLikeStatus(@PathVariable Long postId,
+                                                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        boolean isLiked = likeService.isLiked(postId, userDetails);
+        return ResponseFactory.ok(isLiked, StatusCode.SUCCESS_GET_LIKESTATUS);
+    }
+
 }
