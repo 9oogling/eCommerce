@@ -34,6 +34,8 @@ public enum StatusCode {
   SUCCESS_FIND_EMAIL(HttpStatus.OK, "이메일 찾기에 성공했습니다."),
   SUCCESS_FIND_CHATTING_ROOM_POST(HttpStatus.OK, "채팅방 게시물을 조회에 성공했습니다."),
   SUCCESS_FIND_CHATTING_ROOM_MESSAGE_OFFSET(HttpStatus.OK, "메세지 오프셋 조회에 성공했습니다."),
+  SUCCESS_GET_LIKECOUNT(HttpStatus.OK, "좋아요 수를 조회를 성공하였습니다."),
+  SUCCESS_GET_LIKESTATUS(HttpStatus.OK, "좋아요 상태를 확인했습니다."),
 
 
   // 400번대
