@@ -9,7 +9,7 @@ let readSubscriptions = null;
 let page = 1;
 const size = 30;
 const images = [
-  "https://th.bing.com/th/id/OIP.q1RFb2mAtdWSZrdNG-Yq4QDsEH?w=166&h=185&c=7&r=0&o=5&pid=1.7",
+    "https://th.bing.com/th/id/OIP.q1RFb2mAtdWSZrdNG-Yq4QDsEH?w=166&h=185&c=7&r=0&o=5&pid=1.7",
     "../images/minji.jfif",
     "https://th.bing.com/th/id/OIP.pp8MpF-w-EGroMVYKvFNvAHaJC?w=198&h=242&c=7&r=0&o=5&pid=1.7",
     "https://th.bing.com/th/id/OIP.WXb-0EfftXRtbpQusgYYDgHaEK?w=333&h=187&c=7&r=0&o=5&pid=1.7",
@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded',
     () => {
         token = getToken();
 
+        if (!token) {
+            window.location.href = "/login";
+        }
         fetch('/api/user-info', {
             method: 'GET',
             headers: {
@@ -127,9 +130,8 @@ document.addEventListener('DOMContentLoaded',
                                         listItem.className = 'chat-item';
                                         listItem.id = 'chat-room-' + newResponse.chattingRoomId;
 
-                                    const randomIndex = Math.floor(Math.random() * images.length);
-                                    const selectedImage = images[randomIndex];
-                                    console.log(selectedImage);
+                                        const randomIndex = Math.floor(Math.random() * images.length);
+                                        const selectedImage = images[randomIndex];
                                         // 새로운 메시지 내용으로 설정
                                         listItem.innerHTML = `
                                 <img src="${selectedImage}" alt="Avatar" class="chat-avatar">
@@ -162,13 +164,14 @@ document.addEventListener('DOMContentLoaded',
                 }
             );
         }
+
         chattingRoomList(page, size);
 
 
     });
 
 
-function chattingRoomList(page, size){
+function chattingRoomList(page, size) {
     const chattingRoomUrl = `/api/chattingrooms?page=${page}&size=${size}`;
 
     fetch(chattingRoomUrl, {
@@ -187,15 +190,15 @@ function chattingRoomList(page, size){
         .then(data => {
             const chatList = document.querySelector('.chat-list');
             const chats = data.data;
-            if(chats.length <= 0 ){
+            if (chats.length <= 0) {
                 document.getElementById('loadMoreChats').style.display = 'none';
                 return;
-            }else{
+            } else {
                 document.getElementById('loadMoreChats').style.display = 'block';
             }
             chats.forEach(chat => {
-                const listItemId ='chat-room-' + chat.chattingRoomId;
-                if(document.getElementById(listItemId)){
+                const listItemId = 'chat-room-' + chat.chattingRoomId;
+                if (document.getElementById(listItemId)) {
                     return;
                 }
 
@@ -218,7 +221,6 @@ function chattingRoomList(page, size){
 
                 const randomIndex = Math.floor(Math.random() * images.length);
                 const selectedImage = images[randomIndex];
-                console.log(selectedImage);
 
                 listItem.innerHTML = `
                 <img src="${selectedImage}" alt="Avatar" class="chat-avatar">
@@ -241,9 +243,10 @@ function chattingRoomList(page, size){
 
 function loadMoreChats() {
     page++;
-    chattingRoomList(page,size);
+    chattingRoomList(page, size);
     console.log(page + " page " + size + " ");
 }
+
 function topicChattingRoom(chattingRoomId) {
     chatSubscriptions = stompClient.subscribe('/topic/' + chattingRoomId, (message) => {
         const container = document.querySelector('.chat-messages');
@@ -254,7 +257,11 @@ function topicChattingRoom(chattingRoomId) {
             hour: '2-digit',
             minute: '2-digit'
         });
-
+        if (msg === "NOT_FOUND_CHATTING_PARTNER") {
+            alert("상대방이 채팅방에 나갔습니다.");
+            disableInput();
+            return;
+        }
         if (msg.email !== email) {
             messageDiv.className = 'message';
             messageDiv.innerHTML = `
@@ -311,12 +318,18 @@ function topicMessageRead(chattingRoomId) {
 
 // 클릭시 채팅방이 열린다.
 function openChat(chattingRoomId, partnerNickname) {
+    enableInput();
     const chatHeader = document.getElementsByClassName('chat-header')[0]; // [0]을 추가하여 첫 번째 요소를 선택
-    const button =document.getElementById('loadMoreButton');
+    const button = document.getElementById('loadMoreButton');
+    const existButton = document.querySelector('.exit-chat-button');
+    existButton.id = `exit-button-${chattingRoomId}`;
+
     button.style.opacity = '1';
     button.style.pointerEvents = 'auto';
-    button.textContent='더보기';
+    button.textContent = '더보기';
     // chatHeader의 display 속성을 'block'으로 변경
+
+
     if (chatHeader) {
         chatHeader.style.display = 'block'; // 또는 'flex', 'grid' 등 필요에 따라 변경
     }
@@ -431,16 +444,16 @@ function fetchMessages(chattingRoomId, messageId) {
                     fetchChattingRoomGetPost(chattingRoomId);
                 }
 
-            const button =document.getElementById('loadMoreButton');
-            button.style.display ='block';
+                const button = document.getElementById('loadMoreButton');
+                button.style.display = 'block';
 
                 if (data.data.length > 0) {
                     button.style.opacity = '1';
                     button.style.pointerEvents = 'auto'; // 클릭 가능
                 } else {
-                    button.style.opacity ='0.2';
+                    button.style.opacity = '0.2';
                     button.style.pointerEvents = 'none'; // 클릭 불가능
-                    button.textContent='끝!';
+                    button.textContent = '끝!';
                 }
             }
         )
@@ -464,7 +477,6 @@ function messageOffset(chattingroomsId) {
             return response.json();
         });
 }
-
 
 function renderMessages(messages) {
     const container = document.querySelector('.chat-messages');
@@ -537,6 +549,56 @@ function sendMessage() {
     }
 }
 
+function exitChattingRoom(chattingRoomId) {
+    const url = `/api/chattingrooms/${chattingRoomId}/exit`;
+    fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                alert('채팅방 나가기 성공 했습니다.');
+                window.location.href = "/chat";
+            } else {
+                throw new Error("채팅방 나가기 실패");
+            }
+        })
+        .catch(error => {
+            alert("채팅방에서 나가는 중 오류가 발생했습니다. 다시 시도 해 주세요.");
+            console.error("Error", error);
+        });
+}
+
+document.getElementById('exit-chat-button').addEventListener('click', function () {
+    const modal = document.getElementById('exit-modal');
+    modal.style.display = 'block'; // 모달 표시
+});
+
+document.getElementById('cancel-exit').addEventListener('click', function () {
+    const modal = document.getElementById('exit-modal');
+    modal.style.display = 'none'; // 모달 숨김
+});
+
+document.getElementById('confirm-exit').addEventListener('click', function () {
+    const existButton = document.querySelector('.exit-chat-button');
+    const chattingRoomId = parseInt(existButton.id.split('-')[2]);
+    exitChattingRoom(chattingRoomId); // 채팅방 나가기 함수 호출
+    const modal = document.getElementById('exit-modal');
+    modal.style.display = 'none'; // 모달 숨김
+});
+
+// 모달 외부 클릭 시 모달 닫기
+window.addEventListener('click', function (event) {
+    const modal = document.getElementById('exit-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+
 function createImageOverlay() {
     const avatars = document.querySelectorAll('.user-avatar, #partnerAvatar');
     const expandedImage = document.createElement('img');
@@ -587,7 +649,7 @@ function createImageOverlay() {
 
     // 아바타 클릭 시 확대 이미지 표시
     avatars.forEach(avatar => {
-        avatar.addEventListener('click', function() {
+        avatar.addEventListener('click', function () {
             expandedImage.src = avatar.src; // 클릭한 이미지 src를 확대 이미지에 설정
             overlay.style.display = 'flex'; // 오버레이 표시
             expandedImage.style.display = 'block'; // 확대 이미지 표시
@@ -595,18 +657,18 @@ function createImageOverlay() {
         });
     });
     // 오버레이 클릭 시 숨기기
-    overlay.addEventListener('click', function() {
+    overlay.addEventListener('click', function () {
         expandedImage.style.transform = 'translate(-50%, -50%) scale(1)'; // 축소
         overlay.style.display = 'none'; // 오버레이 숨기기
     });
 
-    closeButton.addEventListener('click', function(event) {
+    closeButton.addEventListener('click', function (event) {
         event.stopPropagation(); // 오버레이 클릭 이벤트 전파 방지
         expandedImage.style.transform = 'translate(-50%, -50%) scale(1)'; // 축소
         overlay.style.display = 'none'; // 오버레이 숨기기
     });
 
-    document.addEventListener('keydown', function(event) {
+    document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape') { // Esc 키 체크
             expandedImage.style.transform = 'translate(-50%, -50%) scale(1)'; // 축소
             overlay.style.display = 'none'; // 오버레이 숨기기
@@ -616,6 +678,28 @@ function createImageOverlay() {
 
 // DOMContentLoaded 이벤트가 발생할 때 호출
 document.addEventListener('DOMContentLoaded', createImageOverlay);
+
+function disableInput() {
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.querySelector('.input-area button');
+
+    // 입력 필드 비활성화
+    messageInput.disabled = true;
+    messageInput.style.backgroundColor = '#8b95a1'; // 원하는 어두운 색으로 설정
+    sendButton.style.cursor = 'not-allowed';
+    messageInput.style.cursor = 'not-allowed';
+    sendButton.disabled = true; // 전송 버튼도 비활성화
+}
+
+function enableInput() {
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.querySelector('.input-area button');
+    messageInput.style.backgroundColor = '#fff'; // 원하는 어두운 색으로 설정
+    sendButton.style.cursor = 'pointer';
+    messageInput.style.cursor = 'text';
+    messageInput.disabled = false; // 입력 필드 활성화
+    sendButton.disabled = false; // 전송 버튼 활성화
+}
 
 document.getElementById('messageInput').addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && !e.shiftKey) {
