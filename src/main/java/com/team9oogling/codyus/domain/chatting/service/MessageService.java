@@ -5,6 +5,7 @@ import static com.team9oogling.codyus.global.entity.StatusCode.*;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +40,9 @@ public class MessageService {
 
 	private final UserService userService;
 
+	private final SimpMessageSendingOperations messagingTemplate;
+
+
 	@Transactional
 	public ChattingMessageResponseDto sendMessage(ChattingMessageRequestDto requestDto) {
 		User user = userService.findByToken(requestDto.getToken());
@@ -48,7 +52,7 @@ public class MessageService {
 			throw new CustomException(ITEM_TRANSACTION_COMPLETED);
 		}
 		// 2. 멤버 조회
-		List<ChattingMember> members = isMemberExitedFromChattingRoom(chattingRoom, user);
+		List<ChattingMember> members = isMemberExitedFromChattingRoom(chattingRoom, user, false);
 		// 4. 메시지 처리
 		Message message = new Message(user, members.get(0), requestDto);
 		messageRepository.save(message);
@@ -62,7 +66,7 @@ public class MessageService {
 		User user = userService.findByToken(requestDto.getToken());
 		ChattingRoom chattingRoom = findByChattingRoomId(requestDto.getChattingRoomId());
 		Message message = messageRepository.findById(requestDto.getMessageId()).orElseThrow(() -> new CustomException(NOT_FOUND_MESSAGE));
-		List<ChattingMember> members = isMemberExitedFromChattingRoom(chattingRoom, user);
+		List<ChattingMember> members = isMemberExitedFromChattingRoom(chattingRoom, user, true);
 		updateMessageOffset(message, user, requestDto.getChattingRoomId());
 		return new ChattingReadResponseDto(members, requestDto.getChattingRoomId(), message.getId());
 	}
@@ -82,21 +86,23 @@ public class MessageService {
 		return messageRepository.countByChattingMemberAndIdGreaterThan(chattingMember, lastMessageId == null ? 0 : lastMessageId);
 	}
 
-	public List<ChattingMember> isMemberExitedFromChattingRoom(ChattingRoom chattingRoom, User user) {
+	public List<ChattingMember> isMemberExitedFromChattingRoom(ChattingRoom chattingRoom, User user, boolean isRead) {
 		List<ChattingMember> chattingMemberList = chattingMemberRepository.findByChattingRoom(chattingRoom);
 
 		ChattingMember member = null;
 		ChattingMember memberPartner = null;
 
 		for (ChattingMember chattingMember : chattingMemberList) {
-			if (chattingMember.getStatus() == ChattingMemberStatus.EXIT) {
-				throw new CustomException(NOT_FOUND_CHATTING_PARTNER);
-			}
 			if (chattingMember.getUser().getId().equals(user.getId())) {
 				member = chattingMember;
 			} else {
 				memberPartner = chattingMember;
 			}
+		}
+
+		if (!isRead && Objects.requireNonNull(memberPartner).getStatus() == ChattingMemberStatus.EXIT) {
+			messagingTemplate.convertAndSend("/topic/" + chattingRoom.getId(), NOT_FOUND_CHATTING_PARTNER);
+			throw new CustomException(NOT_FOUND_CHATTING_PARTNER);
 		}
 		return List.of(Objects.requireNonNull(member), Objects.requireNonNull(memberPartner));
 	}

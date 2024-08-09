@@ -77,7 +77,7 @@ public class SecurityConfig {
         .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             // 1. 중복 url 삭제 2. 파일명 -> API 로 변경
-            .requestMatchers("/api/users/signup", "/main.html"
+            .requestMatchers("chat","/api/users/signup", "/main.html"
                 , "/posts", "/api/posts", "posts/postDetail/", "/chatting/**", "/posts/**",
                 "/posts/postCreate", "/chat",
                 "/api/users/token/refresh", "/api/users/login", "/login", "/home",
