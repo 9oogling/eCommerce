@@ -17,6 +17,7 @@
 <body>
 <div th:fragment="header-content">
   <header class="header-container">
+    <div class="header-blur"></div>
     <div class="logo">
       <a href="/home">
       <img src="https://blog.kakaocdn.net/dn/bUc9Tm/btsIScKh0Zv/6aeidAbRZ9xRa2lNY9gEK1/img.png"
@@ -42,18 +43,25 @@
     <div class="all-search">
       <div class="search">
         <input type="text" placeholder=" ">
-        <div>
+        <div class="search-icon">
           <svg>
             <use xlink:href="#path"> </use>
           </svg>
+        </div>
+        <div class="search-options">
+          <select id="search-options">
+            <option value="all">전체</option>
+            <option value="title">제목</option>
+            <option value="content">내용</option>
+            <option value="hashtag">해시태그</option>
+          </select>
         </div>
       </div>
 
       <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 28" id="path">
-          <path
-              d="M32.9418651,-20.6880772 C37.9418651,-20.6880772 40.9418651,-16.6880772 40.9418651,-12.6880772 C40.9418651,-8.68807717 37.9418651,-4.68807717 32.9418651,-4.68807717 C27.9418651,-4.68807717 24.9418651,-8.68807717 24.9418651,-12.6880772 C24.9418651,-16.6880772 27.9418651,-20.6880772 32.9418651,-20.6880772 L32.9418651,-29.870624 C32.9418651,-30.3676803 33.3448089,-30.770624 33.8418651,-30.770624 C34.08056,-30.770624 34.3094785,-30.6758029 34.4782612,-30.5070201 L141.371843,76.386562"
-              transform="translate(83.156854, 22.171573) rotate(-225.000000) translate(-83.156854, -22.171573)"></path>
+          <path d="M32.9418651,-20.6880772 C37.9418651,-20.6880772 40.9418651,-16.6880772 40.9418651,-12.6880772 C40.9418651,-8.68807717 37.9418651,-4.68807717 32.9418651,-4.68807717 C27.9418651,-4.68807717 24.9418651,-8.68807717 24.9418651,-12.6880772 C24.9418651,-16.6880772 27.9418651,-20.6880772 32.9418651,-20.6880772 L32.9418651,-29.870624 C32.9418651,-30.3676803 33.3448089,-30.770624 33.8418651,-30.770624 C34.08056,-30.770624 34.3094785,-30.6758029 34.4782612,-30.5070201 L141.371843,76.386562"
+                transform="translate(83.156854, 22.171573) rotate(-225.000000) translate(-83.156854, -22.171573)"></path>
         </symbol>
       </svg>
       <!-- dribbble -->
@@ -88,11 +96,6 @@
 
         </a>
       </nav>
-      <div class="support">
-        <a href="https://twitter.com/DevLoop01" target="_blank"><i
-            class="fab fa-twitter-square"></i></a>
-        <a href="https://dribbble.com/devloop01" target="_blank"><i class="fab fa-dribbble"></i></a>
-      </div>
     </div>
   </header>
 </div>

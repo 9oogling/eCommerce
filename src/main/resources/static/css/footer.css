@@ -24,13 +24,21 @@ body {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    margin: 15px 0 0 0;
+    margin: 0 0 0 0;
 }
 
-.p-footer__address {
-    font-size: 33px;
-    font-style: normal;
-    margin-right: 10px;
+.p-footer__site-group-item1 a,
+.p-footer__site-group-item2 a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.p-footer__site-group-item1 a span,
+.p-footer__site-group-item2 a span {
+    margin-left: 8px; /* 이미지와 텍스트 사이의 간격 조정 */
+    font-size: 15px;
+    color: white;
 }
 
 .images {
@@ -55,7 +63,7 @@ body {
     align-items: center;
     list-style: none;
     padding: 0;
-    margin: 0 0 10px 0;
+    margin: 10px 0 10px 0;
 }
 
 .p-footer__site-group-item a {
@@ -102,5 +110,5 @@ body {
     text-align: center;
     font-size: 13px;
     font-weight: 300;
-    margin: 0 0 20px 0;
+    margin: 0 0 10px 0;
 }

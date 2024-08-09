@@ -8,21 +8,7 @@ let chatSubscriptions = null;
 let readSubscriptions = null;
 let page = 1;
 const size = 30;
-const images = [
-  "https://th.bing.com/th/id/OIP.q1RFb2mAtdWSZrdNG-Yq4QDsEH?w=166&h=185&c=7&r=0&o=5&pid=1.7",
-    "../images/minji.jfif",
-    "https://th.bing.com/th/id/OIP.pp8MpF-w-EGroMVYKvFNvAHaJC?w=198&h=242&c=7&r=0&o=5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.WXb-0EfftXRtbpQusgYYDgHaEK?w=333&h=187&c=7&r=0&o=5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.3h-MFmKn8KXDr_06tM4VAgHaLH?w=198&h=297&c=7&r=0&o=5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.DZJJTR8lJWb8QY5KJBkpjAHaJb?w=198&h=253&c=7&r=0&o=5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.DTWWqJpjhW7W71vGnK8BHAHaLH?w=198&h=298&c=7&r=0&o=5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.YCgjt3mX_0a9ejsgZ57U2gHaLH?w=198&h=297&c=7&r=0&o=5&pid=1.7",
-    "https://yt3.googleusercontent.com/sFTqSt_vmbmzwP1Qu-tgiSXKBPQQG7xeQ6Yb57HfVUCJw6wb1tGD7apop_G7At1phjL90_EsZw=s900-c-k-c0x00ffffff-no-rj",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8a0OvluNq3_-Y1WOKBKnQw_yjXBFsXYGJww&s",
-    "https://i.namu.wiki/i/xl7WXBmp2VQ7mQRz53DlZ_7S1O4CEA_6RERhydKMTPYsdK9oXAcvqhtijh_rHQNw1fYt7skGA4vnMOJNg40jQA.webp",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-sLVDDeTPW-xjGmR763gvkzO5NXbgJ9ysPg&s",
-    "https://i.namu.wiki/i/X8T436a2mIHFtZLdiQvxDuibXht5Fg7x2b0-kdLXbMHUB-bFUGDGiLDA27kRGlZHLvM44PY4KelG_fnWg22zZQ.webp"
-];
+
 document.addEventListener('DOMContentLoaded',
     () => {
         token = getToken();
@@ -31,7 +17,7 @@ document.addEventListener('DOMContentLoaded',
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
+                'Authorization': token
             }
         })
             .then(response => {
@@ -44,10 +30,6 @@ document.addEventListener('DOMContentLoaded',
                 email = data.data.username;
                 nickName = data.data.nickName;
                 document.getElementById('userName').innerText = nickName;
-                const randomIndex = Math.floor(Math.random() * images.length);
-                const selectedImage = images[randomIndex];
-                const userAvatar = document.querySelector('.user-avatar');
-                userAvatar.src = selectedImage;
                 connectToSocket();
             })
 
@@ -55,7 +37,7 @@ document.addEventListener('DOMContentLoaded',
             const socket = new SockJS('/chatting', null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
             stompClient = Stomp.over(socket);
 
-            let headers = {Authorization: 'Bearer ' + token};
+            let headers = {Authorization: token};
 
             stompClient.connect(headers, (frame) => {
 
@@ -110,7 +92,7 @@ document.addEventListener('DOMContentLoaded',
                                 method: 'GET',
                                 headers: {
                                     'Content-Type': 'application/json',
-                                    'Authorization': 'Bearer ' + token
+                                    'Authorization': token
                                 }
                             })
                                 .then(response => {
@@ -127,12 +109,9 @@ document.addEventListener('DOMContentLoaded',
                                         listItem.className = 'chat-item';
                                         listItem.id = 'chat-room-' + newResponse.chattingRoomId;
 
-                                    const randomIndex = Math.floor(Math.random() * images.length);
-                                    const selectedImage = images[randomIndex];
-                                    console.log(selectedImage);
                                         // 새로운 메시지 내용으로 설정
                                         listItem.innerHTML = `
-                                <img src="${selectedImage}" alt="Avatar" class="chat-avatar">
+                                <img src="../images/minji.jfif" alt="Avatar" class="chat-avatar">
                                 <div class="chat-info">
                                     <div class="chat-name">
                                         ${newResponse.partnerNickname} <span class="unread-count">${newResponse.unReadMessageCount}</span>
@@ -167,10 +146,6 @@ document.addEventListener('DOMContentLoaded',
 
     });
 
-function getToken() {
-    return localStorage.getItem('Authorization');
-}
-
 
 function chattingRoomList(page, size){
     const chattingRoomUrl = `/api/chattingrooms?page=${page}&size=${size}`;
@@ -179,7 +154,7 @@ function chattingRoomList(page, size){
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
+            'Authorization': token
         }
     })
         .then(response => {
@@ -220,12 +195,8 @@ function chattingRoomList(page, size){
                     })
                     : '';
 
-                const randomIndex = Math.floor(Math.random() * images.length);
-                const selectedImage = images[randomIndex];
-                console.log(selectedImage);
-
                 listItem.innerHTML = `
-                <img src="${selectedImage}" alt="Avatar" class="chat-avatar">
+                <img src="../images/minji.jfif" alt="Avatar" class="chat-avatar">
                 <div class="chat-info">
                     <div class="chat-name">
                         ${chat.partnerNickname} ${unreadCount}
@@ -328,10 +299,6 @@ function openChat(chattingRoomId, partnerNickname) {
     chattingroomsId = chattingRoomId;
     const chatMessages = document.getElementById('chatMessages');
     chatMessages.innerHTML = ''; // 이전 내용 삭제
-
-    const openExistingItem = document.getElementById('chat-room-' + chattingRoomId);
-    const chatAvatar = openExistingItem.querySelector('.chat-avatar');
-    document.getElementById('partnerAvatar').src = chatAvatar.src;
     document.getElementById('chatName').innerText = partnerNickname;
     fetchMessages(chattingRoomId, oldSetMessageId)
         .then(() => {
@@ -380,7 +347,7 @@ function fetchChattingRoomGetPost(chattingRoomId) {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
+            'Authorization': token
         }
     })
         .then(response => {
@@ -398,7 +365,7 @@ function fetchChattingRoomGetPost(chattingRoomId) {
                     <div class="post-details">
                         <div class="post-title-price">
                             <h3 id="postTitle">${post.postTitle}</h3>
-                            <p id="price">가격 : ${post.price.toLocaleString()}원</p>
+                            <p id="price">가격: ${post.price.toLocaleString()}원</p>
                         </div>
                         <div class="post-status">
                         <span id="postStatus">${post.postStatus === 'INPROGRESS' ? '판매 중' : '판매 완료'}</span>
@@ -420,7 +387,7 @@ function fetchMessages(chattingRoomId, messageId) {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
+            'Authorization': token
         }
     })
         .then(response => {
@@ -458,7 +425,7 @@ function messageOffset(chattingroomsId) {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
+            'Authorization': token
         }
     })
         .then(response => {
@@ -540,86 +507,6 @@ function sendMessage() {
         messageInput.value = ''; // 입력 필드 초기화
     }
 }
-
-function createImageOverlay() {
-    const avatars = document.querySelectorAll('.user-avatar, #partnerAvatar');
-    const expandedImage = document.createElement('img');
-    const overlay = document.createElement('div');
-
-    const closeButton = document.createElement('button'); // X 버튼 생성
-
-    // 이미지 스타일 설정
-    expandedImage.style.position = 'fixed';
-    expandedImage.style.top = '50%';
-    expandedImage.style.left = '50%';
-    expandedImage.style.transform = 'translate(-50%, -50%) scale(1)'; // 기본 스케일
-    expandedImage.style.width = '400px'; // 전체 너비 설정 (원하는 크기로 조정)
-    expandedImage.style.height = '400px'; // 전체 높이 설정 (원하는 크기로 조정)
-    expandedImage.style.zIndex = '1000';
-    expandedImage.style.cursor = 'pointer';
-    expandedImage.style.display = 'none'; // 기본적으로 숨김
-    expandedImage.style.transition = 'transform 0.5s ease'; // 부드러운 확대/축소 효과 추가
-
-    // 오버레이 스타일 설정
-    overlay.style.position = 'fixed';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)'; // 어두운 배경
-    overlay.style.display = 'none'; // 기본적으로 숨김
-    overlay.style.justifyContent = 'center';
-    overlay.style.alignItems = 'center';
-    overlay.style.zIndex = '999';
-
-    // X 버튼 스타일 설정
-    closeButton.innerText = 'X';
-    closeButton.style.position = 'absolute';
-    closeButton.style.top = '20px'; // 위쪽 여백
-    closeButton.style.right = '20px'; // 오른쪽 여백
-    closeButton.style.backgroundColor = 'transparent'; // 배경 투명
-    closeButton.style.color = 'white'; // 글자 색상
-    closeButton.style.border = 'none'; // 테두리 없음
-    closeButton.style.fontSize = '24px'; // 글자 크기
-    closeButton.style.cursor = 'pointer'; // 커서 변경
-    closeButton.style.zIndex = '1001'; // 오버레이보다 위에 표시
-
-    // 문서에 오버레이와 확대 이미지를 추가
-    document.body.appendChild(overlay);
-    overlay.appendChild(expandedImage);
-    overlay.appendChild(closeButton); // X 버튼 추가
-
-    // 아바타 클릭 시 확대 이미지 표시
-    avatars.forEach(avatar => {
-        avatar.addEventListener('click', function() {
-            expandedImage.src = avatar.src; // 클릭한 이미지 src를 확대 이미지에 설정
-            overlay.style.display = 'flex'; // 오버레이 표시
-            expandedImage.style.display = 'block'; // 확대 이미지 표시
-            expandedImage.style.transform = 'translate(-50%, -50%) scale(1.5)'; // 확대 비율 조정
-        });
-    });
-    // 오버레이 클릭 시 숨기기
-    overlay.addEventListener('click', function() {
-        expandedImage.style.transform = 'translate(-50%, -50%) scale(1)'; // 축소
-        overlay.style.display = 'none'; // 오버레이 숨기기
-    });
-
-    closeButton.addEventListener('click', function(event) {
-        event.stopPropagation(); // 오버레이 클릭 이벤트 전파 방지
-        expandedImage.style.transform = 'translate(-50%, -50%) scale(1)'; // 축소
-        overlay.style.display = 'none'; // 오버레이 숨기기
-    });
-
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') { // Esc 키 체크
-            expandedImage.style.transform = 'translate(-50%, -50%) scale(1)'; // 축소
-            overlay.style.display = 'none'; // 오버레이 숨기기
-        }
-    });
-}
-
-// DOMContentLoaded 이벤트가 발생할 때 호출
-document.addEventListener('DOMContentLoaded', createImageOverlay);
 
 document.getElementById('messageInput').addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && !e.shiftKey) {
