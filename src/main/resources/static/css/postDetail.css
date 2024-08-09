@@ -1,12 +1,4 @@
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #fafafa;
-    color: #262626;
-    margin: 0;
-    padding: 0;
-}
-
-.container {
+.post-container {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
@@ -14,45 +6,46 @@ body {
 
 .post {
     background-color: #fff;
-    border: 1px solid #ddd;
+    border: 2px solid black;
     border-radius: 5px;
-    padding: 20px;
     margin-bottom: 20px;
+
 }
 
 .post-header {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-bottom: 10px;
 }
 
 .post-header h1 {
-    font-size: 24px;
+    font-size: 30px;
     margin-bottom: 10px;
+    font-weight: bold;
 }
 
 .image-container {
-    width: 100%;
+    width: 80%;  /* 컨테이너 크기를 줄임 */
+    max-width: 80%;  /* 최대 너비를 설정 */
+    height: auto;
     text-align: center;
     margin-bottom: 10px;
+    overflow: hidden;
+    margin: 0 auto; /* 컨테이너를 가운데로 정렬 */
 }
 
 .image-container img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
+    width: 100%;   /* 이미지가 컨테이너의 너비에 맞춰짐 */
+    height: auto;  /* 비율을 유지하며 높이를 자동으로 조정 */
+    object-fit: contain; /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
 }
 
-.post-username {
-    font-weight: bold;
-    margin-bottom: 10px;
-}
 
 .post-image-container {
     position: relative;
     width: 100%;
     margin-bottom: 10px;
+    text-align: center; /* 이미지 컨테이너를 가운데 정렬 */
 }
 
 .post-image {
@@ -68,6 +61,8 @@ body {
     font-size: 12px;
     cursor: pointer;
     transition: background-color 0.3s;
+    bottom: 10px;
+    left: 10px;
 }
 
 .product-tag:hover {
@@ -92,39 +87,81 @@ body {
     margin-bottom: 10px;
 }
 
+/* 기본 하트 색상 */
+#like-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #fff; /* 기본 색상 */
+}
+
+/* 좋아요 상태일 때 하트 색상 */
+#like-button.liked {
+    color: red; /* 하트 색상 */
+    padding: 5px; /* 여백 추가 */
+}
+
 .post-caption {
     margin-top: 10px;
 }
 
+.post-username {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.post-content {
+    font-size: 18px;
+    font-weight: normal;
+    overflow-wrap: break-word;
+}
+
+.post-hashtag {
+    color: #1da1f2; /* 해시태그 색상 */
+    text-decoration: none; /* 링크의 밑줄 제거 */
+    font-weight: bold;
+}
+
+.post-hashtag:hover {
+    text-decoration: underline; /* 해시태그에 마우스를 올렸을 때 밑줄 추가 */
+}
+
 .product-gallery {
+    background-color: #fff;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+    max-width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
+    flex-wrap: wrap; /* 여러 상품을 줄바꿈하여 나열 */
+    gap: 15px; /* 상품 간의 간격 */
 }
 
 .product-item {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    text-align: center;
-    width: 150px;
-    background-color: #fff;
+    width: calc(25% - 15px); /* 너비 조정: 4개 상품이 한 줄에 표시되도록 설정 */
+    box-sizing: border-box; /* 패딩과 경계가 전체 너비에 포함되도록 설정 */
+    border: 1px solid #ddd; /* 경계선 추가 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    overflow: hidden; /* 내용이 넘치면 숨김 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+    background-color: #fff; /* 배경 색상 */
+    padding: 10px; /* 상품 항목 내부 패딩 */
 }
 
 .product-item img {
-    width: 100%;
-    height: auto;
+    width: 100%; /* 이미지를 항목 너비에 맞게 조정 */
+    height: auto; /* 비율을 유지하며 높이 자동 조정 */
+    object-fit: cover; /* 이미지가 항목을 완전히 덮도록 조정 */
+    max-height: 150px; /* 이미지의 최대 높이 설정 */
+    display: block; /* 이미지가 상자 내에서 블록으로 표시되도록 설정 */
+    margin: 0 auto; /* 이미지가 가운데 정렬되도록 설정 */
 }
 
-.product-name {
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 5px;
-}
-
-.product-price {
-    font-size: 14px;
-    color: #8e8e8e;
-    margin-top: 5px;
+.product-item .product-name,
+.product-item .product-price {
+    padding: 5px; /* 텍스트와 이미지 사이의 패딩 추가 */
+    font-size: 14px; /* 텍스트 크기 조정 */
 }

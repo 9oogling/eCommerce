@@ -8,27 +8,29 @@
     <link rel="stylesheet" type="text/css" href="/css/footer.css">
     <link rel="stylesheet" type="text/css" href="/css/header.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
-            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script></head>
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+</head>
 <body>
 <div th:insert="header :: header-content"></div>
-<div class="container">
+<div class="post-container">
     <div class="post">
         <div id="post-detail" class="post-header">
             <!-- 게시물 정보가 여기에 로드됩니다. -->
         </div>
         <div id="post-image" class="post-image">
+            <!-- 게시물 이미지가 여기에 로드됩니다. -->
         </div>
-
         <div class="post-actions">
-            <button id="like-button" class="action-btn">❤️</button>
-        </div>
-        <div id="post-likes" class="post-likes">0 likes</div>
+            <button id="like-button" class="action-btn">🤍</button>
+            <div id="post-likes" class="post-likes">0 likes</div></div>
         <div id="post-caption" class="post-caption">
             <!-- 게시물 캡션이 여기에 로드됩니다. -->
         </div>
     </div>
 
     <div class="product-gallery">
+
         <!-- 여기에 상품 목록이 동적으로 로드됩니다. -->
     </div>
 </div>
@@ -36,6 +38,8 @@
 
 
 <script src="/js/postDetail.js"></script>
+<script src="/js/header.js"></script>
+<script src="/js/basic.js"></script>
 
 </body>
 
