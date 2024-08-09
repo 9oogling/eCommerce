@@ -68,25 +68,6 @@
     background-color: #8b95a1; /* 호버 시 배경색 변경 */
 }
 
-.date-separator {
-    text-align: center;
-    font-weight: bold;
-    margin: 10px 0;
-    position: relative;
-}
-
-/*.date-separator::before {*/
-/*    content: '';*/
-/*    display: block;*/
-/*    width: 100%;*/
-/*    height: 1px; !* 선 두께 *!*/
-/*    background: #ccc; !* 선 색상 *!*/
-/*    position: absolute;*/
-/*    top: 50%; !* 가운데 정렬 *!*/
-/*    left: 0;*/
-/*    z-index: -1; !* 텍스트 뒤에 배치 *!*/
-/*}*/
-
 .chat-item {
     display: flex;
     align-items: center;
