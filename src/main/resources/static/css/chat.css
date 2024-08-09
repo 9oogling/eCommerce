@@ -68,25 +68,6 @@
     background-color: #8b95a1; /* 호버 시 배경색 변경 */
 }
 
-.date-separator {
-    text-align: center;
-    font-weight: bold;
-    margin: 10px 0;
-    position: relative;
-}
-
-.date-separator::before {
-    content: '';
-    display: block;
-    width: 100%;
-    height: 1px; /* 선 두께 */
-    background: #ccc; /* 선 색상 */
-    position: absolute;
-    top: 50%; /* 가운데 정렬 */
-    left: 0;
-    z-index: -1; /* 텍스트 뒤에 배치 */
-}
-
 .chat-item {
     display: flex;
     align-items: center;
@@ -174,6 +155,22 @@
     max-height: 100%;
 }
 
+.chat-header .exit-chat-button {
+    float:right;
+    margin-left: 20px;
+    background-color: #262626;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.chat-header .exit-chat-button:hover {
+    background-color: #8b95a1;
+}
 
 .chat-messages {
     flex: 1;
@@ -259,12 +256,13 @@
 }
 
 .input-area button {
+    float:right;
+    margin-right: -20px;
     padding: 10px 20px;
     background-color: #262626;
     color: white;
     border: none;
     border-radius: 20px;
-    cursor: pointer;
 }
 
 .hidden {
@@ -345,6 +343,74 @@
 
 #loadMoreButton:hover {
     background-color: #8b95a1; /* 호버 시 배경색 변경 */
+}
+
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7); /* 투명도 높은 어두운 배경 */
+}
+
+/* 모달 콘텐츠 */
+.modal-content {
+    background-color: #fff; /* 흰색 배경 */
+    margin: 10% auto; /* 위쪽 여백과 가운데 정렬 */
+    padding: 20px;
+    border-radius: 10px; /* 둥근 모서리 */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* 그림자 */
+    width: 90%; /* 기본 너비 */
+    max-width: 250px; /* 최대 너비 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+/* 모달 제목 스타일 */
+.modal-content h2 {
+    margin: 0 0 10px; /* 아래쪽 여백 */
+    font-size: 1.5em; /* 폰트 크기 */
+    color: black; /* 어두운 텍스트 색상 */
+}
+
+/* 모달 설명 스타일 */
+.modal-content p {
+    margin: 0 0 20px; /* 아래쪽 여백 */
+    color: black; /* 중간 톤의 텍스트 색상 */
+    font-size: 1em; /* 폰트 크기 */
+}
+
+/* 버튼 기본 스타일 */
+.modal-content button {
+    color: #fff; /* 흰색 텍스트 */
+    border: none; /* 테두리 없음 */
+    padding: 10px 20px; /* 여백 */
+    margin: 5px; /* 버튼 간 간격 */
+    border-radius: 5px; /* 둥근 모서리 */
+    cursor: pointer; /* 포인터 커서 */
+    transition: background-color 0.3s; /* 호버 시 배경 색상 전환 */
+}
+
+/* 나가기 버튼 스타일 */
+.exit-button {
+    background-color: #262626;
+}
+
+/* 취소 버튼 스타일 */
+.cancel-button {
+    background-color: #262626;
+}
+
+/* 버튼 호버 효과 */
+.exit-button:hover {
+    background-color: #8b95a1;
+}
+
+.cancel-button:hover {
+    background-color: #8b95a1;
 }
 
 ::-webkit-scrollbar {
