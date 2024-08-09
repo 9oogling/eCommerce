@@ -16,7 +16,7 @@
   width: 23px;
   height: 20px;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 1001;
 }
 
 #toggle div.bar,
@@ -82,7 +82,7 @@
 
 #overlay nav {
   position: absolute;
-  bottom: 30px;
+  bottom: 350px;
   left: 30px;
 }
 
@@ -181,73 +181,110 @@
 
 .all-search {
   position: absolute;
-  top: 50px;
+  top: 60px;
   right: 16%;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  height: 30px;
 }
 
 .search {
-  display: table;
+  display: flex;
+  align-items: center;
+  position: relative;
 }
+
 .search input {
   background: none;
   border: none;
   outline: none;
-  width: 28px;
-  min-width: 0;
+  width: 0; /* 초기에는 너비 0으로 설정 */
   padding: 0;
-  z-index: 1;
-  position: relative;
-  line-height: 18px;
-  margin: 5px 0;
+  z-index: 2; /* 검색창이 앞에 오도록 설정 */
+  line-height: 28px;
   font-size: 14px;
   -webkit-appearance: none;
-  transition: all .6s ease;
+  transition: width 0.6s ease;
   cursor: pointer;
   color: #000000;
+  height: 28px;
+  position: absolute; /* input과 svg가 겹쳐지도록 설정 */
 }
+
+.search input.expanded {
+  width: 400px; /* 확장된 검색창의 너비 */
+  padding: 0 4px;
+}
+
 .search input + div {
   position: relative;
   height: 28px;
-  width: 100%;
-  margin: -28px 0 0 0;
+  width: 200px; /* 초기 돋보기 아이콘의 크기 */
+  margin: 0;
+  transition: opacity 0.6s ease;
 }
+
+.search input.expanded + div {
+  opacity: 0; /* 검색창이 확장될 때 돋보기 아이콘만 숨김 */
+}
+
 .search input + div svg {
   display: block;
   position: absolute;
   height: 28px;
-  width: 160px;
+  width: 200px; /* 초기 돋보기 아이콘의 크기 */
   right: 0;
   top: 0;
   fill: none;
   stroke: #000000;
   stroke-width: 1.5px;
-  stroke-dashoffset: calc(212.908 + 59);
   stroke-dasharray: 59 212.908;
-  transition: all .6s ease;
-}
-.search input:not(:placeholder-shown),
-.search input:focus {
-  width: 160px;
-  padding: 0 4px;
-  cursor: text;
-}
-.search input:not(:placeholder-shown) + div svg,
-.search input:focus + div svg {
-  stroke-dasharray: 150 212.908;
-  stroke-dashoffset: 300;
+  stroke-dashoffset: 0;
+  transition: width 0.6s ease;
 }
 
-.search-type-select {
-  border: 1px solid #000000;
-  color: #000000;
-  outline: 0;
-  font-size: 14.5px;
+.search input.expanded + div svg {
+  width: 400px; /* 확장된 검색창에 맞춘 SVG 너비 */
+  stroke-dasharray: 400; /* 확장된 검색창에 맞춘 dasharray */
+  stroke-dashoffset: 0; /* 확장 시 전체 선이 보이도록 설정 */
+}
+
+.search-options {
+  display: none;
+  position: absolute;
+  right: 100%; /* 드롭다운 메뉴를 검색창의 좌측으로 배치 */
+  margin-right: 10px;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.search-options select {
+  font-size: 14px;
+  padding: 5px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #000;
+  cursor: pointer;
+  height: 100%;
+}
+
+/* 검색창 확장 시 드롭다운 메뉴를 보이게 설정 */
+.search input.expanded ~ .search-options {
+  display: inline-block;
+  opacity: 1;
+  visibility: visible;
+}
+
+.search input:not(.expanded) ~ .search-options {
+  opacity: 0;
+  visibility: hidden;
 }
 
 ::selection {
   background: rgba(255, 255, 255, 0.2);
 }
+
 ::-moz-selection {
   background: rgba(255, 255, 255, 0.2);
 }
@@ -363,7 +400,7 @@ nav a:focus {
 }
 
 .right-container ul li a {
-  color: #818181;
+  color: #000000;
   text-decoration: none;
   font-size: 13px;
   font-weight: 400;

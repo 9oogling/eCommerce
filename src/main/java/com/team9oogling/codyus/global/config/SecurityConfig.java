@@ -79,7 +79,7 @@ public class SecurityConfig {
             // 1. 중복 url 삭제 2. 파일명 -> API 로 변경
             .requestMatchers("chat","/api/users/signup", "/main.html"
                 , "/posts", "/api/posts", "posts/postDetail/", "/chatting/**", "/posts/**",
-                "/posts/postCreate",
+                "/posts/postCreate", "/chat",
                 "/api/users/token/refresh", "/api/users/login", "/login", "/home",
                 "/api/user-info", "/signup", "/shop", "/searchResult.html", "api/posts/search")
             .permitAll()
@@ -93,7 +93,7 @@ public class SecurityConfig {
           exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint);
         })
         .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-        .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+        .addFilterAfter(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }

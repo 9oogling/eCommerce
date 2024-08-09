@@ -1,12 +1,17 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+/* 기본 폰트 설정 */
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+body {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  margin: -5px auto auto auto;
   background-color: #ffffff;
-  z-index: 1;
+  overflow: hidden;
 }
 
 nav ul {
@@ -47,10 +52,17 @@ nav ul li {
   padding: 20px;
 }
 
+header > .header-blur {
+  display: none !important;
+}
+
+header > .logo img {
+  display: none !important;
+}
+
 .logo img {
   width: 100%;
   margin-bottom: 250px;
-  z-index: 3;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -136,11 +148,11 @@ input:-ms-input-placeholder {
 .slider {
   position: relative;
   overflow: hidden;
-  z-index: -100;
-
+  z-index: -1;
   max-width: 100%;
   width: 100%;
   height: 100%;
+
 }
 
 .slide {
@@ -149,7 +161,8 @@ input:-ms-input-placeholder {
   width: 100%;
   height: 100%;
   position: fixed;
-
+  background-size: cover;
+  background-position: center;
   animation: slider 7.5s infinite linear;
 }
 

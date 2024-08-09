@@ -3,6 +3,7 @@
 /* 기본 폰트 설정 */
 body {
   font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  overflow: hidden;
 }
 /*
 로그인 화면 크기 조절
@@ -20,9 +21,8 @@ body {
 .login-logo img {
   width: 100%;
   display: flex;
-  margin-top: 100px;
-  margin-bottom: 30px;
-  margin-left: 3px;
+  margin-top: 60px;
+  margin-bottom: 50px;
 }
 
 /*
@@ -119,6 +119,7 @@ ex) . . .  예시 색상
   border: none;
   cursor: pointer;
   font-size: 13px;
+  margin-top: 20px;
   margin-bottom: 100px;
 }
 
